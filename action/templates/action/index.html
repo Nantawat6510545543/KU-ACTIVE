@@ -9,7 +9,7 @@
 <div class="topnav">
     {% if user.is_authenticated %}
         <a style="color: rgb(125, 125, 225);">
-            Welcome to KU polls, {{user.username.title}}</a>
+            Welcome to KU active, {{user.username.title}}</a>
         {% if user.is_superuser  %}
              <a class="link" style="color: rgb(0, 255, 255)"
                     href="{% url 'admin:index' %}">Admin</a>
@@ -32,3 +32,53 @@
     {% endif %}
     <p></p>
 </div>
+
+<p></p>
+
+
+{% if activity_list %}
+   <table  class="style1">
+    <thead>
+        <tr>
+            <th>Activity</th>
+            <th>Published date</th>
+            <th>End date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for activity in activity_list %}
+        <tr>
+            <td>
+                {% if activity.can_participate %}
+                <a href="{% url 'action:detail' activity.id %}">{{ activity.activity_name }}</a>
+                {% else %}
+                <a style="color: rgb(128, 128, 128);">{{ activity.activity_name }}</a>
+                {% endif %}
+            </td>
+            <td>
+                <a>{{activity.pub_date}}</a>
+            </td>
+            <td>
+                {% if activity.end_date is none %}
+                <a>This active has no end date</a>
+                {% else %}
+                <a>{{ activity.end_date }}</a>
+                {% endif %}
+            </td>
+            <td>
+                {% if activity.can_participate %}
+                <b><a style="color: rgb(0,100,0);">Available</a></b>
+                {% else %}
+                <b><a style="color: rgb(255,0,0);">Not available</a></b>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% else %}
+<p>No activity are available.</p>
+{% endif %}
