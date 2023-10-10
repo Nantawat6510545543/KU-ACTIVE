@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 
-from .models import Profile, Activity, Participation
+from .models import Profile, Activity, Participation, FriendRequest
 
 
 class ActivityAdmin(admin.ModelAdmin):
@@ -20,9 +20,19 @@ class ActivityAdmin(admin.ModelAdmin):
     ordering = ('id',)
 
 
-class UserProfileAdmin(admin.ModelAdmin):
+class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'bio']
 
 
-admin.site.register(Profile, UserProfileAdmin)
+class FriendRequestAdmin(admin.ModelAdmin):
+    list_display = ['from_user', 'to_user']
+
+
+class ParticipationAdmin(admin.ModelAdmin):
+    list_display = ['participants', 'activity', 'participation_date']
+
+
+admin.site.register(Profile, ProfileAdmin)
+admin.site.register(FriendRequest, FriendRequestAdmin)
 admin.site.register(Activity, ActivityAdmin)
+admin.site.register(Participation, ParticipationAdmin)
