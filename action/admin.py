@@ -1,6 +1,7 @@
 from django.contrib import admin
+from django.contrib.auth.models import User
 
-from .models import User, Activity, Participation
+from .models import Profile, Activity, Participation
 
 
 class ActivityAdmin(admin.ModelAdmin):
@@ -19,4 +20,9 @@ class ActivityAdmin(admin.ModelAdmin):
     ordering = ('id',)
 
 
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ['user', 'bio']
+
+
+admin.site.register(Profile, UserProfileAdmin)
 admin.site.register(Activity, ActivityAdmin)
