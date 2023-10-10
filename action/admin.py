@@ -1,16 +1,19 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 
-from .models import Profile, Activity, Participation, FriendRequest
+from .models import Profile, Activity, Tag, Participation, FriendRequest
+from .forms import ActivityAdminForm
 
 
 class ActivityAdmin(admin.ModelAdmin):
+    form = ActivityAdminForm
     fieldsets = [
         (None, {'fields': ['activity_name']}),
-        (
-            'Date information',
-            {'fields': ['owner', 'pub_date', 'end_date'],
-             'classes': ['collapse']}),
+        ('Date information',
+         {'fields': ['owner', 'pub_date', 'end_date', 'activity_date',
+                     'description', 'place'],
+          'classes': ['collapse']}),
+        ('Tags', {'fields': ['tags'], 'classes': ['wide']}),
     ]
     list_display = ('id', 'owner', 'activity_name', 'pub_date', 'end_date',
                     'is_published', 'was_published_recently',
@@ -18,6 +21,7 @@ class ActivityAdmin(admin.ModelAdmin):
     list_filter = ['owner', 'end_date']
     search_fields = ['activity_name']
     ordering = ('id',)
+    filter_horizontal = ('tags',)
 
 
 class ProfileAdmin(admin.ModelAdmin):
@@ -32,7 +36,12 @@ class ParticipationAdmin(admin.ModelAdmin):
     list_display = ['participants', 'activity', 'participation_date']
 
 
-admin.site.register(Profile, ProfileAdmin)
-admin.site.register(FriendRequest, FriendRequestAdmin)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ['name']
+
+
 admin.site.register(Activity, ActivityAdmin)
+admin.site.register(FriendRequest, FriendRequestAdmin)
 admin.site.register(Participation, ParticipationAdmin)
+admin.site.register(Profile, ProfileAdmin)
+admin.site.register(Tag, TagAdmin)
