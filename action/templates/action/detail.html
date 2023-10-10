@@ -6,21 +6,63 @@
     <title>Active</title>
 </head>
 <div class="topnav">
-  <a href="{% url 'action:index' %}"
-    style="color: #00FFFF;">Go to Home</a>
+    <a href="{% url 'action:index' %}"
+       style="color: #00FFFF;">Go to Home</a>
     {% if user.is_authenticated %}
-       <a style="color: rgb(125, 125, 225)" href="{% url 'action:profile' %}"
-            >User: {{user.username.title}}</a>
-        {% if user.is_superuser  %}
-             <a class="link" style="color: rgb(0, 125, 255)"
-                    href="{% url 'admin:index' %}">Admin</a>
+        <a style="color: rgb(125, 125, 225)" href="{% url 'action:profile' %}"
+        >User: {{ user.username.title }}</a>
+        {% if user.is_superuser %}
+            <a class="link" style="color: rgb(0, 125, 255)"
+               href="{% url 'admin:index' %}">Admin</a>
         {% endif %}
         <a style="color: rgb(255,69,0);"
-            href="{% url 'logout' %}">Logout</a>
+           href="{% url 'logout' %}">Logout</a>
     {% else %}
         <a class="link" style="color: rgb(0, 128, 0)"
-           href="{% url 'login' %}?next={{request.path}}">Login</a>
+           href="{% url 'login' %}?next={{ request.path }}">Login</a>
         <a class="link" style="color: rgb(255, 165, 0)"
            href="{% url 'signup' %}">Register</a>
     {% endif %}
+    {% if messages %}
+      {% for message in messages %}
+        <a>{{ message }}</a>
+      {% endfor %}
+    {% endif %}
 </div>
+
+<div class="activity-details">
+    <h2>{{ activity.activity_name }}</h2>
+    <p><strong>Owner:</strong> {{ activity.owner.username }}</p>
+    <p><strong>Date Published:</strong> {{ activity.pub_date }}</p>
+    <p><strong>End Date:</strong> {{ activity.end_date }}</p>
+    <p><strong>Time of Activity:</strong> {{ activity.activity_date }}</p>
+    <p><strong>Description:</strong> {{ activity.description }}</p>
+    <p><strong>Place:</strong> {{ activity.place }}</p>
+
+    <h3>Tags:</h3>
+    <ul>
+        {% for tag in activity.tags.all %}
+            <li>{{ tag.name }}</li>
+        {% empty %}
+            <li>No tags available for this activity.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% if user.is_authenticated %}
+    {% if has_participated %}
+      <form method="post" action="{% url 'action:withdraw' activity.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Withdraw</button>
+      </form>
+      <p>You are currently participating in this activity.</p>
+    {% else %}
+      <form method="post" action="{% url 'action:participate' activity.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Participate</button>
+      </form>
+      <p>Click the "Participate" button to join this activity.</p>
+    {% endif %}
+  {% else %}
+    <p>Login to participate in this activity.</p>
+  {% endif %}

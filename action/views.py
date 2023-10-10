@@ -36,4 +36,58 @@ class DetailView(generic.DetailView):
         return Activity.objects.filter(pub_date__lte=timezone.now())
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        try:
+            self.object = self.get_object()
+        except Http404:
+            messages.error(request,
+                           "Activity does not exist or is not published yet.")
+            return redirect("action:index")
+
+        user = request.user
+        has_participated = False
+        if user.is_authenticated:
+            has_participated = Participation.objects.filter(
+                participants=user, activity=self.object).exists()
+
+        context = {"activity": self.object,
+                   "has_participated": has_participated}
+        return render(request, self.template_name, context)
+
+
+@login_required
+def participate(request, activity_id):
+    activity = get_object_or_404(Activity, pk=activity_id)
+    user = request.user
+
+    if not activity.can_participate():
+        messages.error(request, "Vote is not allow")
+        return redirect("polls:index")
+
+    new_participate, created = Participation.objects.get_or_create(
+        participants=user, activity=activity)
+
+    if created:
+        messages.success(request, "You have successfully participated.")
+    else:
+        messages.info(request, "You are already participating.")
+
+    return redirect(reverse("action:detail", args=(activity.id,)))
+
+
+@login_required
+def withdraw(request, activity_id):
+    activity = get_object_or_404(Activity, pk=activity_id)
+    user = request.user
+
+    user_has_participated = Participation.objects.filter(
+        participants=user, activity=activity).exists()
+
+    if user_has_participated:
+        Participation.objects.filter(participants=user,
+                                     activity=activity).delete()
+        messages.success(request, "You have departed from the activity.")
+    else:
+        messages.info(request,
+                      "You are not currently participating in this activity.")
+
+    return redirect(reverse("action:detail", args=(activity.id,)))

@@ -1,9 +1,9 @@
 import datetime
 
-from django.db import models
-from django.utils import timezone
 from django.contrib import admin
 from django.contrib.auth.models import User
+from django.db import models
+from django.utils import timezone
 
 
 class Profile(models.Model):
@@ -22,18 +22,32 @@ class FriendRequest(models.Model):
                                 related_name="friendship_requests_received", )
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Activity(models.Model):
     """
     Represents an activity in the application.
     """
     owner = models.ForeignKey(User, related_name='owner',
                               on_delete=models.CASCADE)
+    tags = models.ManyToManyField(Tag, blank=True)
 
     activity_name = models.CharField(max_length=200)
     pub_date = models.DateTimeField('Date published',
                                     default=timezone.now)
     end_date = models.DateTimeField('Date ended',
-                                    null=True, blank=True)
+                                    default=timezone.now() +
+                                            timezone.timedelta(
+                                                days=30))
+    activity_date = models.DateTimeField('Time of Activity', null=True,
+                                         blank=True)
+    description = models.TextField('Description', blank=True)
+    place = models.CharField('Place', max_length=200, blank=True)
 
     def __str__(self):
         """
@@ -95,6 +109,9 @@ class Activity(models.Model):
 
 
 class Participation(models.Model):
+    """
+    Represents a participation for each user.
+    """
     participants = models.ForeignKey(User, related_name='participants',
                                      on_delete=models.CASCADE)
     activity = models.ForeignKey(Activity, related_name='activity',
