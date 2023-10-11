@@ -5,8 +5,7 @@ from django.views import generic
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from .models import Profile, Activity, Participation
+from .models import Activity, Participation, User
 
 
 @login_required
@@ -35,6 +34,7 @@ class DetailView(generic.DetailView):
         """
         return Activity.objects.filter(pub_date__lte=timezone.now())
 
+    # TODO refactor
     def get(self, request, *args, **kwargs):
         try:
             self.object = self.get_object()

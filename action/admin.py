@@ -1,7 +1,6 @@
 from django.contrib import admin
-from django.contrib.auth.models import User
 
-from .models import Profile, Activity, Tag, Participation, FriendRequest
+from .models import Activity, Tag, Participation, FriendRequest, User
 from .forms import ActivityAdminForm
 
 
@@ -24,8 +23,8 @@ class ActivityAdmin(admin.ModelAdmin):
     filter_horizontal = ('tags',)
 
 
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'bio']
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['username', 'bio']
 
 
 class FriendRequestAdmin(admin.ModelAdmin):
@@ -43,5 +42,5 @@ class TagAdmin(admin.ModelAdmin):
 admin.site.register(Activity, ActivityAdmin)
 admin.site.register(FriendRequest, FriendRequestAdmin)
 admin.site.register(Participation, ParticipationAdmin)
-admin.site.register(Profile, ProfileAdmin)
+admin.site.register(User, UserAdmin)
 admin.site.register(Tag, TagAdmin)

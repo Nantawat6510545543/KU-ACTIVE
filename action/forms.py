@@ -1,6 +1,7 @@
 from django import forms
-from .models import Activity, Tag
+from django.contrib.auth.forms import UserCreationForm
 
+from .models import Activity, Tag, User
 
 class ActivityAdminForm(forms.ModelForm):
     tags = forms.ModelMultipleChoiceField(
@@ -12,3 +13,19 @@ class ActivityAdminForm(forms.ModelForm):
     class Meta:
         model = Activity
         fields = '__all__'
+
+
+class UserForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'password1',
+            'password2',
+            'email',
+            'first_name',
+            'last_name',
+            'profile_picture',
+            'bio'
+        ]
+

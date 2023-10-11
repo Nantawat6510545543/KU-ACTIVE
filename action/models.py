@@ -1,18 +1,17 @@
 import datetime
 
 from django.contrib import admin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.utils import timezone
 
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class User(AbstractUser):
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True)
-    bio = models.TextField()
+    bio = models.TextField(blank=True)
 
     def __str__(self):
-        return self.user.username
+        return self.username
 
 
 class FriendRequest(models.Model):

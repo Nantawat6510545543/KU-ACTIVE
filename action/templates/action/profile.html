@@ -5,5 +5,10 @@ profile
 {% endblock %}
 
 {% block content %}
-<h1>This is the profile page for {{ user.username }}</h1>
+<h1>Username: {{ user.username }}</h1>
+<h1>Email: {{ user.email }}</h1>
+<h1>First Name: {{ user.first_name }}</h1>
+<h1>Last Name: {{ user.last_name }}</h1>
+<h1>Profile Picture: {{ user.profile_picture }}</h1>
+<h1>Bio: {{ user.bio }}</h1>
 {% endblock %}
