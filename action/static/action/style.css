@@ -4,6 +4,12 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+
+    /* 
+    the body is at the .topnav, so if we use background-position: center,
+    it wil center at the .topnav not the actual body, so we need to set height = 100
+    */
+    height: 100vh; 
 }
 
 .strokeme {
