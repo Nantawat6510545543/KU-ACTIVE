@@ -1,0 +1,53 @@
+{% extends "action/base.html" %}
+
+{% block content %}
+<div class="activity-details">
+    <h2>{{ activity.title }}</h2>
+    <p><strong>Owner:</strong> {{ activity.owner.username }}</p>
+    <p><strong>Date Published:</strong> {{ activity.pub_date }}</p>
+    <p><strong>Picture: </strong> {{ activity.picture }}</p>
+    <p><strong>End Date:</strong> {{ activity.end_date }}</p>
+    <p><strong>Date of Activity:</strong> {{ activity.date }}</p>
+    <p><strong>Description:</strong> {{ activity.description }}</p>
+    <p><strong>Place:</strong> {{ activity.place }}</p>
+    <p><strong>Participants:</strong> {{ activity.participants }}</p>
+    <p><strong>Participant Counts:</strong> {{ activity.participant_count }}
+    <p><strong>Background Picture: </strong> {{ activity.background_picture }}</p>
+
+    <p><strong>Participant Limit:</strong>
+    {% if activity.participant_limit %}
+        {{ activity.participant_limit }}
+    {% else %}
+        {{ activity.participant_limit }}
+    {% endif %}
+    </p>
+
+    <h3>Tags:</h3>
+    <ul>
+    {% for tag in activity.tags.all %}
+        <li>{{ tag.name }}</li>
+    {% empty %}
+        <li>No tags available for this activity.</li>
+    {% endfor %}
+    </ul>
+</div>
+
+{% if user.is_authenticated %}
+    {% if has_participated %}
+        <form method="post" action="{% url 'action:leave' activity.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Leave</button>
+        </form>
+    <p>You are currently participating in this activity.</p>
+    {% else %}
+    <form method="post" action="{% url 'action:participate' activity.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Participate</button>
+    </form>
+    <p>Click the "Participate" button to join this activity.</p>
+    {% endif %}
+{% else %}
+    <p>Login to participate in this activity.</p>
+{% endif %}
+
+{% endblock %}

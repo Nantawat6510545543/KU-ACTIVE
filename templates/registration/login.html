@@ -1,0 +1,26 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'action/style.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Login</title>
+    </head>
+    <body>
+        <div class="form-container">
+            <h2>Login</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-table">
+                    {{ form.as_table }}
+                </div>
+                <p class="form-submit">
+                    <button type="submit">Login</button>
+                </p>
+                <input type="hidden" name="next" value="{{next}}"/>
+            </form>
+            <p>Don't have an account? <a href="/signup">Sign up</a></p>
+            <p>Want to visit our page first? <a href="{% url 'action:index' %}">Click here.</a></p>
+        </div>
+    </body>
+</html>

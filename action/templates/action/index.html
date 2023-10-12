@@ -1,0 +1,78 @@
+{% extends "action/base.html" %}
+
+{% block content_topnav %}
+{% if user.is_authenticated %}
+    <a class="link" style="color: rgb(125, 125, 225)"
+        href="{% url 'action:profile' %}">
+            Welcome to KU active, {{ user.username.title }}</a>
+{% endif %}
+{% endblock %}
+
+{% block message %}
+    {% if messages %}
+        {% for message in messages %}
+        <a>| </a>
+        <a style="color: rgb(255,255,0);"
+            {% if message.tags %} class="{{ message.tags }}"
+            {% endif %}>{{ message }}
+        </a>
+        {% endfor %}
+    {% endif %}
+    <p></p>
+{% endblock %}
+
+{% block content %}
+{% if activity_list %}
+<table class="style1">
+    <thead>
+        <tr>
+            <th>Activity</th>
+            <th>Published date</th>
+            <th>End date</th>
+            <th>Status</th>
+            <th>Tags</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for activity in activity_list %}
+        <tr>
+            <td>
+                {% if activity.can_participate %}
+                <a href="{% url 'action:detail' activity.id %}">{{ activity.title }}</a>
+                {% else %}
+                <a style="color: rgb(128, 128, 128);">{{ activity.title }}</a>
+                {% endif %}
+            </td>
+            <td>
+                <a>{{ activity.pub_date }}</a>
+            </td>
+            <td>
+                {% if activity.end_date is none %}
+                <a>This activity has no end date.</a>
+                {% else %}
+                <a>{{ activity.end_date }}</a>
+                {% endif %}
+            </td>
+            <td>
+                {% if activity.can_participate %}
+                <b><a style="color: rgb(0,100,0);">Available</a></b>
+                {% else %}
+                <b><a style="color: rgb(255,0,0);">Not available</a></b>
+                {% endif %}
+            </td>
+            <td>
+                {% for tag in activity.tags.all %}
+                    {{ tag.name }}
+                    {% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<p>No activity are available.</p>
+{% endif %}
+
+{% endblock %}

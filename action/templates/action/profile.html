@@ -1,0 +1,23 @@
+{% extends "action/base.html" %}
+
+{% block title %}
+profile
+{% endblock %}
+
+{% block content %}
+<h1>Username: {{ user.username }}</h1>
+<h1>Email: {{ user.email }}</h1>
+<h1>First Name: {{ user.first_name }}</h1>
+<h1>Last Name: {{ user.last_name }}</h1>
+<h1>Profile Picture: 
+    <img src="{{ user.profile_picture }}" alt="{{ user.username }}'s Profile Picture">
+</h1>
+
+<h1>Bio: {{ user.bio }}</h1>
+
+<h1>Friends: {{ user.friends.all }} </h1>
+<h1>Friend Count: {{ user.friends.count }} </h1>
+
+<h1>Activities: {{ user.participated_activity }} </h1>
+<h1>Activity Count: {{ user.participated_activity.count }} </h1>
+{% endblock %}
