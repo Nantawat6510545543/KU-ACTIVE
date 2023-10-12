@@ -107,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGIN_REDIRECT_URL = 'action:index'  # after login, show list of polls
+LOGIN_REDIRECT_URL = 'action:index'  # after login, show list of participations
 LOGOUT_REDIRECT_URL = 'login'  # after logout, direct to where?
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'

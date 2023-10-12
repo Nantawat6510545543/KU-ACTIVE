@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 from .models import Activity, Tag, User
 
+
 class ActivityAdminForm(forms.ModelForm):
     tags = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
@@ -28,4 +29,3 @@ class UserForm(UserCreationForm):
             'profile_picture',
             'bio'
         ]
-

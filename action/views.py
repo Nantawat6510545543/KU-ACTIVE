@@ -1,11 +1,13 @@
-from django.http import HttpResponseRedirect, Http404
+from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Activity, Participation, User
+
+
+from .models import Activity, Participation
 
 
 @login_required
@@ -60,8 +62,8 @@ def participate(request, activity_id):
     user = request.user
 
     if not activity.can_participate():
-        messages.error(request, "Vote is not allow")
-        return redirect("polls:index")
+        messages.error(request, "You can't participate in this activity.")
+        return redirect("action:index")
 
     new_participate, created = Participation.objects.get_or_create(
         participants=user, activity=activity)

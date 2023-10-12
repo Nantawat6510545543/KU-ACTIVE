@@ -3,23 +3,23 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title class="form">Register</title>
-</head>
-<body>
-<form method="POST" class="form-container">
-    <h2>Register</h2>
-    {% csrf_token %}
-    <table class="form-table">
-        {{ form.as_table }}
-        <tr>
-            <td colspan="2" class="form-submit">
-                <button type="submit" class="submit-button">Register</button>
-            </td>
-        </tr>
-    </table>
-    <p>Already have an account? <a href="{% url 'login' %}">Login here.</a></p>
-    <p>Want to visit our page first? <a href="/action">Click here.</a></p>
-</form>
-</body>
+    <head>
+        <title class="form">Register</title>
+    </head>
+    <body>
+        <form method="POST" class="form-container">
+            <h2>Register</h2>
+            {% csrf_token %}
+            <table class="form-table">
+                {{ form.as_table }}
+                <tr>
+                    <td colspan="2" class="form-submit">
+                        <button type="submit" class="submit-button">Register</button>
+                    </td>
+                </tr>
+            </table>
+            <p>Already have an account? <a href="{% url 'login' %}">Login here.</a></p>
+            <p>Want to visit our page first? <a href="{% url 'action:index' %}">Click here.</a></p>
+        </form>
+    </body>
 </html>

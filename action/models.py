@@ -1,7 +1,5 @@
-import datetime
-
 from django.contrib import admin
-from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 
@@ -16,9 +14,9 @@ class User(AbstractUser):
 
 class FriendRequest(models.Model):
     from_user = models.ForeignKey(User, on_delete=models.CASCADE,
-                                  related_name="friendship_requests_sent", )
+                                  related_name="friendship_requests_sent")
     to_user = models.ForeignKey(User, on_delete=models.CASCADE,
-                                related_name="friendship_requests_received", )
+                                related_name="friendship_requests_received")
 
 
 class Tag(models.Model):
@@ -41,8 +39,7 @@ class Activity(models.Model):
                                     default=timezone.now)
     end_date = models.DateTimeField('Date ended',
                                     default=timezone.now() +
-                                            timezone.timedelta(
-                                                days=30))
+                                    timezone.timedelta(days=30))
     activity_date = models.DateTimeField('Time of Activity', null=True,
                                          blank=True)
     description = models.TextField('Description', blank=True)
@@ -68,7 +65,7 @@ class Activity(models.Model):
                   False otherwise.
         """
         now = timezone.now()
-        return now - datetime.timedelta(days=1) <= self.pub_date <= now
+        return now - timezone.timedelta(days=1) <= self.pub_date <= now
 
     @admin.display(
         boolean=True,
@@ -117,3 +114,9 @@ class Participation(models.Model):
                                  on_delete=models.CASCADE)
     participation_date = models.DateTimeField('Participation date',
                                               default=timezone.now)
+
+# TODO 
+# - Activity contain user (Similar to Poll contain votes), use @property
+# - Add Activity Image and short description attributes
+# - Merge Participation using ManyToManyField
+# - revise ImageField
