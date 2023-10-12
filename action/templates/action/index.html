@@ -38,9 +38,9 @@
         <tr>
             <td>
                 {% if activity.can_participate %}
-                <a href="{% url 'action:detail' activity.id %}">{{ activity.activity_name }}</a>
+                <a href="{% url 'action:detail' activity.id %}">{{ activity.title }}</a>
                 {% else %}
-                <a style="color: rgb(128, 128, 128);">{{ activity.activity_name }}</a>
+                <a style="color: rgb(128, 128, 128);">{{ activity.title }}</a>
                 {% endif %}
             </td>
             <td>

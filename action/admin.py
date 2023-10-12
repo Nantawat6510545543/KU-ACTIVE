@@ -1,24 +1,25 @@
 from django.contrib import admin
 
-from .models import Activity, Tag, Participation, FriendRequest, User
+from .models import Activity, FriendRequest, Tag, Participation, User
 from .forms import ActivityAdminForm
 
 
 class ActivityAdmin(admin.ModelAdmin):
     form = ActivityAdminForm
     fieldsets = [
-        (None, {'fields': ['activity_name']}),
+        ('Required', {'fields': ['title', 'owner', 'description', 'place', 'picture']}),
         ('Date information',
-         {'fields': ['owner', 'pub_date', 'end_date', 'activity_date',
-                     'description', 'place'],
+         {'fields': ['pub_date', 'end_date', 'date'],
           'classes': ['collapse']}),
+        ('Optional', {'fields': ['participant_limit', 'full_description', 'background_picture'],
+                      'classes': ['wide']}),
         ('Tags', {'fields': ['tags'], 'classes': ['wide']}),
     ]
-    list_display = ('id', 'owner', 'activity_name', 'pub_date', 'end_date',
+    list_display = ('id', 'owner', 'title', 'pub_date', 'end_date',
                     'is_published', 'was_published_recently',
                     'can_participate')
     list_filter = ['owner', 'end_date']
-    search_fields = ['activity_name']
+    search_fields = ['title']
     ordering = ('id',)
     filter_horizontal = ('tags',)
 
@@ -28,7 +29,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 class FriendRequestAdmin(admin.ModelAdmin):
-    list_display = ['from_user', 'to_user']
+    list_display = ['sender', 'receiver', 'status']
 
 
 class ParticipationAdmin(admin.ModelAdmin):

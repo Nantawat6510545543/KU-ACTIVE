@@ -77,7 +77,7 @@ def participate(request, activity_id):
 
 
 @login_required
-def withdraw(request, activity_id):
+def leave(request, activity_id):
     activity = get_object_or_404(Activity, pk=activity_id)
     user = request.user
 
@@ -87,7 +87,7 @@ def withdraw(request, activity_id):
     if user_has_participated:
         Participation.objects.filter(participants=user,
                                      activity=activity).delete()
-        messages.success(request, "You have departed from the activity.")
+        messages.success(request, "You have left this activity.")
     else:
         messages.info(request,
                       "You are not currently participating in this activity.")

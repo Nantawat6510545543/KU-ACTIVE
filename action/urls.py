@@ -9,6 +9,6 @@ urlpatterns = [
     path('<int:pk>/', views.DetailView.as_view(), name='detail'),
     path('<int:activity_id>/participate/', views.participate,
          name='participate'),
-    path('<int:activity_id>/withdraw/', views.withdraw,
-         name='withdraw'),
+    path('<int:activity_id>/leave/', views.leave,
+         name='leave'),
 ]

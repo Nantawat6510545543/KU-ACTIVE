@@ -5,18 +5,29 @@ from django.utils import timezone
 
 
 class User(AbstractUser):
+    friends = models.ManyToManyField('self', blank=True)
+
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True)
     bio = models.TextField(blank=True)
+
+    @property
+    def participated_activity(self):
+        participation = Participation.objects.filter(participants=self)
+        participated_activity = participation.values_list('activity__title', flat=True)
+        return participated_activity
 
     def __str__(self):
         return self.username
 
 
 class FriendRequest(models.Model):
-    from_user = models.ForeignKey(User, on_delete=models.CASCADE,
-                                  related_name="friendship_requests_sent")
-    to_user = models.ForeignKey(User, on_delete=models.CASCADE,
-                                related_name="friendship_requests_received")
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sent_requests")
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="received_requests")
+    status = models.CharField(max_length=10, choices=[
+        ("pending", "Pending"),
+        ("accepted", "Accepted"),
+        ("declined", "Declined")
+    ])
 
 
 class Tag(models.Model):
@@ -32,30 +43,47 @@ class Activity(models.Model):
     """
     owner = models.ForeignKey(User, related_name='owner',
                               on_delete=models.CASCADE)
-    tags = models.ManyToManyField(Tag, blank=True)
+    title = models.CharField(max_length=100, blank=True)
+    date = models.DateTimeField('Date of Activity',
+                                    default=timezone.now() +
+                                    timezone.timedelta(days=30))
+    picture = models.ImageField(blank=True)  # TODO make default image, set blank=False<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    description =  models.CharField('Description', max_length=200)
+    participant_limit = models.IntegerField(null=True, blank=True, default=None)
 
-    activity_name = models.CharField(max_length=200)
     pub_date = models.DateTimeField('Date published',
                                     default=timezone.now)
     end_date = models.DateTimeField('Date ended',
                                     default=timezone.now() +
                                     timezone.timedelta(days=30))
-    activity_date = models.DateTimeField('Time of Activity', null=True,
-                                         blank=True)
-    description = models.TextField('Description', blank=True)
+
+    full_description = models.TextField('Full Description', blank=True)
+    background_picture = models.ImageField(blank=True)  # TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     place = models.CharField('Place', max_length=200, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True)
+
+    @property
+    def participants(self):
+        participation = Participation.objects.filter(activity=self)
+        participants = participation.values_list('participants__username', flat=True)
+        return participants
+    
+    @property
+    def participant_count(self):
+        return Participation.objects.filter(activity=self).count()
 
     def __str__(self):
         """
         Returns a string of activity name.
         """
-        return self.activity_name
+        return self.title
 
     @admin.display(
         boolean=True,
         ordering='pub_date',
         description='Published recently?',
     )
+
     def was_published_recently(self):
         """
         Checks if the activity was published recently.
@@ -114,9 +142,3 @@ class Participation(models.Model):
                                  on_delete=models.CASCADE)
     participation_date = models.DateTimeField('Participation date',
                                               default=timezone.now)
-
-# TODO 
-# - Activity contain user (Similar to Poll contain votes), use @property
-# - Add Activity Image and short description attributes
-# - Merge Participation using ManyToManyField
-# - revise ImageField
