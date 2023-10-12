@@ -97,9 +97,9 @@ class ActivityModelTest(TestCase):
         """
         Test the activity_name attribute of the Activity model.
         """
-        activity = Activity(owner=self.user, activity_name="Test Activity")
+        activity = Activity(owner=self.user, title="Test Activity")
         activity.save()
-        self.assertEqual(activity.activity_name, "Test Activity")
+        self.assertEqual(activity.title, "Test Activity")
 
     def test_pub_date_attribute(self):
         """
@@ -119,14 +119,14 @@ class ActivityModelTest(TestCase):
         activity.save()
         self.assertEqual(activity.end_date, end_date)
 
-    def test_activity_date_attribute(self):
+    def test_date_attribute(self):
         """
         Test the activity_date attribute of the Activity model.
         """
         activity_date = timezone.now()
-        activity = Activity(owner=self.user, activity_date=activity_date)
+        activity = Activity(owner=self.user, date=activity_date)
         activity.save()
-        self.assertEqual(activity.activity_date, activity_date)
+        self.assertEqual(activity.date, activity_date)
 
     def test_description_attribute(self):
         """
