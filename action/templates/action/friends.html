@@ -1,0 +1,27 @@
+{% extends "action/base.html" %}
+
+{% block content %}
+
+<h1>
+<a href="{% url 'action:friends' %}">Friend List</a>
+<a href="{% url 'action:add_view' %}">Add Friends</a>
+<a href="{% url 'action:request_view' %}">Friend Request</a>
+</h1>
+
+<h3>
+
+{% for each_friend in user.friends %}
+    #TODO fix this <br>
+    Sender: {{ each_friend.sender }} <br>
+    Receiver: {{ each_friend.receiver }} <br>
+    Friend: {{ each_friend.sender }}/{{ each_friend.receiver }}????
+    <form action="{% url 'action:remove_friend' friend_id=each_friend.id %}">
+        <button type="submit">Remove Friend</button>
+    </form>
+{% empty %}
+    No friend.
+{% endfor %}
+
+</h3>
+
+{% endblock %}

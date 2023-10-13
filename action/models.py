@@ -1,12 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 
 
 class User(AbstractUser):
-    friends = models.ManyToManyField('self', blank=True)
-
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True)
     bio = models.TextField(blank=True)
 
@@ -15,6 +14,11 @@ class User(AbstractUser):
         participation = ActivityStatus.objects.filter(participants=self)
         participated_activity = participation.values_list('activity__title', flat=True)
         return participated_activity
+
+    @property
+    def friends(self):
+        return FriendStatus.objects.filter(Q(is_friend=True) & 
+            (Q(sender=self) | Q(receiver=self)))
 
     def __str__(self):
         return self.username
@@ -139,11 +143,15 @@ class ActivityStatus(models.Model):
     is_favorited = models.BooleanField(default=False)
 
 
-class FriendRequest(models.Model):
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sent_requests")
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="received_requests")
-    status = models.CharField(max_length=10, choices=[
-        ("pending", "Pending"),
-        ("accepted", "Accepted"),
-        ("declined", "Declined")
-    ])
+class FriendStatus(models.Model):
+    STATUS_CHOICES = (
+        ('Pending', 'Pending'),
+        ('Accepted', 'Accepted'),
+        ('Declined', 'Declined'),
+    )
+
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender")
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver")
+
+    request_status = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True, default=None)
+    is_friend = models.BooleanField(default=False)
