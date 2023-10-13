@@ -12,22 +12,12 @@ class User(AbstractUser):
 
     @property
     def participated_activity(self):
-        participation = Participation.objects.filter(participants=self)
+        participation = ActivityStatus.objects.filter(participants=self)
         participated_activity = participation.values_list('activity__title', flat=True)
         return participated_activity
 
     def __str__(self):
         return self.username
-
-
-class FriendRequest(models.Model):
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sent_requests")
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="received_requests")
-    status = models.CharField(max_length=10, choices=[
-        ("pending", "Pending"),
-        ("accepted", "Accepted"),
-        ("declined", "Declined")
-    ])
 
 
 class Tag(models.Model):
@@ -45,10 +35,10 @@ class Activity(models.Model):
                               on_delete=models.CASCADE)
     title = models.CharField(max_length=100, blank=True)
     date = models.DateTimeField('Date of Activity',
-                                    default=timezone.now() +
-                                    timezone.timedelta(days=30))
+                                default=timezone.now() +
+                                timezone.timedelta(days=30))
     picture = models.ImageField(blank=True)  # TODO make default image, set blank=False<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    description =  models.CharField('Description', max_length=200)
+    description = models.CharField('Description', max_length=200)
     participant_limit = models.IntegerField(null=True, blank=True, default=None)
 
     pub_date = models.DateTimeField('Date published',
@@ -64,13 +54,13 @@ class Activity(models.Model):
 
     @property
     def participants(self):
-        participation = Participation.objects.filter(activity=self)
+        participation = ActivityStatus.objects.filter(activity=self)
         participants = participation.values_list('participants__username', flat=True)
         return participants
-    
+
     @property
     def participant_count(self):
-        return Participation.objects.filter(activity=self).count()
+        return ActivityStatus.objects.filter(activity=self).count()
 
     def __str__(self):
         """
@@ -100,6 +90,7 @@ class Activity(models.Model):
         ordering='pub_date',
         description='Is published?',
     )
+
     def is_published(self):
         """
         Checks if the activity is published.
@@ -132,7 +123,7 @@ class Activity(models.Model):
         return self.pub_date <= now <= self.end_date
 
 
-class Participation(models.Model):
+class ActivityStatus(models.Model):
     """
     Represents a participation for each user.
     """
@@ -140,5 +131,19 @@ class Participation(models.Model):
                                      on_delete=models.CASCADE)
     activity = models.ForeignKey(Activity, related_name='activity',
                                  on_delete=models.CASCADE)
+
     participation_date = models.DateTimeField('Participation date',
                                               default=timezone.now)
+
+    is_participated = models.BooleanField(default=False)
+    is_favorited = models.BooleanField(default=False)
+
+
+class FriendRequest(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sent_requests")
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="received_requests")
+    status = models.CharField(max_length=10, choices=[
+        ("pending", "Pending"),
+        ("accepted", "Accepted"),
+        ("declined", "Declined")
+    ])

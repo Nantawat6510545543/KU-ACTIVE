@@ -18,7 +18,7 @@
     {% if activity.participant_limit %}
         {{ activity.participant_limit }}
     {% else %}
-        {{ activity.participant_limit }}
+        None.
     {% endif %}
     </p>
 
@@ -33,19 +33,34 @@
 </div>
 
 {% if user.is_authenticated %}
-    {% if has_participated %}
-        <form method="post" action="{% url 'action:leave' activity.id %}">
-            {% csrf_token %}
+    {% if activity_status.is_participated %}
+        <form action="{% url 'action:leave' activity.id %}">
             <button type="submit" class="btn btn-danger">Leave</button>
         </form>
-    <p>You are currently participating in this activity.</p>
+
+        <p>You are currently participating in this activity.</p>
     {% else %}
-    <form method="post" action="{% url 'action:participate' activity.id %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-primary">Participate</button>
-    </form>
-    <p>Click the "Participate" button to join this activity.</p>
+        <form action="{% url 'action:participate' activity.id %}">
+            <button type="submit" class="btn btn-primary">Participate</button>
+        </form>
+        <p>Click the "Participate" button to join this activity.</p>
     {% endif %}
+
+
+    {% if activity_status.is_favorited %}
+        <form action="{% url 'action:unfavorite' activity.id %}">
+            <button type="submit" class="btn btn-danger">Un-favorite</button>
+        </form>
+        <p>You have favorited this activity.</p>
+    {% else %}
+        <form action="{% url 'action:favorite' activity.id %}">
+            <button type="submit" class="btn btn-primary">Favorite</button>
+        </form>
+        <p>Click the "Favorite" button to favorite this activity.</p>
+    {% endif %}
+
+
+
 {% else %}
     <p>Login to participate in this activity.</p>
 {% endif %}

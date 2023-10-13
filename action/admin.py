@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Activity, FriendRequest, Tag, Participation, User
+from .models import Activity, FriendRequest, Tag, ActivityStatus, User
 from .forms import ActivityAdminForm
 
 
@@ -32,7 +32,7 @@ class FriendRequestAdmin(admin.ModelAdmin):
     list_display = ['sender', 'receiver', 'status']
 
 
-class ParticipationAdmin(admin.ModelAdmin):
+class ActivityStatusAdmin(admin.ModelAdmin):
     list_display = ['participants', 'activity', 'participation_date']
 
 
@@ -42,6 +42,6 @@ class TagAdmin(admin.ModelAdmin):
 
 admin.site.register(Activity, ActivityAdmin)
 admin.site.register(FriendRequest, FriendRequestAdmin)
-admin.site.register(Participation, ParticipationAdmin)
+admin.site.register(ActivityStatus, ActivityStatusAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Tag, TagAdmin)
