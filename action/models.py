@@ -10,13 +10,17 @@ class User(AbstractUser):
 
     @property
     def participated_activity(self):
-        return ActivityStatus.objects.filter(participants=self, is_participated=True)
+        return ActivityStatus.objects.filter(participants=self,
+                                             is_participated=True)
 
     @property
     def favorited_activity(self):
-        return ActivityStatus.objects.filter(participants=self, is_favorited=True)
+        return ActivityStatus.objects.filter(participants=self,
+                                             is_favorited=True)
 
-    # TODO change it to retrieve the object instead of the string then re-making the objects
+    # TODO
+    #  change it to retrieve the object instead of the string
+    #  then re-making the objects
     @property
     def friends(self):
         # Case 1: Harry is the sender, so the friend is the receiver
@@ -24,7 +28,8 @@ class User(AbstractUser):
             .values_list('receiver__username', flat=True)
 
         # Case 2: Harry is the receiver, so the friend is the sender
-        queryset2 = FriendStatus.objects.filter(is_friend=True, receiver=self) \
+        queryset2 = FriendStatus.objects.filter(is_friend=True,
+                                                receiver=self) \
             .values_list('sender__username', flat=True)
 
         # Combine both cases together (This will be list of strings)
@@ -54,27 +59,32 @@ class Activity(models.Model):
                               on_delete=models.CASCADE)
     title = models.CharField(max_length=100, blank=True)
     date = models.DateTimeField('Date of Activity',
-                                default=timezone.now() +
-                                timezone.timedelta(days=30))
-    picture = models.ImageField(blank=True)  # TODO make default image, set blank=False<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                                default=timezone.now() + timezone.timedelta(
+                                    days=30))
+    # TODO make default image, set blank=False
+    picture = models.ImageField(blank=True)
     description = models.CharField('Description', max_length=200)
-    participant_limit = models.IntegerField(null=True, blank=True, default=None)
+    participant_limit = models.IntegerField(null=True, blank=True,
+                                            default=None)
 
     pub_date = models.DateTimeField('Date published',
                                     default=timezone.now)
-    end_date = models.DateTimeField('Date ended',
-                                    default=timezone.now() +
-                                    timezone.timedelta(days=30))
+    end_date = models.DateTimeField(
+        'Date ended',
+        default=timezone.now() + timezone.timedelta(days=30)
+    )
 
     full_description = models.TextField('Full Description', blank=True)
-    background_picture = models.ImageField(blank=True)  # TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    # TODO
+    background_picture = models.ImageField(blank=True)
     place = models.CharField('Place', max_length=200, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
 
     @property
     def participants(self):
         participation = ActivityStatus.objects.filter(activity=self)
-        participants = participation.values_list('participants__username', flat=True)
+        participants = participation.values_list('participants__username',
+                                                 flat=True)
         return participants
 
     @property
@@ -92,7 +102,6 @@ class Activity(models.Model):
         ordering='pub_date',
         description='Published recently?',
     )
-
     def was_published_recently(self):
         """
         Checks if the activity was published recently.
@@ -109,7 +118,6 @@ class Activity(models.Model):
         ordering='pub_date',
         description='Is published?',
     )
-
     def is_published(self):
         """
         Checks if the activity is published.
@@ -168,8 +176,11 @@ class FriendStatus(models.Model):
         ('Declined', 'Declined'),
     )
 
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender")
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver")
+    sender = models.ForeignKey(User, on_delete=models.CASCADE,
+                               related_name="sender")
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE,
+                                 related_name="receiver")
 
-    request_status = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True, default=None)
+    request_status = models.CharField(max_length=50, choices=STATUS_CHOICES,
+                                      null=True, default=None)
     is_friend = models.BooleanField(default=False)
