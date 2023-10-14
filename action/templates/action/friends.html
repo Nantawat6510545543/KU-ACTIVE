@@ -11,10 +11,7 @@
 <h3>
 
 {% for each_friend in user.friends %}
-    #TODO fix this <br>
-    Sender: {{ each_friend.sender }} <br>
-    Receiver: {{ each_friend.receiver }} <br>
-    Friend: {{ each_friend.sender }}/{{ each_friend.receiver }}????
+    Friend: {{ each_friend }} <br>
     <form action="{% url 'action:remove_friend' friend_id=each_friend.id %}">
         <button type="submit">Remove Friend</button>
     </form>

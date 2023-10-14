@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models import Q
 from django.utils import timezone
 
 
@@ -11,14 +10,30 @@ class User(AbstractUser):
 
     @property
     def participated_activity(self):
-        participation = ActivityStatus.objects.filter(participants=self)
-        participated_activity = participation.values_list('activity__title', flat=True)
-        return participated_activity
+        return ActivityStatus.objects.filter(participants=self, is_participated=True)
 
     @property
+    def favorited_activity(self):
+        return ActivityStatus.objects.filter(participants=self, is_favorited=True)
+
+    # TODO change it to retrieve the object instead of the string then re-making the objects
+    @property
     def friends(self):
-        return FriendStatus.objects.filter(Q(is_friend=True) & 
-            (Q(sender=self) | Q(receiver=self)))
+        # Case 1: Harry is the sender, so the friend is the receiver
+        queryset1 = FriendStatus.objects.filter(is_friend=True, sender=self) \
+            .values_list('receiver__username', flat=True)
+
+        # Case 2: Harry is the receiver, so the friend is the sender
+        queryset2 = FriendStatus.objects.filter(is_friend=True, receiver=self) \
+            .values_list('sender__username', flat=True)
+
+        # Combine both cases together (This will be list of strings)
+        friend_usernames = queryset1.union(queryset2)
+
+        # Make objects out of friend_usernames
+        friend_objects = User.objects.filter(username__in=friend_usernames)
+
+        return friend_objects
 
     def __str__(self):
         return self.username
@@ -141,6 +156,9 @@ class ActivityStatus(models.Model):
 
     is_participated = models.BooleanField(default=False)
     is_favorited = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.activity.title
 
 
 class FriendStatus(models.Model):

@@ -18,6 +18,9 @@ profile
 <h1>Friends: {{ user.friends.all }} </h1>
 <h1>Friend Count: {{ user.friends.count }} </h1>
 
-<h1>Activities: {{ user.participated_activity }} </h1>
-<h1>Activity Count: {{ user.participated_activity.count }} </h1>
+<h1>Participated Activities: {{ user.participated_activity }} </h1>
+<h1>Participated Activity Count: {{ user.participated_activity.count }} </h1>
+
+<h1>Favorite Activities: {{ user.favorited_activity }} </h1>
+<h1>Favorite Activity Count: {{ user.favorited_activity.count }} </h1>
 {% endblock %}

@@ -26,8 +26,8 @@ class ActivityAdmin(admin.ModelAdmin):
             'fields': [
                 'participant_limit', 'full_description', 'background_picture'
             ],
-                'classes': ['wide']
-            }),
+            'classes': ['wide']
+        }),
 
         ('Tags', {
             'fields': ['tags'],

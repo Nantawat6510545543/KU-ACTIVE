@@ -27,8 +27,10 @@
     <thead>
         <tr>
             <th>Activity</th>
+            <th>Description</th>
             <th>Published date</th>
             <th>End date</th>
+            <th>Participation Limit</th>
             <th>Status</th>
             <th>Tags</th>
         </tr>
@@ -44,6 +46,9 @@
                 {% endif %}
             </td>
             <td>
+                <a>{{ activity.description }}</a>
+            </td>
+            <td>
                 <a>{{ activity.pub_date }}</a>
             </td>
             <td>
@@ -52,6 +57,9 @@
                 {% else %}
                 <a>{{ activity.end_date }}</a>
                 {% endif %}
+            </td>
+            <td>
+                <a>{{ activity.participant_limit }}</a>
             </td>
             <td>
                 {% if activity.can_participate %}

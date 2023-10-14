@@ -38,7 +38,7 @@ class AddFriendView(generic.ListView):
     context_object_name = 'friend_add_list'
 
     def get_queryset(self):
-        return User.objects.exclude(pk=self.request.user.pk)
+        return User.objects.exclude(username=self.request.user)
 
 
 class RequestView(generic.ListView):
@@ -204,14 +204,14 @@ def remove_friend(request, friend_id: int):
 @login_required
 def accept_request(request, friend_id: int):
     friend_status = fetch_friend_status(request, friend_id)
-    
+
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
     else:
         friend_status.request_status = 'Accepted'
         friend_status.is_friend = True
         friend_status.save()
-        messages.success(request, f"You are now friend with this person.")
+        messages.success(request, "You are now friend with this person.")
 
     return redirect(reverse("action:request_view"))
 
@@ -219,12 +219,12 @@ def accept_request(request, friend_id: int):
 @login_required
 def decline_request(request, friend_id: int):
     friend_status = fetch_friend_status(request, friend_id)
-    
+
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
     else:
         friend_status.request_status = 'Declined'
         friend_status.save()
-        messages.success(request, f"You have declined this person.")
+        messages.success(request, "You have declined this person.")
 
     return redirect(reverse("action:request_view"))
