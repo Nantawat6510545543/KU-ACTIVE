@@ -1,5 +1,6 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'action/style.css' %}">
+{% load socialaccount %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,6 +20,7 @@
                 </p>
                 <input type="hidden" name="next" value="{{next}}"/>
             </form>
+            <p><a href="{% provider_login_url 'google' %}" class="btn btn-google">Login with Google</a></p>
             <p>Don't have an account? <a href="/signup">Sign up</a></p>
             <p>Want to visit our page first? <a href="{% url 'action:index' %}">Click here.</a></p>
         </div>
