@@ -20,11 +20,31 @@
   }
 },
 {
+  "model": "action.user",
+  "pk": 2,
+  "fields": {
+    "password": "!h4rEJ6XC7ZhiA67erIpU2voWCD9LoJsDzCV0LwS3",
+    "last_login": "2023-10-14T17:10:47.183Z",
+    "is_superuser": false,
+    "username": "nantawat",
+    "first_name": "Nantawat",
+    "last_name": "SUKSIRISUNT",
+    "email": "nantawat.suk@ku.th",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2023-10-14T16:51:25.141Z",
+    "profile_picture": "",
+    "bio": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
   "model": "action.activity",
   "pk": 1,
   "fields": {
     "owner": 1,
-    "title": "beta",
+    "title": "let paly",
     "date": "2023-11-13T16:53:38Z",
     "picture": "380213816_149246458255520_2673199395247927710_n.jpg",
     "description": "adsd",
@@ -48,3 +68,4 @@
     "is_favorited": true
   }
 }
+]
