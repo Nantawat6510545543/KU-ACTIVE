@@ -1,0 +1,50 @@
+[
+{
+  "model": "action.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$kDGKC8mCkm65WUpKywcMUH$aMF7d3huXxFBS66WkHI5SKNe6BYMXsk68vXXpwcoyBY=",
+    "last_login": "2023-10-14T17:37:16.028Z",
+    "is_superuser": true,
+    "username": "mossg",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2023-10-14T16:43:44.709Z",
+    "profile_picture": "",
+    "bio": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "action.activity",
+  "pk": 1,
+  "fields": {
+    "owner": 1,
+    "title": "beta",
+    "date": "2023-11-13T16:53:38Z",
+    "picture": "380213816_149246458255520_2673199395247927710_n.jpg",
+    "description": "adsd",
+    "participant_limit": null,
+    "pub_date": "2023-10-14T16:54:28Z",
+    "end_date": "2023-11-13T16:53:38Z",
+    "full_description": "",
+    "background_picture": "",
+    "place": "KU",
+    "tags": []
+  }
+},
+{
+  "model": "action.activitystatus",
+  "pk": 1,
+  "fields": {
+    "participants": 1,
+    "activity": 1,
+    "participation_date": "2023-10-14T16:54:47.016Z",
+    "is_participated": true,
+    "is_favorited": true
+  }
+}
