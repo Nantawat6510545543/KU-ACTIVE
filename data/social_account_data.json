@@ -14,17 +14,5 @@
       2
     ]
   }
-},
-{
-  "model": "socialaccount.socialaccount",
-  "pk": 1,
-  "fields": {
-    "user": 2,
-    "provider": "google",
-    "uid": "110487827818026747045",
-    "last_login": "2023-10-14T17:10:47.162Z",
-    "date_joined": "2023-10-14T16:51:25.154Z",
-    "extra_data": "{\"iss\": \"https://accounts.google.com\", \"azp\": \"331188814670-m6si6qeiak8cfiu0bhssthapjm85orct.apps.googleusercontent.com\", \"aud\": \"331188814670-m6si6qeiak8cfiu0bhssthapjm85orct.apps.googleusercontent.com\", \"sub\": \"110487827818026747045\", \"hd\": \"ku.th\", \"email\": \"nantawat.suk@ku.th\", \"email_verified\": true, \"at_hash\": \"Zxg45V1PzVhEYvIEXKTHeA\", \"name\": \"Nantawat SUKSIRISUNT\", \"picture\": \"https://lh3.googleusercontent.com/a/ACg8ocIdqk9UlJyIL391j8qhyaiu5k8lDGjSjtomiWZO_eWWKg=s96-c\", \"given_name\": \"Nantawat\", \"family_name\": \"SUKSIRISUNT\", \"locale\": \"th\", \"iat\": 1697303446, \"exp\": 1697307046}"
-  }
 }
 ]
