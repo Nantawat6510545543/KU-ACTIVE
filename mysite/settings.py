@@ -115,7 +115,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-SITE_ID = 2
+SITE_ID = 1
+SITE_NAME = 'Google OAuth'
+SITE_DOMAIN = 'http://127.0.0.1:8000/'
+
 LOGIN_REDIRECT_URL = 'action:index'
 LOGOUT_REDIRECT_URL = 'login'
 
