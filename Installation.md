@@ -36,8 +36,6 @@ cd KU-ACTIVE
 
 Once the script completes, it will automatically run the server.
 
-Note: This script also loads sample vote data.
-
 ### Manual Installation
 
 1. Clone this repository by running the following command in your terminal:
