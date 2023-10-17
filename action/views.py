@@ -1,15 +1,17 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
 from django.http import Http404
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views import generic
 from django.utils import timezone
+from django.views import generic
 
 from .models import Activity, ActivityStatus, FriendStatus, User
+from .utils import fetch_activity_status, fetch_friend_status, get_index_queryset
 
+
+# TODO refactor to separate file (utils.py + each views/models), especially get_queryset()
 
 class ProfileView(LoginRequiredMixin, generic.ListView):
     model = User
@@ -21,18 +23,15 @@ class IndexView(generic.ListView):
     context_object_name = 'activity_list'
 
     def get_queryset(self):
-        """
-        """
-        return Activity.objects.filter(pub_date__lte=timezone.now()
-                                       ).order_by('-pub_date')
+        return get_index_queryset(self.request)
 
 
-class FriendView(generic.ListView):
+class FriendView(LoginRequiredMixin, generic.ListView):
     model = User
     template_name = 'action/friends.html'
 
 
-class AddFriendView(generic.ListView):
+class AddFriendView(LoginRequiredMixin, generic.ListView):
     template_name = 'action/friend_add.html'
     context_object_name = 'friend_add_list'
 
@@ -40,7 +39,7 @@ class AddFriendView(generic.ListView):
         return User.objects.exclude(username=self.request.user)
 
 
-class RequestView(generic.ListView):
+class RequestView(LoginRequiredMixin, generic.ListView):
     template_name = 'action/friend_request.html'
     context_object_name = 'friend_request_list'
 
@@ -139,43 +138,6 @@ def unfavorite(request, activity_id: int):
     return redirect(reverse("action:detail", args=(activity_id,)))
 
 
-@login_required
-def fetch_activity_status(request, activity_id: int):
-    activity = get_object_or_404(Activity, pk=activity_id)
-    user = request.user
-
-    # TODO factor out the activity part
-    # if not activity.can_participate():
-    #     messages.error(request, "You can't participate in this activity.")
-    #     return redirect("action:index")
-
-    try:
-        activity_status = ActivityStatus.objects. \
-            get(participants=user, activity=activity)
-
-    except ActivityStatus.DoesNotExist:
-        activity_status = ActivityStatus.objects. \
-            create(participants=user, activity=activity)
-
-    return activity_status
-
-
-@login_required
-def fetch_friend_status(request, friend_id: int) -> FriendStatus:
-    user1 = request.user
-    user2 = User.objects.get(id=friend_id)
-
-    try:
-        friend_status = FriendStatus.objects.get(
-            Q(sender=user1, receiver=user2) | Q(sender=user2, receiver=user1))
-
-    except FriendStatus.DoesNotExist:
-        friend_status = FriendStatus.objects. \
-            create(sender=user1, receiver=user2)
-
-    return friend_status
-
-
 # TODO add check to not allow user to add themselves as friend
 @login_required
 def add_friend(request, friend_id: int):
@@ -186,12 +148,12 @@ def add_friend(request, friend_id: int):
     else:
         friend_status.request_status = 'Pending'
         friend_status.save()
-        messages.success(request, "Request Sent")
+        messages.success(request, "Request Sent.")
 
     return redirect(reverse("action:add_view"))
 
 
-# TODO add check to not allow user to add themselves as friend
+# TODO add check to not allow user to remove themselves as friend
 @login_required
 def remove_friend(request, friend_id: int):
     friend_status = fetch_friend_status(request, friend_id)

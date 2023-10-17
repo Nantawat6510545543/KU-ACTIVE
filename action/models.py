@@ -40,6 +40,7 @@ class User(AbstractUser):
 
         return friend_objects
 
+
     def __str__(self):
         return self.username
 
@@ -75,7 +76,7 @@ class Activity(models.Model):
     )
 
     full_description = models.TextField('Full Description', blank=True)
-    # TODO
+    # TODO make default picture, and change blank=False, don't delete this until done
     background_picture = models.ImageField(blank=True)
     place = models.CharField('Place', max_length=200, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
