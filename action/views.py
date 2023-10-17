@@ -1,10 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.utils import timezone
 from django.views import generic
 
 from .models import Activity, ActivityStatus, FriendStatus, User
@@ -48,31 +46,21 @@ class RequestView(LoginRequiredMixin, generic.ListView):
                                            request_status='Pending')
 
 
-# TODO refactor
 class DetailView(generic.DetailView):
-    model = Activity
     template_name = 'action/detail.html'
-
-    def get_queryset(self):
-        """
-        Excludes any activity that aren't published yet.
-        """
-        return Activity.objects.filter(pub_date__lte=timezone.now())
 
     def get(self, request, *args, **kwargs):
         try:
-            self.object = self.get_object()
-        except Http404:
-            messages.error(request,
-                           "Activity does not exist or is not published yet.")
+            self.pk = self.kwargs['pk']
+            context = {
+                "activity": Activity.objects.get(pk=self.pk),
+                "activity_status": fetch_activity_status(request, self.pk)
+            }
+            return render(request, self.template_name, context)
+
+        except Activity.DoesNotExist:
+            messages.error(request, "Activity does not exist or is not published yet.")
             return redirect("action:index")
-
-        context = {
-            "activity": self.object,
-            "activity_status": fetch_activity_status(request, self.object.id)
-        }
-
-        return render(request, self.template_name, context)
 
 
 @login_required

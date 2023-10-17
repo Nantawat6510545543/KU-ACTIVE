@@ -18,8 +18,7 @@ class User(AbstractUser):
         return ActivityStatus.objects.filter(participants=self,
                                              is_favorited=True)
 
-    # TODO
-    #  change it to retrieve the object instead of the string
+    # TODO change it to retrieve the object instead of the string
     #  then re-making the objects
     @property
     def friends(self):
@@ -39,7 +38,6 @@ class User(AbstractUser):
         friend_objects = User.objects.filter(username__in=friend_usernames)
 
         return friend_objects
-
 
     def __str__(self):
         return self.username
@@ -83,14 +81,10 @@ class Activity(models.Model):
 
     @property
     def participants(self):
-        participation = ActivityStatus.objects.filter(activity=self)
+        participation = ActivityStatus.objects.filter(activity=self, is_participated=True)
         participants = participation.values_list('participants__username',
                                                  flat=True)
         return participants
-
-    @property
-    def participant_count(self):
-        return ActivityStatus.objects.filter(activity=self).count()
 
     def __str__(self):
         """

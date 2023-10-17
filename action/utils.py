@@ -11,7 +11,7 @@ from .models import Activity, ActivityStatus, FriendStatus, User
 
 
 # TODO write less stupid code
-# TODO maybe try Filter Design Pattern
+# TODO maybe try Filter/Meditator Design Pattern
 # TODO refactor "Sort" option to separate function
 # TODO save user's sort/filter settings by using session
 # TODO add support for multiple criteria queries
