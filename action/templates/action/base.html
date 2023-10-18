@@ -34,6 +34,8 @@
             href="{% url 'logout' %}">
             Logout
         </a>
+
+        <a href="{% url 'action:friends' %}"> Friend List </a>
         {% else %}
         <a class="link" style="color: rgb(0, 128, 0)"
             href="{% url 'login' %}?next={{ request.path }}">

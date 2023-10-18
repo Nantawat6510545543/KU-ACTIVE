@@ -1,0 +1,29 @@
+{% extends "action/base.html" %}
+
+{% block content %}
+
+<h1>
+<a href="{% url 'action:friends' %}">Friend List</a>
+<a href="{% url 'action:add_view' %}">Add Friends</a>
+<a href="{% url 'action:request_view' %}">Friend Request</a>
+</h1>
+
+<h3>
+
+{% for each_request in friend_request_list %}
+    From: {{ each_request.sender }} <br>
+    To: {{ each_request.receiver }} <br>
+    <form action="{% url 'action:accept_request' friend_id=each_request.sender.id %}">
+        <button type="submit">Accept Friend Request</button>
+    </form>
+    <form action="{% url 'action:decline_request' friend_id=each_request.sender.id %}">
+        <button type="submit">Decline Friend Request</button>
+    </form>
+    ============ <br>
+{% empty %}
+    No friend request.
+{% endfor %}
+
+</h3>
+
+{% endblock %}
