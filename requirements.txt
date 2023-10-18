@@ -2,3 +2,4 @@ Django
 Pillow
 python-decouple
 django-allauth
+psycopg2
