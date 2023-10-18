@@ -57,9 +57,7 @@ class Activity(models.Model):
     owner = models.ForeignKey(User, related_name='owner',
                               on_delete=models.CASCADE)
     title = models.CharField(max_length=100, blank=True)
-    date = models.DateTimeField('Date of Activity',
-                                default=timezone.now() + timezone.timedelta(
-                                    days=30))
+    date = models.DateTimeField('Date of Activity', null=True, blank=True)
     # TODO make default image, set blank=False
     picture = models.ImageField(blank=True)
     description = models.CharField('Description', max_length=200)
@@ -68,11 +66,8 @@ class Activity(models.Model):
 
     pub_date = models.DateTimeField('Date published',
                                     default=timezone.now)
-    end_date = models.DateTimeField(
-        'Date ended',
-        default=timezone.now() + timezone.timedelta(days=30)
-    )
-
+    end_date = models.DateTimeField('Date ended',
+                                    null=True, blank=True)
     full_description = models.TextField('Full Description', blank=True)
     # TODO make default picture, and change blank=False, don't delete this until done
     background_picture = models.ImageField(blank=True)
@@ -81,7 +76,8 @@ class Activity(models.Model):
 
     @property
     def participants(self):
-        participation = ActivityStatus.objects.filter(activity=self, is_participated=True)
+        participation = ActivityStatus.objects.filter(activity=self,
+                                                      is_participated=True)
         participants = participation.values_list('participants__username',
                                                  flat=True)
         return participants
