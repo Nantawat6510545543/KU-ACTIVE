@@ -14,14 +14,7 @@ git clone https://github.com/Nantawat6510545543/KU-ACTIVE.git
 cd KU-ACTIVE
 ```
 
-3. Update the `GOOGLE_OAUTH_CLIENT_ID` and `GOOGLE_OAUTH_SECRET_KEY`
-   values in the [sample.env](sample.env)  file with your own credentials. You
-   can obtain your Google OAuth Key and Secret by following the instructions
-   provided in
-   the [Google OAuth Key + Secret](https://support.google.com/cloud/answer/6158849).
-
-
-4. Execute the setup script based on your operating system:
+3. Execute the setup script based on your operating system:
 
    for **Mac/Linux**, use this command:
     ```

@@ -15,6 +15,12 @@ class ProfileView(LoginRequiredMixin, generic.ListView):
     model = User
     template_name = 'action/profile.html'
 
+    def post(self, request, *args, **kwargs):
+        if 'profile_picture' in request.FILES:
+            request.user.profile_picture = request.FILES['profile_picture']
+            request.user.save()
+        return redirect('action:profile')
+
 
 class IndexView(generic.ListView):
     template_name = 'action/index.html'

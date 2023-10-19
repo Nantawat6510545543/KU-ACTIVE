@@ -52,6 +52,13 @@ class UserAdmin(admin.ModelAdmin):
 class FriendStatusAdmin(admin.ModelAdmin):
     list_display = ['sender', 'receiver', 'request_status', 'is_friend']
 
+    def save_model(self, request, obj, form, change):
+        if obj.request_status == "Accepted":
+            obj.is_friend = True
+        else:
+            obj.is_friend = False
+        obj.save()
+
 
 class ActivityStatusAdmin(admin.ModelAdmin):
     list_display = [

@@ -29,3 +29,9 @@ class UserForm(UserCreationForm):
             'profile_picture',
             'bio'
         ]
+
+
+class ProfilePictureForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['profile_picture']

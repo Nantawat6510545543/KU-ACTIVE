@@ -24,15 +24,6 @@ pip install -r requirements.txt
 :: Create .env file
 copy sample.env .env
 
-:: Run migrations
-%PYTHON_CMD% manage.py migrate
-
-:: Run setup oauth
-%PYTHON_CMD% manage.py setup_oauth
-
-:: Load initial data
-@REM %PYTHON_CMD% manage.py loaddata data/action.json
-
 :: Run tests
 %PYTHON_CMD% manage.py test
 

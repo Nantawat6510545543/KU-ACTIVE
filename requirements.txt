@@ -2,3 +2,5 @@ Django
 Pillow
 python-decouple
 django-allauth
+dj-database-url
+psycopg2

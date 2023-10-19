@@ -3,13 +3,15 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
+from PIL import Image
 
 # TODO use modelform
 # TODO look into Manager and QuerySetManager class
 # TODO use ABC for inheritance, not subclass
 
 class User(AbstractUser):
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/',
+                                        default='default.jpg')
     bio = models.TextField(blank=True)
 
     @property
@@ -33,6 +35,15 @@ class User(AbstractUser):
         )
         return friend_objects
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.profile_picture:
+            img = Image.open(self.profile_picture.path)
+            max_size = (500, 500)
+            img.thumbnail(max_size)
+            img.save(self.profile_picture.path)
+
     def __str__(self):
         return self.username
 
@@ -51,9 +62,7 @@ class Activity(models.Model):
     owner = models.ForeignKey(User, related_name='owner',
                               on_delete=models.CASCADE)
     title = models.CharField(max_length=100, blank=True)
-    date = models.DateTimeField('Date of Activity',
-                                default=timezone.now() + timezone.timedelta(
-                                    days=30))
+    date = models.DateTimeField('Date of Activity', null=True, blank=True)
     # TODO make default image, set blank=False
     picture = models.ImageField(blank=True)
     description = models.CharField('Description', max_length=200)
@@ -62,11 +71,8 @@ class Activity(models.Model):
 
     pub_date = models.DateTimeField('Date published',
                                     default=timezone.now)
-    end_date = models.DateTimeField(
-        'Date ended',
-        default=timezone.now() + timezone.timedelta(days=30)
-    )
-
+    end_date = models.DateTimeField('Date ended',
+                                    null=True, blank=True)
     full_description = models.TextField('Full Description', blank=True)
     # TODO make default picture, and change blank=False, don't delete this until done
     background_picture = models.ImageField(blank=True)
@@ -75,7 +81,8 @@ class Activity(models.Model):
 
     @property
     def participants(self):
-        participation = ActivityStatus.objects.filter(activity=self, is_participated=True)
+        participation = ActivityStatus.objects.filter(activity=self,
+                                                      is_participated=True)
         participants = participation.values_list('participants__username',
                                                  flat=True)
         return participants
