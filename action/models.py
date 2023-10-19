@@ -1,8 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 
+# TODO use modelform
+# TODO look into Manager and QuerySetManager class
+# TODO use ABC for inheritance, not subclass
 
 class User(AbstractUser):
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True)
@@ -18,25 +22,15 @@ class User(AbstractUser):
         return ActivityStatus.objects.filter(participants=self,
                                              is_favorited=True)
 
-    # TODO change it to retrieve the object instead of the string
-    #  then re-making the objects
     @property
     def friends(self):
-        # Case 1: Harry is the sender, so the friend is the receiver
-        queryset1 = FriendStatus.objects.filter(is_friend=True, sender=self) \
-            .values_list('receiver__username', flat=True)
-
-        # Case 2: Harry is the receiver, so the friend is the sender
-        queryset2 = FriendStatus.objects.filter(is_friend=True,
-                                                receiver=self) \
-            .values_list('sender__username', flat=True)
-
-        # Combine both cases together (This will be list of strings)
-        friend_usernames = queryset1.union(queryset2)
-
-        # Make objects out of friend_usernames
-        friend_objects = User.objects.filter(username__in=friend_usernames)
-
+        # First case, the friend request receiver is the current user
+        # Second case, the friend request receiver is the current user
+        # then both cases filter for only is_friend
+        friend_objects = User.objects.filter(
+            Q(sender__is_friend=True, sender__receiver=self) |
+            Q(receiver__is_friend=True, receiver__sender=self)
+        )
         return friend_objects
 
     def __str__(self):
