@@ -10,15 +10,13 @@ profile
 <h1>First Name: {{ user.first_name }}</h1>
 <h1>Last Name: {{ user.last_name }}</h1>
 
-
-
 <h1>Profile Picture:
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="profile_picture">
         <button type="submit">Upload Profile Picture</button>
     </form>
-    <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}'s Profile Picture">
+    <img src="{{ user.profile_picture }}" alt="{{ user.username }}'s Profile Picture">
 </h1>
 
 <h1>Bio: {{ user.bio }}</h1>

@@ -3,15 +3,17 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
-from PIL import Image
+from decouple import config
+
 
 # TODO use modelform
 # TODO look into Manager and QuerySetManager class
 # TODO use ABC for inheritance, not subclass
 
 class User(AbstractUser):
-    profile_picture = models.ImageField(upload_to='profile_pics/',
-                                        default='default.jpg')
+    profile_picture = models.URLField(max_length=500,
+                                      default=config("DEFAULT_IMAGE",
+                                                     default=''))
     bio = models.TextField(blank=True)
 
     @property
@@ -34,15 +36,6 @@ class User(AbstractUser):
             Q(receiver__is_friend=True, receiver__sender=self)
         )
         return friend_objects
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-        if self.profile_picture:
-            img = Image.open(self.profile_picture.path)
-            max_size = (500, 500)
-            img.thumbnail(max_size)
-            img.save(self.profile_picture.path)
 
     def __str__(self):
         return self.username

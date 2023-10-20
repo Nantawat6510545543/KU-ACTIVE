@@ -4,9 +4,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import generic
+import pyrebase
 
 from .models import Activity, ActivityStatus, FriendStatus, User
-from .utils import fetch_activity_status, fetch_friend_status, get_index_queryset
+from .utils import fetch_activity_status, fetch_friend_status, \
+    get_index_queryset
 
 
 # TODO refactor to separate file (utils.py + each views/models), especially get_queryset()
@@ -15,9 +17,28 @@ class ProfileView(LoginRequiredMixin, generic.ListView):
     model = User
     template_name = 'action/profile.html'
 
+    def upload_helper(self, image_file, username):
+        firebase = pyrebase.initialize_app({
+            "apiKey": "AIzaSyCePCh_-wMS5951a3VRIIT3SKc_Fcgy4fU",
+            "authDomain": "ku-active-401915.firebaseapp.com",
+            "projectId": "ku-active-401915",
+            "storageBucket": "ku-active-401915.appspot.com",
+            "messagingSenderId": "331188814670",
+            "appId": "1:331188814670:web:24815511ce9ba71226541f",
+            "measurementId": "G-TEE85JLF2L",
+            "databaseURL": ""
+        })
+
+        storage = firebase.storage()
+        storage.child(f"images/{username}").put(image_file)
+        file_url = storage.child(f"images/{username}").get_url(None)
+        return file_url
+
     def post(self, request, *args, **kwargs):
         if 'profile_picture' in request.FILES:
-            request.user.profile_picture = request.FILES['profile_picture']
+            image_file = request.FILES['profile_picture']
+            file_url = self.upload_helper(image_file, request.user.username)
+            request.user.profile_picture = file_url
             request.user.save()
         return redirect('action:profile')
 
@@ -65,7 +86,8 @@ class DetailView(generic.DetailView):
             return render(request, self.template_name, context)
 
         except Activity.DoesNotExist:
-            messages.error(request, "Activity does not exist or is not published yet.")
+            messages.error(request,
+                           "Activity does not exist or is not published yet.")
             return redirect("action:index")
 
 
