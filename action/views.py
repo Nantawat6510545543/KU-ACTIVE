@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils import timezone
 from django.views import generic
 from decouple import config
 import pyrebase
@@ -32,6 +33,7 @@ class ProfileView(LoginRequiredMixin, generic.ListView):
     model = User
     template_name = 'action/profile.html'
 
+    # TODO move to EditProfileView
     def post(self, request, *args, **kwargs):
         if 'profile_picture' in request.FILES:
             username = request.user.username
@@ -56,22 +58,34 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = ActivityForm
     template_name = 'action/create_activity.html'
 
-    # TODO fix
-    # def post(self, request, *args, **kwargs):
-    #     if 'activity_picture' in request.FILES:
-    #         username = request.user.username
-    #         image_file = request.FILES['activity_picture']
-    #         storage.child(f"Activity_picture/{username}").put(image_file)
-    #         file_url = storage.child(f"Activity_picture/{username}").get_url(
-    #             None)
-    #         request.user.profile_picture = file_url
-    #         request.user.save()
-    #     return self.get_success_url()
+    def get_initial(self):
+        # Set the initial value for the field
+        initial = super().get_initial()
+        initial['owner'] = self.request.user
+        initial['pub_date'] = timezone.now()
+        return initial
+
+    # TODO the same for background image
+    def process_image(self, form):
+        # Create an Activity instance and set its attributes
+        activity = form.save(commit=False)
+        activity.title = self.request.POST['title']
+
+        # Check if the form is valid
+        if form.is_valid():
+            # Process the image and save it to the user
+            image_file = self.request.FILES['picture']
+            image_path = f"Activity_picture/{activity.title}"
+
+            # Set the activity's picture attribute
+            storage.child(image_path).put(image_file)
+            file_url = storage.child(image_path).get_url(None)
+            activity.picture = file_url
+
 
     def form_valid(self, form):
-        # Save the form and redirect to the index on success
+        self.process_image(form)
         messages.success(self.request, 'Activity created successfully.')
-        self.post(self)
         return super().form_valid(form)
 
     def form_invalid(self, form):
