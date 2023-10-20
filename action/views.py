@@ -36,10 +36,11 @@ class ProfileView(LoginRequiredMixin, generic.ListView):
     # TODO move to EditProfileView, maybe Strategy Pattern
     def post(self, request, *args, **kwargs):
         if 'profile_picture' in request.FILES:
-            username = request.user.username
+            user = request.user
             image_file = request.FILES['profile_picture']
-            storage.child(f"Profile_picture/{username}").put(image_file)
-            file_url = storage.child(f"Profile_picture/{username}").get_url(
+            image_name = f"{user.username}{user.id}"
+            storage.child(f"Profile_picture/{image_name}").put(image_file)
+            file_url = storage.child(f"Profile_picture/{image_name}").get_url(
                 None)
             request.user.profile_picture = file_url
             request.user.save()
@@ -70,12 +71,13 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
         # Create an Activity instance and set its attributes
         activity = form.save(commit=False)
         activity.title = self.request.POST['title']
+        image_name = f"{activity.title}{activity.id}"
 
         # Add activity picture
         if form.is_valid() and 'picture' in self.request.FILES:
             # Process the image and save it to the user
             image_file = self.request.FILES['picture']
-            image_path = f"Activity_picture/{activity.title}"
+            image_path = f"Activity_picture/{image_name}"
 
             # Set the activity's picture attribute
             storage.child(image_path).put(image_file)
@@ -86,13 +88,12 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
         if form.is_valid() and 'background_picture' in self.request.FILES:
             # Process the image and save it to the user
             image_file = self.request.FILES['background_picture']
-            image_path = f"Activity_background_picture/{activity.title}"
+            image_path = f"Activity_background_picture/{image_name}"
 
             # Set the activity's picture attribute
             storage.child(image_path).put(image_file)
             file_url = storage.child(image_path).get_url(None)
             activity.background_picture = file_url
-
 
     def form_valid(self, form):
         self.process_image(form)
