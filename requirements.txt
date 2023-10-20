@@ -1,7 +1,7 @@
 Django
+Pillow
+python-decouple
 django-allauth
 dj-database-url
-python-decouple
 psycopg2
 pyrebase
-Pillow
