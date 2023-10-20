@@ -4,11 +4,25 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import generic
+from decouple import config
 import pyrebase
 
 from .models import Activity, ActivityStatus, FriendStatus, User
 from .utils import fetch_activity_status, fetch_friend_status, \
     get_index_queryset
+
+firebase = pyrebase.initialize_app({
+    "apiKey": config('FIREBASE_API_KEY'),
+    "authDomain": config('FIREBASE_AUTH_DOMAIN'),
+    "projectId": config('FIREBASE_PROJECT_ID'),
+    "storageBucket": config('FIREBASE_STORAGE_BUCKET'),
+    "messagingSenderId": config('FIREBASE_MESSAGING_SENDER_ID'),
+    "appId": config('FIREBASE_APP_ID'),
+    "measurementId": config('FIREBASE_MEASUREMENT_ID'),
+    "databaseURL": config('FIREBASE_DATABASE_URL')
+})
+
+storage = firebase.storage()
 
 
 # TODO refactor to separate file (utils.py + each views/models), especially get_queryset()
@@ -17,27 +31,12 @@ class ProfileView(LoginRequiredMixin, generic.ListView):
     model = User
     template_name = 'action/profile.html'
 
-    def upload_helper(self, image_file, username):
-        firebase = pyrebase.initialize_app({
-            "apiKey": "AIzaSyCePCh_-wMS5951a3VRIIT3SKc_Fcgy4fU",
-            "authDomain": "ku-active-401915.firebaseapp.com",
-            "projectId": "ku-active-401915",
-            "storageBucket": "ku-active-401915.appspot.com",
-            "messagingSenderId": "331188814670",
-            "appId": "1:331188814670:web:24815511ce9ba71226541f",
-            "measurementId": "G-TEE85JLF2L",
-            "databaseURL": ""
-        })
-
-        storage = firebase.storage()
-        storage.child(f"images/{username}").put(image_file)
-        file_url = storage.child(f"images/{username}").get_url(None)
-        return file_url
-
     def post(self, request, *args, **kwargs):
         if 'profile_picture' in request.FILES:
+            username = request.user.username
             image_file = request.FILES['profile_picture']
-            file_url = self.upload_helper(image_file, request.user.username)
+            storage.child(f"images/{username}").put(image_file)
+            file_url = storage.child(f"images/{username}").get_url(None)
             request.user.profile_picture = file_url
             request.user.save()
         return redirect('action:profile')
