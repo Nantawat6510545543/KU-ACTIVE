@@ -38,8 +38,8 @@ class ProfilePictureForm(forms.ModelForm):
 
 
 class ActivityForm(forms.ModelForm):
-    date = forms.DateField(
-        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+    date = pub_date = end_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
         input_formats=['%Y-%m-%d']
     )
 

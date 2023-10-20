@@ -56,9 +56,22 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = ActivityForm
     template_name = 'action/create_activity.html'
 
+    # TODO fix
+    # def post(self, request, *args, **kwargs):
+    #     if 'activity_picture' in request.FILES:
+    #         username = request.user.username
+    #         image_file = request.FILES['activity_picture']
+    #         storage.child(f"Activity_picture/{username}").put(image_file)
+    #         file_url = storage.child(f"Activity_picture/{username}").get_url(
+    #             None)
+    #         request.user.profile_picture = file_url
+    #         request.user.save()
+    #     return self.get_success_url()
+
     def form_valid(self, form):
         # Save the form and redirect to the index on success
         messages.success(self.request, 'Activity created successfully.')
+        self.post(self)
         return super().form_valid(form)
 
     def form_invalid(self, form):

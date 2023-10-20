@@ -1,9 +1,18 @@
 {% extends "action/base.html" %}
 
 {% block content %}
-<form method="post">
+<h3>
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <h3>{{ form.as_p }}</h3>
+    {{ form.errors }}
+    {% for field in form %}
+        {% if field.name == 'picture' or field.name == 'background_picture' %}
+            {{ field.label_tag }} <input type="file" name="{{ field.name }}"><br>
+        {% else %}
+            {{ field.label_tag }} {{ field }}<br>
+        {% endif %}
+    {% endfor %}
     <input type="submit" value="Create">
 </form>
+<h3>
 {% endblock %}
