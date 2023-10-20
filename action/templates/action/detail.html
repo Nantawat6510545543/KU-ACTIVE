@@ -1,68 +1,70 @@
 {% extends "action/base.html" %}
 
 {% block content %}
-<div class="activity-details">
-    <h2>{{ activity.title }}</h2>
-    <p><strong>Owner:</strong> {{ activity.owner.username }}</p>
-    <p><strong>Date Published:</strong> {{ activity.pub_date }}</p>
-    <p><strong>Picture: </strong> {{ activity.picture }}</p>
-    <p><strong>End Date:</strong> {{ activity.end_date }}</p>
-    <p><strong>Date of Activity:</strong> {{ activity.date }}</p>
-    <p><strong>Description:</strong> {{ activity.description }}</p>
-    <p><strong>Place:</strong> {{ activity.place }}</p>
-    <p><strong>Participants:</strong> {{ activity.participants }}</p>
-    <p><strong>Participant Counts:</strong> {{ activity.participants.count }}</p>
-    <p><strong>Background Picture: </strong> {{ activity.background_picture }}</p>
+<div class="outer-details">
+    <div class="top-details">
+        <a class="back" href="{% url 'action:index' %}">Back</a>
+        <h2>{{ activity.title }}</h2>
+        {% if user.is_authenticated %}
+            {% if activity_status.is_participated %}
+                <form action="{% url 'action:leave' activity.id %}" class="Participate">
+                    <button type="submit" class="btn btn-danger">Leave</button>
+                </form>
+            {% else %}
+                <form action="{% url 'action:participate' activity.id %}" class="Participate">
+                    <button type="submit" class="btn btn-primary">Participate</button>
+                </form>
+            {% endif %}
 
-    <p><strong>Participant Limit:</strong>
-    {% if activity.participant_limit %}
-        {{ activity.participant_limit }}
-    {% else %}
-        None.
-    {% endif %}
-    </p>
 
-    <h3>Tags:</h3>
-    <ul>
-    {% for tag in activity.tags.all %}
-        <li>{{ tag.name }}</li>
-    {% empty %}
-        <li>No tags available for this activity.</li>
-    {% endfor %}
-    </ul>
+            {% if activity_status.is_favorited %}
+                <form action="{% url 'action:unfavorite' activity.id %}" class="Favorite">
+                    <button type="submit" class="btn btn-danger">Un-favorite</button>
+                </form>
+            {% else %}
+                <form action="{% url 'action:favorite' activity.id %}" class="Favorite">
+                    <button type="submit" class="btn btn-primary">Favorite</button>
+                </form>
+            {% endif %}
+        {% else %}
+            <p>Login to participate in this activity.</p>
+        {% endif %}
+    </div>
+    <div class="activity-owner">
+        <p><strong>Owner:</strong> {{ activity.owner.username }}</p>
+        <div class="activity-details">
+            <img src="some.jpg" width=100% height="300">
+            <p><strong>Date Published:</strong> {{ activity.pub_date }}</p>
+            <p><strong>Picture: </strong> {{ activity.picture }}</p>
+            <p><strong>End Date:</strong> {{ activity.end_date }}</p>
+            <p><strong>Date of Activity:</strong> {{ activity.date }}</p>
+            <p><strong>Description:</strong> {{ activity.description }}</p>
+            <p><strong>Place:</strong> {{ activity.place }}</p>
+            <p><strong>Participants:</strong> {{ activity.participants }}</p>
+            <p><strong>Participant Counts:</strong> {{ activity.participants.count }}</p>
+            <p><strong>Background Picture: </strong> {{ activity.background_picture }}</p>
+
+            <p><strong>Participant Limit:</strong>
+            {% if activity.participant_limit %}
+                {{ activity.participant_limit }}
+            {% else %}
+                None.
+            {% endif %}
+            </p>
+
+            <h3>Tags:</h3>
+            <ul>
+            {% for tag in activity.tags.all %}
+                <li>{{ tag.name }}</li>
+            {% empty %}
+                <li>No tags available for this activity.</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
 </div>
 
-{% if user.is_authenticated %}
-    {% if activity_status.is_participated %}
-        <form action="{% url 'action:leave' activity.id %}">
-            <button type="submit" class="btn btn-danger">Leave</button>
-        </form>
-
-        <p>You are currently participating in this activity.</p>
-    {% else %}
-        <form action="{% url 'action:participate' activity.id %}">
-            <button type="submit" class="btn btn-primary">Participate</button>
-        </form>
-        <p>Click the "Participate" button to join this activity.</p>
-    {% endif %}
 
 
-    {% if activity_status.is_favorited %}
-        <form action="{% url 'action:unfavorite' activity.id %}">
-            <button type="submit" class="btn btn-danger">Un-favorite</button>
-        </form>
-        <p>You have favorited this activity.</p>
-    {% else %}
-        <form action="{% url 'action:favorite' activity.id %}">
-            <button type="submit" class="btn btn-primary">Favorite</button>
-        </form>
-        <p>Click the "Favorite" button to favorite this activity.</p>
-    {% endif %}
-
-
-
-{% else %}
-    <p>Login to participate in this activity.</p>
-{% endif %}
 
 {% endblock %}

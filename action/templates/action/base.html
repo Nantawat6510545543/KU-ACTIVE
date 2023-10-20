@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'action/style.css' %}">
+    <link rel="stylesheet" href="{% static 'action/detail.css' %}">
     <title>
     {% block title %}
     {% endblock %}
@@ -22,6 +23,7 @@
             {{ user.username.title }}
             <img src="https:///20x20" />
         </a>
+
         <a class="friends" href="{% url 'action:friends' %}">
             Friends
         </a>
@@ -40,6 +42,7 @@
         <a class="title" href="{% url 'action:index' %}">Registered Activity</a>
         <a class="title" href="{% url 'action:index' %}">Interested Activity</a>
         <a class="title" href="{% url 'action:index' %}">Your Friends Join!</a>
+        <a class="title" href="{% url 'action:index' %}">Upcoming</a>
         <a class="title" href="{% url 'action:index' %}">Popular</a>
         <a class="title" href="{% url 'action:index' %}">Recent</a>
         <a class="title" href="{% url 'action:index' %}">Category</a>

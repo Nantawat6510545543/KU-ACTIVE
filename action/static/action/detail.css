@@ -1,0 +1,64 @@
+.activity-details {
+    background-color: white;
+    margin: 5% 0% 2% 0%;
+    border-radius: 0px 0px 30px 5px;
+}
+
+.activity-owner {
+    background-color: #618264;
+    margin: 1% 2% 2% 2%;
+    border-radius: 30px;
+}
+
+p {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.outer-details {
+    background-color: #79AC78;
+    margin: 1% 10% 10% 10%;
+    border-radius: 30px;
+}
+
+.top-details {
+
+}
+
+.top-details .back{
+    margin: 0% 2% 0% 2%;
+    display:inline-block;
+    background: #5A5A5A;
+    border-radius: 20px;
+    padding: 10px 20px 10px 20px;
+
+    text-decoration: none;
+    color: white;
+    font-size: 30px;
+    font-family: Inter;
+    font-weight: 700;
+    word-wrap: break-word
+}
+
+.top-details h2{
+    margin: 1% 5% 0% 5%;
+    display:inline-block;
+    text-align: center;
+    color: black;
+    font-size: 50px;
+    font-family: Inter;
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+.top-details .Participate{
+    float: right;
+    margin: 2% 2% 0% 2%;
+    display:inline-block;
+}
+
+.top-details .Favorite{
+    float: right;
+    margin: 2% 2% 0% 2%;
+    display:inline-block;
+}
