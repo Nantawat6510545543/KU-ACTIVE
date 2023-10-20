@@ -35,3 +35,14 @@ class ProfilePictureForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['profile_picture']
+
+
+class ActivityForm(forms.ModelForm):
+    date = forms.DateField(
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        input_formats=['%Y-%m-%d']
+    )
+
+    class Meta:
+        model = Activity
+        fields = '__all__'

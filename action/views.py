@@ -7,6 +7,7 @@ from django.views import generic
 from decouple import config
 import pyrebase
 
+from .forms import ActivityForm
 from .models import Activity, ActivityStatus, FriendStatus, User
 from .utils import fetch_activity_status, fetch_friend_status, \
     get_index_queryset
@@ -48,6 +49,26 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         return get_index_queryset(self.request)
+
+
+class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Activity
+    template_name = 'action/create_activity.html'
+    form_class = ActivityForm
+
+    def form_valid(self, form):
+        # Save the form and redirect to the index on success
+        messages.success(self.request, 'Activity created successfully.')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # Render the form with errors if it's invalid
+        messages.error(self.request, 'Activity creation failed. Please check the form.')
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_success_url(self):
+        # Define the URL to redirect to on form success
+        return reverse('action:index')
 
 
 class FriendView(LoginRequiredMixin, generic.ListView):
