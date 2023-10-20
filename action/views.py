@@ -36,8 +36,9 @@ class ProfileView(LoginRequiredMixin, generic.ListView):
         if 'profile_picture' in request.FILES:
             username = request.user.username
             image_file = request.FILES['profile_picture']
-            storage.child(f"images/{username}").put(image_file)
-            file_url = storage.child(f"images/{username}").get_url(None)
+            storage.child(f"Profile_picture/{username}").put(image_file)
+            file_url = storage.child(f"Profile_picture/{username}").get_url(
+                None)
             request.user.profile_picture = file_url
             request.user.save()
         return redirect('action:profile')
@@ -52,9 +53,8 @@ class IndexView(generic.ListView):
 
 
 class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
-    model = Activity
-    template_name = 'action/create_activity.html'
     form_class = ActivityForm
+    template_name = 'action/create_activity.html'
 
     def form_valid(self, form):
         # Save the form and redirect to the index on success
@@ -63,7 +63,8 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
 
     def form_invalid(self, form):
         # Render the form with errors if it's invalid
-        messages.error(self.request, 'Activity creation failed. Please check the form.')
+        messages.error(self.request,
+                       'Activity creation failed. Please check the form.')
         return self.render_to_response(self.get_context_data(form=form))
 
     def get_success_url(self):

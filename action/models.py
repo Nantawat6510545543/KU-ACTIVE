@@ -57,7 +57,9 @@ class Activity(models.Model):
     title = models.CharField(max_length=100, blank=True)
     date = models.DateTimeField('Date of Activity', null=True, blank=True)
     # TODO make default image, set blank=False
-    picture = models.ImageField(blank=True)
+    picture = models.URLField(max_length=500,
+                                      default=config("DEFAULT_IMAGE",
+                                                     default=''))
     description = models.CharField('Description', max_length=200)
     participant_limit = models.IntegerField(null=True, blank=True,
                                             default=None)
@@ -68,7 +70,9 @@ class Activity(models.Model):
                                     null=True, blank=True)
     full_description = models.TextField('Full Description', blank=True)
     # TODO make default picture, and change blank=False, don't delete this until done
-    background_picture = models.ImageField(blank=True)
+    background_picture = models.URLField(max_length=500,
+                                      default=config("DEFAULT_IMAGE",
+                                                     default=''))
     place = models.CharField('Place', max_length=200, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
 
