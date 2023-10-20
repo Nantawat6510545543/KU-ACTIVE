@@ -23,4 +23,7 @@ profile
 
 <h1>Favorite Activities: {{ user.favorited_activity }} </h1>
 <h1>Favorite Activity Count: {{ user.favorited_activity.count }} </h1>
+<a href="{% url 'logout' %}">
+    Logout
+</a>
 {% endblock %}

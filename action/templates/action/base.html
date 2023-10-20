@@ -14,40 +14,40 @@
 
 <body>
     <div class="topnav">
-    {% block content_topnav %}
-        <a href="{% url 'action:index' %}"
-        style="color: #00FFFF;">Go to Home</a>
-        {% if user.is_authenticated %}
-            <a style="color: rgb(125, 125, 225)" href="{% url 'action:profile' %}"
-                >User: {{ user.username.title }}</a>
-        {% endif %}
-    {% endblock %}
-
     {% block account_topnav %}
-        {% if user.is_superuser %}
-        <a class="link" style="color: rgb(0, 125, 255)"
-                href="{% url 'admin:index' %}">Admin</a>
-        {% endif %}
+        <a class="title" href="{% url 'action:index' %}">KU-ACTIVE</a>
 
         {% if user.is_authenticated %}
-        <a style="color: rgb(255,69,0);"
-            href="{% url 'logout' %}">
-            Logout
+        <a class="user" href="{% url 'action:profile' %}">
+            {{ user.username.title }}
+            <img src="https:///20x20" />
         </a>
-
-        <a href="{% url 'action:friends' %}"> Friend List </a>
+        <a class="friends" href="{% url 'action:friends' %}">
+            Friends
+        </a>
+        <a class="new-activity" href="#">
+            Create new Activity!
+        </a>
         {% else %}
-        <a class="link" style="color: rgb(0, 128, 0)"
-            href="{% url 'login' %}?next={{ request.path }}">
-            Login
-        </a>
-        <a class="link" style="color: rgb(255, 165, 0)"
-            href="{% url 'signup' %}">
-            Register
+        <a class="login" href="{% url 'login' %}?next={{ request.path }}">
+            guest
+            <img src="https:///20x20" />
         </a>
         {% endif %}
     {% endblock %}
     </div>
+    <div class="secnav">
+        <a class="title" href="{% url 'action:index' %}">Registered Activity</a>
+        <a class="title" href="{% url 'action:index' %}">Interested Activity</a>
+        <a class="title" href="{% url 'action:index' %}">Your Friends Join!</a>
+        <a class="title" href="{% url 'action:index' %}">Popular</a>
+        <a class="title" href="{% url 'action:index' %}">Recent</a>
+        <a class="title" href="{% url 'action:index' %}">Category</a>
+    </div>
+    {% if user.is_superuser %}
+        <a class="link" style="color: rgb(0, 125, 255)"
+                href="{% url 'admin:index' %}">Admin</a>
+    {% endif%}
 
     {% block message %}
         {% if messages %}
