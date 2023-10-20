@@ -33,7 +33,7 @@ class ProfileView(LoginRequiredMixin, generic.ListView):
     model = User
     template_name = 'action/profile.html'
 
-    # TODO move to EditProfileView
+    # TODO move to EditProfileView, maybe Strategy Pattern
     def post(self, request, *args, **kwargs):
         if 'profile_picture' in request.FILES:
             username = request.user.username
@@ -71,8 +71,8 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
         activity = form.save(commit=False)
         activity.title = self.request.POST['title']
 
-        # Check if the form is valid
-        if form.is_valid():
+        # Add activity picture
+        if form.is_valid() and 'picture' in self.request.FILES:
             # Process the image and save it to the user
             image_file = self.request.FILES['picture']
             image_path = f"Activity_picture/{activity.title}"
@@ -81,6 +81,17 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
             storage.child(image_path).put(image_file)
             file_url = storage.child(image_path).get_url(None)
             activity.picture = file_url
+
+        # Add activity background picture
+        if form.is_valid() and 'background_picture' in self.request.FILES:
+            # Process the image and save it to the user
+            image_file = self.request.FILES['background_picture']
+            image_path = f"Activity_background_picture/{activity.title}"
+
+            # Set the activity's picture attribute
+            storage.child(image_path).put(image_file)
+            file_url = storage.child(image_path).get_url(None)
+            activity.background_picture = file_url
 
 
     def form_valid(self, form):
