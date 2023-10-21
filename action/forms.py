@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from decouple import config
 
 from .models import Activity, Tag, User
 
@@ -52,3 +53,10 @@ class ActivityForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             if field_name in Activity._meta.get_fields():
                 field.label = Activity._meta.get_field(field_name).verbose_name
+
+    def clean_background_picture(self):
+        data = self.cleaned_data['background_picture']
+        if not data:
+            data = config("DEFAULT_BACKGROUND", default='')
+        print(data)
+        return data

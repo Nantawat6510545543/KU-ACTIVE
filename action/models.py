@@ -56,7 +56,7 @@ class Activity(models.Model):
                               on_delete=models.CASCADE)
     title = models.CharField(max_length=100, blank=True)
     date = models.DateTimeField('Date of Activity', null=True,
-                                         blank=True)
+                                blank=True)
     pub_date = models.DateTimeField('Date published', default=timezone.now)
     end_date = models.DateTimeField('Date ended', null=True, blank=True)
     description = models.CharField('Description', max_length=200)
