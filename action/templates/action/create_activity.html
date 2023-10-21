@@ -1,0 +1,29 @@
+{% extends "action/base.html" %}
+
+{% block content %}
+<h3>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.errors }}
+    {% for field in form %}
+        {% if field.name == 'picture' or field.name == 'background_picture' %}
+            {{ field.label_tag }} <input type="file" name="{{ field.name }}"><br>
+        {% elif field.name == 'tags' %}
+            {{ field.label_tag }}<br>
+            {% for tag in field.field.queryset %}
+            <label>
+                <input type="checkbox" name="{{ field.name }}" value="{{ tag.id }}"
+                    {% if tag in field.value.all %}checked{% endif %}>
+                    {{ tag }}
+            </label><br>
+            {% empty %}
+                No tag currently available.<br>
+            {% endfor %}
+        {% else %}
+            {{ field.label_tag }} {{ field }}<br>
+        {% endif %}
+    {% endfor %}
+    <input type="submit" value="Create">
+</form>
+<h3>
+{% endblock %}

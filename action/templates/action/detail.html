@@ -2,17 +2,25 @@
 
 {% block content %}
 <div class="activity-details">
+
+    {% for field in activity.meta.fields %}
+        {{ field.label_tag }} {{ field.name }}
+    {% endfor %}
     <h2>{{ activity.title }}</h2>
     <p><strong>Owner:</strong> {{ activity.owner.username }}</p>
-    <p><strong>Date Published:</strong> {{ activity.pub_date }}</p>
-    <p><strong>Picture: </strong> {{ activity.picture }}</p>
+    <p><strong>Picture:</strong> 
+        <img src="{{ activity.picture }}" alt="{{ activity.title }}'s Picture">
+    </p>
+    <p><strong>Published Date:</strong> {{ activity.pub_date }}</p>
     <p><strong>End Date:</strong> {{ activity.end_date }}</p>
     <p><strong>Date of Activity:</strong> {{ activity.date }}</p>
     <p><strong>Description:</strong> {{ activity.description }}</p>
     <p><strong>Place:</strong> {{ activity.place }}</p>
     <p><strong>Participants:</strong> {{ activity.participants }}</p>
     <p><strong>Participant Counts:</strong> {{ activity.participants.count }}</p>
-    <p><strong>Background Picture: </strong> {{ activity.background_picture }}</p>
+    <p><strong>Background Picture:</strong> 
+        <img src="{{ activity.background_picture }}" alt="{{ activity.title }}'s Background Picture">
+    </p>
 
     <p><strong>Participant Limit:</strong>
     {% if activity.participant_limit %}
@@ -58,8 +66,6 @@
         </form>
         <p>Click the "Favorite" button to favorite this activity.</p>
     {% endif %}
-
-
 
 {% else %}
     <p>Login to participate in this activity.</p>

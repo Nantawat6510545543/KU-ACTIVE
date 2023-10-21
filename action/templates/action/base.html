@@ -30,6 +30,10 @@
         {% endif %}
 
         {% if user.is_authenticated %}
+        <a href="{% url 'action:create' %}">
+            Create Activity
+        </a>
+
         <a style="color: rgb(255,69,0);"
             href="{% url 'logout' %}">
             Logout

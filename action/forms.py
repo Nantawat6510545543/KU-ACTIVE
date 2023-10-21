@@ -29,3 +29,20 @@ class UserForm(UserCreationForm):
             'profile_picture',
             'bio'
         ]
+
+
+class ProfilePictureForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['profile_picture']
+
+
+class ActivityForm(forms.ModelForm):
+    date = pub_date = end_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        input_formats=['%Y-%m-%d']
+    )
+
+    class Meta:
+        model = Activity
+        fields = '__all__'
