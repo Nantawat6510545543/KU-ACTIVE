@@ -66,9 +66,7 @@ class Activity(models.Model):
     full_description = models.TextField('Full Description', blank=True)
     # TODO make default picture for background image
     picture = models.URLField(max_length=500, blank=True, default='')
-    background_picture = models.URLField(max_length=500, blank=True,
-                                         default=config("DEFAULT_BACKGROUND",
-                                                        default=''))
+    background_picture = models.URLField(max_length=500, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
 
     @property
