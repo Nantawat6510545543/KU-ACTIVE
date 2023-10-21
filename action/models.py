@@ -12,7 +12,7 @@ from decouple import config
 
 class User(AbstractUser):
     profile_picture = models.URLField(max_length=500,
-                                      default=config("DEFAULT_IMAGE",
+                                      default=config("DEFAULT_PROFILE",
                                                      default=''))
     bio = models.TextField(blank=True)
 
@@ -55,24 +55,20 @@ class Activity(models.Model):
     owner = models.ForeignKey(User, related_name='owner',
                               on_delete=models.CASCADE)
     title = models.CharField(max_length=100, blank=True)
-    date = models.DateTimeField('Date of Activity', null=True, blank=True)
-    picture = models.URLField(max_length=500,
-                                      default=config("DEFAULT_IMAGE",
-                                                     default=''), blank=True)
+    date = models.DateTimeField('Date of Activity', null=True,
+                                         blank=True)
+    pub_date = models.DateTimeField('Date published', default=timezone.now)
+    end_date = models.DateTimeField('Date ended', null=True, blank=True)
     description = models.CharField('Description', max_length=200)
     participant_limit = models.IntegerField(null=True, blank=True,
                                             default=None)
-
-    pub_date = models.DateTimeField('Date published',
-                                    default=timezone.now)
-    end_date = models.DateTimeField('Date ended',
-                                    null=True, blank=True)
+    place = models.CharField('Place', max_length=200, blank=True)
     full_description = models.TextField('Full Description', blank=True)
     # TODO make default picture for background image
-    background_picture = models.URLField(max_length=500,
-                                      default=config("DEFAULT_IMAGE",
-                                                     default=''), blank=True)
-    place = models.CharField('Place', max_length=200, blank=True)
+    picture = models.URLField(max_length=500, blank=True, default='')
+    background_picture = models.URLField(max_length=500, blank=True,
+                                         default=config("DEFAULT_BACKGROUND",
+                                                        default=''))
     tags = models.ManyToManyField(Tag, blank=True)
 
     @property

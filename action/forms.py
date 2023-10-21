@@ -26,7 +26,6 @@ class UserForm(UserCreationForm):
             'email',
             'first_name',
             'last_name',
-            'profile_picture',
             'bio'
         ]
 
@@ -46,3 +45,10 @@ class ActivityForm(forms.ModelForm):
     class Meta:
         model = Activity
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(ActivityForm, self).__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            if field_name in Activity._meta.get_fields():
+                field.label = Activity._meta.get_field(field_name).verbose_name
