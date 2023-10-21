@@ -8,22 +8,22 @@
         {% if user.is_authenticated %}
             {% if activity_status.is_participated %}
                 <form action="{% url 'action:leave' activity.id %}" class="Participate">
-                    <button type="submit" class="btn btn-danger">Leave</button>
+                    <button type="submit" class="Participate-btn">Leave</button>
                 </form>
             {% else %}
                 <form action="{% url 'action:participate' activity.id %}" class="Participate">
-                    <button type="submit" class="btn btn-primary">Participate</button>
+                    <button type="submit" class="Participate-btn">Participate</button>
                 </form>
             {% endif %}
 
 
             {% if activity_status.is_favorited %}
                 <form action="{% url 'action:unfavorite' activity.id %}" class="Favorite">
-                    <button type="submit" class="btn btn-danger">Un-favorite</button>
+                    <button type="submit" class="Favorite-btn">Un-favorite</button>
                 </form>
             {% else %}
                 <form action="{% url 'action:favorite' activity.id %}" class="Favorite">
-                    <button type="submit" class="btn btn-primary">Favorite</button>
+                    <button type="submit" class="Favorite-btn">Favorite</button>
                 </form>
             {% endif %}
         {% else %}
@@ -32,8 +32,10 @@
     </div>
     <div class="activity-owner">
         <p><strong>Owner:</strong> {{ activity.owner.username }}</p>
+        <div class="img">
+            <img src="some.jpg">
+        </div>
         <div class="activity-details">
-            <img src="some.jpg" width=100% height="300">
             <p><strong>Date Published:</strong> {{ activity.pub_date }}</p>
             <p><strong>Picture: </strong> {{ activity.picture }}</p>
             <p><strong>End Date:</strong> {{ activity.end_date }}</p>
