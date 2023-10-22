@@ -5,45 +5,28 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
-from decouple import config
-import pyrebase
 
 from .forms import ActivityForm
 from .models import Activity, ActivityStatus, FriendStatus, User
-from .utils import fetch_activity_status, fetch_friend_status, \
-    get_index_queryset
-
-firebase = pyrebase.initialize_app({
-    "apiKey": config('FIREBASE_API_KEY'),
-    "authDomain": config('FIREBASE_AUTH_DOMAIN'),
-    "projectId": config('FIREBASE_PROJECT_ID'),
-    "storageBucket": config('FIREBASE_STORAGE_BUCKET'),
-    "messagingSenderId": config('FIREBASE_MESSAGING_SENDER_ID'),
-    "appId": config('FIREBASE_APP_ID'),
-    "measurementId": config('FIREBASE_MEASUREMENT_ID'),
-    "databaseURL": config('FIREBASE_DATABASE_URL')
-})
-
-storage = firebase.storage()
+from .process_strategy import ActivityBackgroundPicture, ActivityPicture, ProfilePicture, StrategyContext
+from . import utils
 
 
 # TODO refactor to separate file (utils.py + each views/models), especially get_queryset()
-
 class ProfileView(LoginRequiredMixin, generic.ListView):
     model = User
     template_name = 'action/profile.html'
 
-    # TODO move to EditProfileView, maybe Strategy Pattern
-    def post(self, request, *args, **kwargs):
-        if 'profile_picture' in request.FILES:
-            user = request.user
-            image_file = request.FILES['profile_picture']
+    # TODO move to EditProfileView, then refactor
+    def post(self, *args, **kwargs):
+        if 'profile_picture' in self.request.FILES:
+            user = self.request.user
             image_name = f"{user.username}{user.id}"
-            storage.child(f"Profile_picture/{image_name}").put(image_file)
-            file_url = storage.child(f"Profile_picture/{image_name}").get_url(
-                None)
-            request.user.profile_picture = file_url
-            request.user.save()
+
+            context = StrategyContext()
+            context.set_process(ProfilePicture())
+            user.profile_picture = context.process_image_url(self.request, image_name)
+            user.save()
         return redirect('action:profile')
 
 
@@ -52,7 +35,7 @@ class IndexView(generic.ListView):
     context_object_name = 'activity_list'
 
     def get_queryset(self):
-        return get_index_queryset(self.request)
+        return utils.get_index_queryset(self.request)
 
 
 class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
@@ -66,34 +49,20 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
         initial['pub_date'] = timezone.now()
         return initial
 
-    # TODO the same for background image
     def process_image(self, form):
         # Create an Activity instance and set its attributes
         activity = form.save(commit=False)
-        activity.title = self.request.POST['title']
         image_name = f"{activity.title}{activity.id}"
+        context = StrategyContext()
 
-        # Add activity picture
-        if form.is_valid() and 'picture' in self.request.FILES:
-            # Process the image and save it to the user
-            image_file = self.request.FILES['picture']
-            image_path = f"Activity_picture/{image_name}"
-
+        if form.is_valid():
             # Set the activity's picture attribute
-            storage.child(image_path).put(image_file)
-            file_url = storage.child(image_path).get_url(None)
-            activity.picture = file_url
+            context.set_process(ActivityPicture())
+            activity.picture = context.process_image_url(self.request, image_name)
 
-        # Add activity background picture
-        if form.is_valid() and 'background_picture' in self.request.FILES:
-            # Process the image and save it to the user
-            image_file = self.request.FILES['background_picture']
-            image_path = f"Activity_background_picture/{image_name}"
-
-            # Set the activity's picture attribute
-            storage.child(image_path).put(image_file)
-            file_url = storage.child(image_path).get_url(None)
-            activity.background_picture = file_url
+            # Set the activity's background picture attribute
+            context.set_process(ActivityBackgroundPicture())
+            activity.background_picture = context.process_image_url(self.request, image_name)
 
     def form_valid(self, form):
         self.process_image(form)
@@ -141,7 +110,7 @@ class DetailView(generic.DetailView):
             self.pk = self.kwargs['pk']
             context = {
                 "activity": Activity.objects.get(pk=self.pk),
-                "activity_status": fetch_activity_status(request, self.pk)
+                "activity_status": utils.fetch_activity_status(request, self.pk)
             }
             return render(request, self.template_name, context)
 
@@ -153,7 +122,7 @@ class DetailView(generic.DetailView):
 
 @login_required
 def participate(request, activity_id: int):
-    activity_status: ActivityStatus = fetch_activity_status(request,
+    activity_status: ActivityStatus = utils.fetch_activity_status(request,
                                                             activity_id)
 
     if activity_status.is_participated:
@@ -168,7 +137,7 @@ def participate(request, activity_id: int):
 
 @login_required
 def leave(request, activity_id: int):
-    activity_status: ActivityStatus = fetch_activity_status(request,
+    activity_status: ActivityStatus = utils.fetch_activity_status(request,
                                                             activity_id)
 
     if activity_status.is_participated:
@@ -184,7 +153,7 @@ def leave(request, activity_id: int):
 
 @login_required
 def favorite(request, activity_id: int):
-    activity_status: ActivityStatus = fetch_activity_status(request,
+    activity_status: ActivityStatus = utils.fetch_activity_status(request,
                                                             activity_id)
 
     if activity_status.is_favorited:
@@ -200,7 +169,7 @@ def favorite(request, activity_id: int):
 
 @login_required
 def unfavorite(request, activity_id: int):
-    activity_status: ActivityStatus = fetch_activity_status(request,
+    activity_status: ActivityStatus = utils.fetch_activity_status(request,
                                                             activity_id)
 
     if activity_status.is_favorited:
@@ -217,7 +186,7 @@ def unfavorite(request, activity_id: int):
 # TODO add check to not allow user to add themselves as friend
 @login_required
 def add_friend(request, friend_id: int):
-    friend_status = fetch_friend_status(request, friend_id)
+    friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
@@ -232,7 +201,7 @@ def add_friend(request, friend_id: int):
 # TODO add check to not allow user to remove themselves as friend
 @login_required
 def remove_friend(request, friend_id: int):
-    friend_status = fetch_friend_status(request, friend_id)
+    friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         friend_status.request_status = None
@@ -247,7 +216,7 @@ def remove_friend(request, friend_id: int):
 
 @login_required
 def accept_request(request, friend_id: int):
-    friend_status = fetch_friend_status(request, friend_id)
+    friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
@@ -262,7 +231,7 @@ def accept_request(request, friend_id: int):
 
 @login_required
 def decline_request(request, friend_id: int):
-    friend_status = fetch_friend_status(request, friend_id)
+    friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")

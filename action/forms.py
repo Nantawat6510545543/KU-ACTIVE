@@ -38,9 +38,9 @@ class ProfilePictureForm(forms.ModelForm):
 
 
 class ActivityForm(forms.ModelForm):
-    date = pub_date = end_date = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'}),
-        input_formats=['%Y-%m-%d']
+    date = pub_date = end_date = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        input_formats=['%Y-%m-%dT%H:%M']
     )
 
     class Meta:
