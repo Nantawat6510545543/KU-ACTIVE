@@ -5,6 +5,11 @@ profile
 {% endblock %}
 
 {% block content %}
+
+<form action="{% url 'action:edit_profile' %}">
+    <button type="submit">Edit Profile</button>
+</form>
+
 <h1>Username: {{ user.username }}</h1>
 <h1>Email: {{ user.email }}</h1>
 <h1>First Name: {{ user.first_name }}</h1>

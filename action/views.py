@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
 
-from .forms import ActivityForm
+from .forms import ActivityForm, UserForm
 from .models import Activity, ActivityStatus, FriendStatus, User
 from .process_strategy import ActivityBackgroundPicture, ActivityPicture, ProfilePicture, StrategyContext
 from . import utils
@@ -29,6 +29,55 @@ class ProfileView(LoginRequiredMixin, generic.ListView):
             user.save()
         return redirect('action:profile')
 
+
+class EditProfileView(LoginRequiredMixin, generic.UpdateView):
+    model = User
+    form_class = UserForm
+    template_name = 'action/edit_profile.html'
+
+    def get_object(self):
+        return User.objects.get(pk=self.request.user.id)
+
+    # def get_initial(self):
+    #         # Get the current object that you are updating
+    #         obj = self.get_object()
+
+    #         # Fetch dynamic values that you want to populate the form with
+    #         dynamic_value_1 = some_function_to_get_dynamic_value_1()
+    #         dynamic_value_2 = some_function_to_get_dynamic_value_2()
+
+    #         # Create a dictionary with the initial values for your fields
+    #         initial_data = {
+    #             'field1': dynamic_value_1,
+    #             'field2': dynamic_value_2,
+    #             # You can also include values from the object if needed
+    #             'field3': obj.field3,
+    #         }
+    #         return initial_data
+
+    def form_valid(self, form):
+        # Save the form data to the user profile
+        profile = form.save(commit=False)
+        image_name = f"{profile.username}{profile.id}"
+
+        # Handle the profile picture if it exists in the request
+        if 'profile_picture' in self.request.FILES:
+            context = StrategyContext()
+            context.set_process(ProfilePicture())
+            profile.profile_picture = context.process_image_url(self.request, image_name)
+            messages.success(self.request, 'Profile edited successfully.')
+
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # Render the form with errors if it's invalid
+        messages.error(self.request,
+                       'Profile edit failed. Please check the form.')
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_success_url(self):
+        # Define the URL to redirect to on form success
+        return reverse('action:profile')
 
 class IndexView(generic.ListView):
     template_name = 'action/index.html'
@@ -53,16 +102,18 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
         # Create an Activity instance and set its attributes
         activity = form.save(commit=False)
         image_name = f"{activity.title}{activity.id}"
-        context = StrategyContext()
 
         if form.is_valid():
+            context = StrategyContext()
             # Set the activity's picture attribute
-            context.set_process(ActivityPicture())
-            activity.picture = context.process_image_url(self.request, image_name)
+            if 'picture' in self.request.FILES:
+                context.set_process(ActivityPicture())
+                activity.picture = context.process_image_url(self.request, image_name)
 
             # Set the activity's background picture attribute
-            context.set_process(ActivityBackgroundPicture())
-            activity.background_picture = context.process_image_url(self.request, image_name)
+            if 'background_picture' in self.request.FILES:
+                context.set_process(ActivityBackgroundPicture())
+                activity.background_picture = context.process_image_url(self.request, image_name)
 
     def form_valid(self, form):
         self.process_image(form)

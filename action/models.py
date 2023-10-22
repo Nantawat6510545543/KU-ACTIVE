@@ -13,7 +13,7 @@ from decouple import config
 class User(AbstractUser):
     profile_picture = models.URLField(max_length=500,
                                       default=config("DEFAULT_PROFILE",
-                                                     default=''))
+                                                     default=''), blank=True)
     bio = models.TextField(blank=True)
 
     @property

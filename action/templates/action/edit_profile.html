@@ -1,0 +1,29 @@
+{% extends "action/base.html" %}
+
+{% block title %}
+Edit profile
+{% endblock %}
+
+{% block content %}
+{{ form.errors }}
+<form action="{% url 'action:profile' %}">
+    <button type="submit">Go Back</button>
+</form>
+
+<form method="post" action="{% url 'action:edit_profile' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <button type="submit">Save Changes</button>
+    <h1>
+        {% for field in form %}
+            {% if field.name == 'profile_picture' %}
+                {{ field.label_tag }}<br>
+                <input type="file" name="profile_picture"><br>
+                <img src="{{ user.profile_picture }}" alt="{{ user.username }}'s Profile Picture">
+            {% else %}
+                {{ field.label_tag }} {{ field }}<br>
+            {% endif %}
+        {% endfor %}
+    </h1>
+</form>
+
+{% endblock %}

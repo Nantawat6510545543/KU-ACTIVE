@@ -10,6 +10,7 @@ urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('create/', views.ActivityCreateView.as_view(), name='create'),
     path('profile/', views.ProfileView.as_view(), name='profile'),
+    path('profile/edit', views.EditProfileView.as_view(), name='edit_profile'),
     path('friends/', views.FriendView.as_view(), name='friends'),
     path('friends/add/', views.AddFriendView.as_view(), name='add_view'),
     path('friends/requests/', views.RequestView.as_view(),

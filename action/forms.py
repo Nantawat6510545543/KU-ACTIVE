@@ -27,8 +27,18 @@ class UserForm(UserCreationForm):
             'email',
             'first_name',
             'last_name',
-            'bio'
+            'bio',
+            'profile_picture'
         ]
+
+    # TODO merge into clean()
+    def clean_username(self):
+        username = self.cleaned_data['username']
+
+        # If the username has been changed, apply validation
+        if User.objects.filter(username=username).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError('Username already exists.')
+        return username
 
 
 class ProfilePictureForm(forms.ModelForm):
@@ -54,6 +64,7 @@ class ActivityForm(forms.ModelForm):
             if field_name in Activity._meta.get_fields():
                 field.label = Activity._meta.get_field(field_name).verbose_name
 
+    # TODO merge into clean()
     def clean_background_picture(self):
         data = self.cleaned_data['background_picture']
         if not data:
