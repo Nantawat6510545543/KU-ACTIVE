@@ -40,11 +40,20 @@ class UserForm(UserCreationForm):
             raise forms.ValidationError('Username already exists.')
         return username
 
+    # TODO รีบแก้ด่วนนนนนนนนน
+    # # TODO merge into clean()
+    # def clean_profile_picture(self):
+    #     data = self.cleaned_data['profile_picture']
 
-class ProfilePictureForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['profile_picture']
+    #     if 'profile_picture' in self.changed_data:
+    #         data = user new picture
+    #     else:
+    #         data = user existing picture (URLField)
+
+    #     if not data:
+    #         data = config("DEFAULT_BACKGROUND", default='')
+
+    #     return data
 
 
 class ActivityForm(forms.ModelForm):
@@ -69,5 +78,4 @@ class ActivityForm(forms.ModelForm):
         data = self.cleaned_data['background_picture']
         if not data:
             data = config("DEFAULT_BACKGROUND", default='')
-        print(data)
         return data

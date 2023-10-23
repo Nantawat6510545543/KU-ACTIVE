@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
@@ -38,23 +39,6 @@ class EditProfileView(LoginRequiredMixin, generic.UpdateView):
     def get_object(self):
         return User.objects.get(pk=self.request.user.id)
 
-    # def get_initial(self):
-    #         # Get the current object that you are updating
-    #         obj = self.get_object()
-
-    #         # Fetch dynamic values that you want to populate the form with
-    #         dynamic_value_1 = some_function_to_get_dynamic_value_1()
-    #         dynamic_value_2 = some_function_to_get_dynamic_value_2()
-
-    #         # Create a dictionary with the initial values for your fields
-    #         initial_data = {
-    #             'field1': dynamic_value_1,
-    #             'field2': dynamic_value_2,
-    #             # You can also include values from the object if needed
-    #             'field3': obj.field3,
-    #         }
-    #         return initial_data
-
     def form_valid(self, form):
         # Save the form data to the user profile
         profile = form.save(commit=False)
@@ -67,7 +51,11 @@ class EditProfileView(LoginRequiredMixin, generic.UpdateView):
             profile.profile_picture = context.process_image_url(self.request, image_name)
             messages.success(self.request, 'Profile edited successfully.')
 
-        return super().form_valid(form)
+        super().form_valid(form)
+        # Update the user's session to prevent session fixation
+        update_session_auth_hash(self.request, profile)
+        return redirect(self.get_success_url())
+
 
     def form_invalid(self, form):
         # Render the form with errors if it's invalid
@@ -78,6 +66,7 @@ class EditProfileView(LoginRequiredMixin, generic.UpdateView):
     def get_success_url(self):
         # Define the URL to redirect to on form success
         return reverse('action:profile')
+
 
 class IndexView(generic.ListView):
     template_name = 'action/index.html'
