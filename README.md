@@ -6,21 +6,41 @@ The web application for activity management and participation, wrote with Python
 
 This app was created as part of the Individual Software Process course at Kasetsart University.
 
-## Installation
+## Install instructions
+Read the installation instructions at [Installation.md](./Installation.md).
 
-to be add.
+## How to run
 
-## Running the application
+1. To run the server
 
-to be add.
+```
+python manage.py runserver --insecure
+```
 
-## Demo Admin accounts
+2. To access the app at http://localhost:8000
 
-to be add.
+3. To deactivate the virtual environment
 
-## Demo user accounts
+```
+deactivate
+```
 
-to be add.
+## Demo User Accounts
+
+You can utilize the following user accounts to explore the website's features:
+
+| Username  | Password  |
+|:---------:|-----------|
+| demouser1 | passdemo1 |
+| demouser2 | passdemo2 |
+
+## Demo Admin Account
+
+To access the administrator features and settings, you can use the following account:
+
+| Admin | Password  |
+|:-----:|-----------|
+| mossg | 12345678 |
 
 ## Project documentation
 
