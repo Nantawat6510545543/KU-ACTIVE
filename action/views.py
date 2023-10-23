@@ -9,8 +9,11 @@ from django.views import generic
 
 from .forms import ActivityForm, UserForm
 from .models import Activity, ActivityStatus, FriendStatus, User
-from .process_strategy import ActivityBackgroundPicture, ActivityPicture, ProfilePicture, StrategyContext
-from . import utils
+from .process_strategy import (ActivityBackgroundPicture, ActivityPicture,
+                               ProfilePicture, StrategyContext)
+from .utils import (activity_status_utils as asu,
+                    friend_status_utils as fsu,
+                    search_utils as su)
 
 
 # TODO refactor to separate file (utils.py + each views/models), especially get_queryset()
@@ -56,7 +59,6 @@ class EditProfileView(LoginRequiredMixin, generic.UpdateView):
         update_session_auth_hash(self.request, profile)
         return redirect(self.get_success_url())
 
-
     def form_invalid(self, form):
         # Render the form with errors if it's invalid
         messages.error(self.request,
@@ -73,7 +75,7 @@ class IndexView(generic.ListView):
     context_object_name = 'activity_list'
 
     def get_queryset(self):
-        return utils.get_index_queryset(self.request)
+        return su.get_index_queryset(self.request)
 
 
 class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
@@ -150,7 +152,7 @@ class DetailView(generic.DetailView):
             self.pk = self.kwargs['pk']
             context = {
                 "activity": Activity.objects.get(pk=self.pk),
-                "activity_status": utils.fetch_activity_status(request, self.pk)
+                "activity_status": asu.fetch_activity_status(request, self.pk)
             }
             return render(request, self.template_name, context)
 
@@ -162,7 +164,7 @@ class DetailView(generic.DetailView):
 
 @login_required
 def participate(request, activity_id: int):
-    activity_status: ActivityStatus = utils.fetch_activity_status(request,
+    activity_status: ActivityStatus = asu.fetch_activity_status(request,
                                                             activity_id)
 
     if activity_status.is_participated:
@@ -177,7 +179,7 @@ def participate(request, activity_id: int):
 
 @login_required
 def leave(request, activity_id: int):
-    activity_status: ActivityStatus = utils.fetch_activity_status(request,
+    activity_status: ActivityStatus = asu.fetch_activity_status(request,
                                                             activity_id)
 
     if activity_status.is_participated:
@@ -193,7 +195,7 @@ def leave(request, activity_id: int):
 
 @login_required
 def favorite(request, activity_id: int):
-    activity_status: ActivityStatus = utils.fetch_activity_status(request,
+    activity_status: ActivityStatus = asu.fetch_activity_status(request,
                                                             activity_id)
 
     if activity_status.is_favorited:
@@ -209,7 +211,7 @@ def favorite(request, activity_id: int):
 
 @login_required
 def unfavorite(request, activity_id: int):
-    activity_status: ActivityStatus = utils.fetch_activity_status(request,
+    activity_status: ActivityStatus = asu.fetch_activity_status(request,
                                                             activity_id)
 
     if activity_status.is_favorited:
@@ -226,7 +228,7 @@ def unfavorite(request, activity_id: int):
 # TODO add check to not allow user to add themselves as friend
 @login_required
 def add_friend(request, friend_id: int):
-    friend_status = utils.fetch_friend_status(request, friend_id)
+    friend_status = fsu.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
@@ -241,7 +243,7 @@ def add_friend(request, friend_id: int):
 # TODO add check to not allow user to remove themselves as friend
 @login_required
 def remove_friend(request, friend_id: int):
-    friend_status = utils.fetch_friend_status(request, friend_id)
+    friend_status = fsu.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         friend_status.request_status = None
@@ -256,7 +258,7 @@ def remove_friend(request, friend_id: int):
 
 @login_required
 def accept_request(request, friend_id: int):
-    friend_status = utils.fetch_friend_status(request, friend_id)
+    friend_status = fsu.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
@@ -271,7 +273,7 @@ def accept_request(request, friend_id: int):
 
 @login_required
 def decline_request(request, friend_id: int):
-    friend_status = utils.fetch_friend_status(request, friend_id)
+    friend_status = fsu.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")

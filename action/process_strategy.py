@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from django.http import HttpRequest
 
-from . import utils
+from .utils import firebase_utils as fu
+
 
 class StrategyContext:
     def __init__(self):
@@ -16,7 +17,7 @@ class StrategyContext:
     def process_image_url(self, request: HttpRequest, image_name: str):
         # Process the image and save it to the user
         if self.strategy:
-            storage = utils.get_firebase_instance().storage()
+            storage = fu.get_firebase_instance().storage()
             image_file, image_path = self.strategy.get_image_data(request, image_name)
 
             storage.child(image_path).put(image_file)
