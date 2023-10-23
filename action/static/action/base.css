@@ -1,0 +1,133 @@
+/*top navigation bar*/
+nav {
+    top: 0%;
+    position: fixed;
+    width: 100%;
+}
+
+.topnav {
+    background: #618264;
+    overflow: hidden;
+    padding: 10px 0px 10px 0px;
+    width: 100%;
+}
+
+.topnav a {
+    text-align: center;
+    text-decoration: none;
+    font-size: 17px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.topnav a.title {
+    color: white;
+    font-size: 55px;
+    font-family: Inter;
+    font-weight: 700;
+    margin-left: 1%;
+}
+
+.topnav a.title:hover {
+    text-decoration: underline;
+}
+
+.topnav a.admin {
+    float: right;
+    display:inline-block;
+    padding: 17px;
+    margin-right: 1%;
+
+    background-color: #04AA6D;
+    color: black;
+    background: white;
+    border-radius: 45px;
+}
+
+.topnav a.new-activity {
+    float: right;
+    display:inline-block;
+    padding: 17px;
+    margin-right: 1%;
+
+    background-color: #04AA6D;
+    color: black;
+    background: white;
+    border-radius: 45px;
+}
+
+.topnav a.friends {
+    float: right;
+    display:inline-block;
+    padding: 17px;
+    margin-right: 1%;
+    border-radius: 45px;
+
+    background-color: #04AA6D;
+    color: black;
+    background: white;
+}
+
+.topnav a.user {
+    float: right;
+    display:inline-block;
+    padding: 15px;
+    margin-right: 1%;
+    border-radius: 45px;
+
+    background-color: #04AA6D;
+    color: black;
+    background: white;
+}
+
+.topnav a.login {
+    position: absolute;
+    right: 0;
+    margin: 20px;
+    background-color: #04AA6D;
+    color: black;
+    background: white;
+    border-radius: 45px;
+}
+
+
+/*second navigation bar*/
+.secnav {
+    background: #B0D9B1;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    text-align: center;
+}
+
+.secnav a {
+    display:inline-block;
+    text-align: center;
+    padding: 10px 40px 10px 40px;
+    text-decoration: none;
+    font-size: 20px;
+    text-align: center;
+    color: black;
+    font-family: Inter;
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+.secnav a:hover {
+    background-color: #618264;
+    color: white;
+}
+
+
+/* Content block */
+.content {
+    position: static;
+    margin-top: 10%;
+    overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+    .content {
+        margin-top: 60px; /* Margin for navigation bar */
+    }
+}

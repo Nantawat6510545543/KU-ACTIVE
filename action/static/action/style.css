@@ -1,51 +1,38 @@
 body {
-    background: white url("images/background.png") 100%;
-
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-
-    /* 
-    the body is at the .topnav, so if we use background-position: center,
-    it wil center at the .topnav not the actual body, so we need to set height = 100
-    */
-    height: 100vh; 
+    background-color: #D0E7D2;
+    margin: 0;
+    width: 100%;
+    height: 100vh;
 }
 
-.strokeme {
-    color: white;
-    text-shadow: -1px -1px 0 #000,
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000;
-}
-
-/*navigator bar*/
-.topnav {
-    background-color: #333;
+/*second nevbar*/
+.secnav {
+    background: #B0D9B1;
     overflow: hidden;
+    padding-left: 3%;
 }
 
-.topnav a {
-    float: left;
-    color: #f2f2f2;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 17px;
-}
-
-.topnav a:hover {
+.secnav a:hover {
     background-color: #ddd;
     color: black;
 }
 
-.topnav a.active {
-    background-color: #04AA6D;
-    color: white;
+.secnav a {
+    display:inline-block;
+    text-align: center;
+    padding: 10px 40px 10px 40px;
+    text-decoration: none;
+    font-size: 20px;
+    text-align: center;
+    color: black;
+    font-family: Inter;
+    font-weight: 700;
+    word-wrap: break-word
+
 }
 
 /*login.html and results.html*/
+
 .form-container {
     max-width: 400px;
     margin: 0 auto;
@@ -53,17 +40,6 @@ body {
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-    color: #333;
-    text-align: center;
-}
-
-
-p {
-    text-align: center;
-    margin-top: 10px;
 }
 
 .form-table {

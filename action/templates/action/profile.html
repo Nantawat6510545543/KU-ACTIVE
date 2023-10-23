@@ -5,28 +5,60 @@ profile
 {% endblock %}
 
 {% block content %}
-<h1>Username: {{ user.username }}</h1>
-<h1>Email: {{ user.email }}</h1>
-<h1>First Name: {{ user.first_name }}</h1>
-<h1>Last Name: {{ user.last_name }}</h1>
-
-<h1>Profile Picture:
+<div class="profile-box">
+    <h2 class="title-profile">Your Profile</h2>
+    <a href="#" class="edit">edit</a>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="profile_picture">
         <button type="submit">Upload Profile Picture</button>
     </form>
-    <img src="{{ user.profile_picture }}" alt="{{ user.username }}'s Profile Picture">
-</h1>
-
-<h1>Bio: {{ user.bio }}</h1>
-
-<h1>Friends: {{ user.friends.all }} </h1>
-<h1>Friend Count: {{ user.friends.count }} </h1>
-
-<h1>Participated Activities: {{ user.participated_activity }} </h1>
-<h1>Participated Activity Count: {{ user.participated_activity.count }} </h1>
-
-<h1>Favorite Activities: {{ user.favorited_activity }} </h1>
-<h1>Favorite Activity Count: {{ user.favorited_activity.count }} </h1>
+    <div class="profile-img">
+        <img src="{{ user.profile_picture }}" alt="{{ user.username }}'s Profile Picture">
+    </div>
+    <div class="right-detail">
+        <div class="box-color">
+            <h1 class="First-Name">First Name:</h1>
+            <p class="First-Name">{{ user.first_name }}</p>
+        </div>
+        <div class="box-color">
+            <h1 class="Last-Name">Last Name:</h1>
+            <p class="Last-Name">{{ user.last_name }}</p>
+        </div>
+        <div class="box-color">
+            <h1 class="Email">Email:</h1>
+            <p class="Email">{{ user.email }}</p>
+        </div>
+        <div class="box-color">
+            <h1 class="Count">Friend Count:</h1>
+            <p class="Count">{{ user.friends.count }} </p>
+        </div>
+    </div>
+    <div class="bottom-left">
+        <div class="name">
+            <h1 class="user-name">Username:</h1>
+            <p class="user-name">{{ user.username }}</p>
+        </div>
+        <div class="bio">
+            <p>Bio:</p>
+            <h1> {{ user.bio }}</h1>
+        </div>
+    </div>
+    <h1>Friends: {{ user.friends.all }} </h1>
+    <h1>Friend Count: {{ user.friends.count }} </h1>
+    <div class="participated-activity">
+        <h1>Participated Activities:</h1>
+        <div class="scroll">
+            {% for participated in  user.participated_activity  %}
+                <li><a href="#">{{ participated }}</a></li>
+            {% endfor %}
+        </div>
+        <h1>Participated Activity Count: {{ user.participated_activity.count }} </h1>
+    </div>
+        <h1>Participated Activities: {{ user.participated_activity }} </h1>
+        <h1>Participated Activity Count: {{ user.participated_activity.count }} </h1>
+        <h1>Favorite Activities: {{ user.favorited_activity }} </h1>
+        <h1>Favorite Activity Count: {{ user.favorited_activity.count }} </h1>
+    <div class="logout"><a href="{% url 'logout' %}"> Logout </a></div>
+</div>
 {% endblock %}
