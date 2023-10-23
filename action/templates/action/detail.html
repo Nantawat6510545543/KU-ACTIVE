@@ -15,10 +15,6 @@
                     <button type="submit" class="Participate-btn">Participate</button>
                 </form>
             {% endif %}
-        {% else %}
-            <p>Login to participate in this activity.</p>
-        {% endif %}
-
 
             {% if activity_status.is_favorited %}
                 <form action="{% url 'action:unfavorite' activity.id %}" class="Favorite">
