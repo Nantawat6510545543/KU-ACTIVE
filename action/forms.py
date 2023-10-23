@@ -4,7 +4,7 @@ from decouple import config
 
 from .models import Activity, Tag, User
 from .process_strategy import ProfilePicture, StrategyContext
-from utils import firebase_utils as fu
+from .utils import firebase_utils as fu
 
 
 class ActivityAdminForm(forms.ModelForm):
