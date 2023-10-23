@@ -17,8 +17,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
-from django.conf import settings
-from django.conf.urls.static import static
 from . import views
 
 admin.site.site_header = "Action Administration"
@@ -30,4 +28,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('signup/', views.signup, name='signup'),
     path('auth/', include('allauth.urls')),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]

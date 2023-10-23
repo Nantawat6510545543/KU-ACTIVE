@@ -3,10 +3,28 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils import timezone
 from django.views import generic
+from decouple import config
+import pyrebase
 
+from .forms import ActivityForm
 from .models import Activity, ActivityStatus, FriendStatus, User
-from .utils import fetch_activity_status, fetch_friend_status, get_index_queryset
+from .utils import fetch_activity_status, fetch_friend_status, \
+    get_index_queryset
+
+firebase = pyrebase.initialize_app({
+    "apiKey": config('FIREBASE_API_KEY'),
+    "authDomain": config('FIREBASE_AUTH_DOMAIN'),
+    "projectId": config('FIREBASE_PROJECT_ID'),
+    "storageBucket": config('FIREBASE_STORAGE_BUCKET'),
+    "messagingSenderId": config('FIREBASE_MESSAGING_SENDER_ID'),
+    "appId": config('FIREBASE_APP_ID'),
+    "measurementId": config('FIREBASE_MEASUREMENT_ID'),
+    "databaseURL": config('FIREBASE_DATABASE_URL')
+})
+
+storage = firebase.storage()
 
 
 # TODO refactor to separate file (utils.py + each views/models), especially get_queryset()
@@ -15,6 +33,19 @@ class ProfileView(LoginRequiredMixin, generic.ListView):
     model = User
     template_name = 'action/profile.html'
 
+    # TODO move to EditProfileView, maybe Strategy Pattern
+    def post(self, request, *args, **kwargs):
+        if 'profile_picture' in request.FILES:
+            user = request.user
+            image_file = request.FILES['profile_picture']
+            image_name = f"{user.username}{user.id}"
+            storage.child(f"Profile_picture/{image_name}").put(image_file)
+            file_url = storage.child(f"Profile_picture/{image_name}").get_url(
+                None)
+            request.user.profile_picture = file_url
+            request.user.save()
+        return redirect('action:profile')
+
 
 class IndexView(generic.ListView):
     template_name = 'action/index.html'
@@ -22,6 +53,62 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         return get_index_queryset(self.request)
+
+
+class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
+    form_class = ActivityForm
+    template_name = 'action/create_activity.html'
+
+    def get_initial(self):
+        # Set the initial value for the field
+        initial = super().get_initial()
+        initial['owner'] = self.request.user
+        initial['pub_date'] = timezone.now()
+        return initial
+
+    # TODO the same for background image
+    def process_image(self, form):
+        # Create an Activity instance and set its attributes
+        activity = form.save(commit=False)
+        activity.title = self.request.POST['title']
+        image_name = f"{activity.title}{activity.id}"
+
+        # Add activity picture
+        if form.is_valid() and 'picture' in self.request.FILES:
+            # Process the image and save it to the user
+            image_file = self.request.FILES['picture']
+            image_path = f"Activity_picture/{image_name}"
+
+            # Set the activity's picture attribute
+            storage.child(image_path).put(image_file)
+            file_url = storage.child(image_path).get_url(None)
+            activity.picture = file_url
+
+        # Add activity background picture
+        if form.is_valid() and 'background_picture' in self.request.FILES:
+            # Process the image and save it to the user
+            image_file = self.request.FILES['background_picture']
+            image_path = f"Activity_background_picture/{image_name}"
+
+            # Set the activity's picture attribute
+            storage.child(image_path).put(image_file)
+            file_url = storage.child(image_path).get_url(None)
+            activity.background_picture = file_url
+
+    def form_valid(self, form):
+        self.process_image(form)
+        messages.success(self.request, 'Activity created successfully.')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # Render the form with errors if it's invalid
+        messages.error(self.request,
+                       'Activity creation failed. Please check the form.')
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_success_url(self):
+        # Define the URL to redirect to on form success
+        return reverse('action:index')
 
 
 class FriendView(LoginRequiredMixin, generic.ListView):
@@ -59,7 +146,8 @@ class DetailView(generic.DetailView):
             return render(request, self.template_name, context)
 
         except Activity.DoesNotExist:
-            messages.error(request, "Activity does not exist or is not published yet.")
+            messages.error(request,
+                           "Activity does not exist or is not published yet.")
             return redirect("action:index")
 
 

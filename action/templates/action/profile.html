@@ -8,9 +8,13 @@ profile
 <div class="profile-box">
     <h2 class="title-profile">Your Profile</h2>
     <a href="#" class="edit">edit</a>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="profile_picture">
+        <button type="submit">Upload Profile Picture</button>
+    </form>
     <div class="profile-img">
-        <img src="{{ user.profile_picture }}"
-            alt="{{ user.username }}'s Profile Picture">
+        <img src="{{ user.profile_picture }}" alt="{{ user.username }}'s Profile Picture">
     </div>
     <div class="right-detail">
         <div class="box-color">
@@ -40,7 +44,8 @@ profile
             <h1> {{ user.bio }}</h1>
         </div>
     </div>
-<!--    <h1>Friends: {{ user.friends.all }} </h1>-->
+    <h1>Friends: {{ user.friends.all }} </h1>
+    <h1>Friend Count: {{ user.friends.count }} </h1>
     <div class="participated-activity">
         <h1>Participated Activities:</h1>
         <div class="scroll">
@@ -50,8 +55,10 @@ profile
         </div>
         <h1>Participated Activity Count: {{ user.participated_activity.count }} </h1>
     </div>
-<!--    <h1>Favorite Activities: {{ user.favorited_activity }} </h1>-->
-<!--    <h1>Favorite Activity Count: {{ user.favorited_activity.count }} </h1>-->
+        <h1>Participated Activities: {{ user.participated_activity }} </h1>
+        <h1>Participated Activity Count: {{ user.participated_activity.count }} </h1>
+        <h1>Favorite Activities: {{ user.favorited_activity }} </h1>
+        <h1>Favorite Activity Count: {{ user.favorited_activity.count }} </h1>
     <div class="logout"><a href="{% url 'logout' %}"> Logout </a></div>
 </div>
 {% endblock %}
