@@ -13,11 +13,11 @@ class StrategyContext:
         else:
             raise ValueError("Invalid Strategy for process image!")
 
-    def process_image_url(self, request: HttpRequest, image_name: str):
+    def process_image_url(self, image_file, image_name: str):
         # Process the image and save it to the user
         if self.strategy:
             storage = utils.get_firebase_instance().storage()
-            image_file, image_path = self.strategy.get_image_data(request, image_name)
+            image_file, image_path = self.strategy.get_image_data(image_file, image_name)
 
             storage.child(image_path).put(image_file)
             file_url = storage.child(image_path).get_url(None)
@@ -34,8 +34,8 @@ class ProcessStrategy(ABC):
 
 
 class ProfilePicture(ProcessStrategy):
-    def get_image_data(self, request: HttpRequest, image_name: str):
-        image_file = request.FILES['profile_picture']
+    def get_image_data(self, image_file, image_name: str):
+        
         image_path = f"Profile_picture/{image_name}"
 
         return image_file, image_path
