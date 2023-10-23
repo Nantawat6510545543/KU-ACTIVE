@@ -4,7 +4,8 @@ from decouple import config
 
 from .models import Activity, Tag, User
 from .process_strategy import ProfilePicture, StrategyContext
-from . import utils
+from utils import firebase_utils as fu
+
 
 class ActivityAdminForm(forms.ModelForm):
     tags = forms.ModelMultipleChoiceField(
@@ -48,12 +49,11 @@ class UserForm(UserCreationForm):
         image_name = f"{self.instance.username}{self.instance.pk}"
         print(image_name)
 
-        storage = utils.get_firebase_instance().storage()
+        storage = fu.get_firebase_instance().storage()
         image_path = f"Profile_picture/{image_name}"
 
         storage.child(image_path).put(image_file)
         file_url = storage.child(image_path).get_url(None)
-
 
         # Handle the profile picture if it exists in the request
         # if image_file:
@@ -67,7 +67,6 @@ class UserForm(UserCreationForm):
         print(self.cleaned_data['username'])
         print(self.cleaned_data['profile_picture'])
         return cleaned_data
-
 
     # def clean_profile_picture(self):
     #     profile_picture = self.cleaned_data['profile_picture']
