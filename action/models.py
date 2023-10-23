@@ -1,11 +1,19 @@
 from django.contrib import admin
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
+from decouple import config
 
+
+# TODO use modelform
+# TODO look into Manager and QuerySetManager class
+# TODO use ABC for inheritance, not subclass
 
 class User(AbstractUser):
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True)
+    profile_picture = models.URLField(max_length=500,
+                                      default=config("DEFAULT_PROFILE",
+                                                     default=''), blank=True)
     bio = models.TextField(blank=True)
 
     @property
@@ -18,25 +26,15 @@ class User(AbstractUser):
         return ActivityStatus.objects.filter(participants=self,
                                              is_favorited=True)
 
-    # TODO change it to retrieve the object instead of the string
-    #  then re-making the objects
     @property
     def friends(self):
-        # Case 1: Harry is the sender, so the friend is the receiver
-        queryset1 = FriendStatus.objects.filter(is_friend=True, sender=self) \
-            .values_list('receiver__username', flat=True)
-
-        # Case 2: Harry is the receiver, so the friend is the sender
-        queryset2 = FriendStatus.objects.filter(is_friend=True,
-                                                receiver=self) \
-            .values_list('sender__username', flat=True)
-
-        # Combine both cases together (This will be list of strings)
-        friend_usernames = queryset1.union(queryset2)
-
-        # Make objects out of friend_usernames
-        friend_objects = User.objects.filter(username__in=friend_usernames)
-
+        # First case, the friend request receiver is the current user
+        # Second case, the friend request receiver is the current user
+        # then both cases filter for only is_friend
+        friend_objects = User.objects.filter(
+            Q(sender__is_friend=True, sender__receiver=self) |
+            Q(receiver__is_friend=True, receiver__sender=self)
+        )
         return friend_objects
 
     def __str__(self):
@@ -57,31 +55,24 @@ class Activity(models.Model):
     owner = models.ForeignKey(User, related_name='owner',
                               on_delete=models.CASCADE)
     title = models.CharField(max_length=100, blank=True)
-    date = models.DateTimeField('Date of Activity',
-                                default=timezone.now() + timezone.timedelta(
-                                    days=30))
-    # TODO make default image, set blank=False
-    picture = models.ImageField(blank=True)
+    date = models.DateTimeField('Date of Activity', null=True,
+                                blank=True)
+    pub_date = models.DateTimeField('Date published', default=timezone.now)
+    end_date = models.DateTimeField('Date ended', null=True, blank=True)
     description = models.CharField('Description', max_length=200)
     participant_limit = models.IntegerField(null=True, blank=True,
                                             default=None)
-
-    pub_date = models.DateTimeField('Date published',
-                                    default=timezone.now)
-    end_date = models.DateTimeField(
-        'Date ended',
-        default=timezone.now() + timezone.timedelta(days=30)
-    )
-
-    full_description = models.TextField('Full Description', blank=True)
-    # TODO make default picture, and change blank=False, don't delete this until done
-    background_picture = models.ImageField(blank=True)
     place = models.CharField('Place', max_length=200, blank=True)
+    full_description = models.TextField('Full Description', blank=True)
+    # TODO make default picture for background image
+    picture = models.URLField(max_length=500, blank=True, default='')
+    background_picture = models.URLField(max_length=500, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
 
     @property
     def participants(self):
-        participation = ActivityStatus.objects.filter(activity=self, is_participated=True)
+        participation = ActivityStatus.objects.filter(activity=self,
+                                                      is_participated=True)
         participants = participation.values_list('participants__username',
                                                  flat=True)
         return participants

@@ -7,7 +7,28 @@ from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
+from decouple import config
+import pyrebase
+
 from .models import Activity, ActivityStatus, FriendStatus, User
+
+# Define a global variable to store the Firebase instance
+_firebase_instance = None
+
+def get_firebase_instance():
+    global _firebase_instance
+    if _firebase_instance is None:
+        _firebase_instance = pyrebase.initialize_app({
+            "apiKey": config('FIREBASE_API_KEY'),
+            "authDomain": config('FIREBASE_AUTH_DOMAIN'),
+            "projectId": config('FIREBASE_PROJECT_ID'),
+            "storageBucket": config('FIREBASE_STORAGE_BUCKET'),
+            "messagingSenderId": config('FIREBASE_MESSAGING_SENDER_ID'),
+            "appId": config('FIREBASE_APP_ID'),
+            "measurementId": config('FIREBASE_MEASUREMENT_ID'),
+            "databaseURL": config('FIREBASE_DATABASE_URL')
+        })
+    return _firebase_instance
 
 
 # TODO write less stupid code
@@ -83,6 +104,7 @@ def fetch_friend_status(request, friend_id: int) -> FriendStatus:
         friend_status = FriendStatus.objects.get(
             Q(sender=user1, receiver=user2) | Q(sender=user2, receiver=user1))
 
+    # This might cause bug idk
     except FriendStatus.DoesNotExist:
         friend_status = FriendStatus.objects. \
             create(sender=user1, receiver=user2)

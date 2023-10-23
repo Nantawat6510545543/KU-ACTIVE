@@ -3,25 +3,132 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils import timezone
 from django.views import generic
 
+from .forms import ActivityForm, UserForm
 from .models import Activity, ActivityStatus, FriendStatus, User
-from .utils import fetch_activity_status, fetch_friend_status, get_index_queryset
+from .process_strategy import ActivityBackgroundPicture, ActivityPicture, ProfilePicture, StrategyContext
+from . import utils
 
 
 # TODO refactor to separate file (utils.py + each views/models), especially get_queryset()
-
 class ProfileView(LoginRequiredMixin, generic.ListView):
     model = User
     template_name = 'action/profile.html'
 
+    # TODO move to EditProfileView, then refactor
+    def post(self, *args, **kwargs):
+        if 'profile_picture' in self.request.FILES:
+            user = self.request.user
+            image_name = f"{user.username}{user.id}"
+
+            context = StrategyContext()
+            context.set_process(ProfilePicture())
+            user.profile_picture = context.process_image_url(self.request, image_name)
+            user.save()
+        return redirect('action:profile')
+
+
+class EditProfileView(LoginRequiredMixin, generic.UpdateView):
+    model = User
+    form_class = UserForm
+    template_name = 'action/edit_profile.html'
+
+    def get_object(self):
+        return User.objects.get(pk=self.request.user.id)
+
+    # def get_initial(self):
+    #         # Get the current object that you are updating
+    #         obj = self.get_object()
+
+    #         # Fetch dynamic values that you want to populate the form with
+    #         dynamic_value_1 = some_function_to_get_dynamic_value_1()
+    #         dynamic_value_2 = some_function_to_get_dynamic_value_2()
+
+    #         # Create a dictionary with the initial values for your fields
+    #         initial_data = {
+    #             'field1': dynamic_value_1,
+    #             'field2': dynamic_value_2,
+    #             # You can also include values from the object if needed
+    #             'field3': obj.field3,
+    #         }
+    #         return initial_data
+
+    def form_valid(self, form):
+        # Save the form data to the user profile
+        profile = form.save(commit=False)
+        image_name = f"{profile.username}{profile.id}"
+
+        # Handle the profile picture if it exists in the request
+        if 'profile_picture' in self.request.FILES:
+            context = StrategyContext()
+            context.set_process(ProfilePicture())
+            profile.profile_picture = context.process_image_url(self.request, image_name)
+            messages.success(self.request, 'Profile edited successfully.')
+
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # Render the form with errors if it's invalid
+        messages.error(self.request,
+                       'Profile edit failed. Please check the form.')
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_success_url(self):
+        # Define the URL to redirect to on form success
+        return reverse('action:profile')
 
 class IndexView(generic.ListView):
     template_name = 'action/index.html'
     context_object_name = 'activity_list'
 
     def get_queryset(self):
-        return get_index_queryset(self.request)
+        return utils.get_index_queryset(self.request)
+
+
+class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
+    form_class = ActivityForm
+    template_name = 'action/create_activity.html'
+
+    def get_initial(self):
+        # Set the initial value for the field
+        initial = super().get_initial()
+        initial['owner'] = self.request.user
+        initial['pub_date'] = timezone.now()
+        return initial
+
+    def process_image(self, form):
+        # Create an Activity instance and set its attributes
+        activity = form.save(commit=False)
+        image_name = f"{activity.title}{activity.id}"
+
+        if form.is_valid():
+            context = StrategyContext()
+            # Set the activity's picture attribute
+            if 'picture' in self.request.FILES:
+                context.set_process(ActivityPicture())
+                activity.picture = context.process_image_url(self.request, image_name)
+
+            # Set the activity's background picture attribute
+            if 'background_picture' in self.request.FILES:
+                context.set_process(ActivityBackgroundPicture())
+                activity.background_picture = context.process_image_url(self.request, image_name)
+
+    def form_valid(self, form):
+        self.process_image(form)
+        messages.success(self.request, 'Activity created successfully.')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # Render the form with errors if it's invalid
+        messages.error(self.request,
+                       'Activity creation failed. Please check the form.')
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_success_url(self):
+        # Define the URL to redirect to on form success
+        return reverse('action:index')
 
 
 class FriendView(LoginRequiredMixin, generic.ListView):
@@ -54,18 +161,19 @@ class DetailView(generic.DetailView):
             self.pk = self.kwargs['pk']
             context = {
                 "activity": Activity.objects.get(pk=self.pk),
-                "activity_status": fetch_activity_status(request, self.pk)
+                "activity_status": utils.fetch_activity_status(request, self.pk)
             }
             return render(request, self.template_name, context)
 
         except Activity.DoesNotExist:
-            messages.error(request, "Activity does not exist or is not published yet.")
+            messages.error(request,
+                           "Activity does not exist or is not published yet.")
             return redirect("action:index")
 
 
 @login_required
 def participate(request, activity_id: int):
-    activity_status: ActivityStatus = fetch_activity_status(request,
+    activity_status: ActivityStatus = utils.fetch_activity_status(request,
                                                             activity_id)
 
     if activity_status.is_participated:
@@ -80,7 +188,7 @@ def participate(request, activity_id: int):
 
 @login_required
 def leave(request, activity_id: int):
-    activity_status: ActivityStatus = fetch_activity_status(request,
+    activity_status: ActivityStatus = utils.fetch_activity_status(request,
                                                             activity_id)
 
     if activity_status.is_participated:
@@ -96,7 +204,7 @@ def leave(request, activity_id: int):
 
 @login_required
 def favorite(request, activity_id: int):
-    activity_status: ActivityStatus = fetch_activity_status(request,
+    activity_status: ActivityStatus = utils.fetch_activity_status(request,
                                                             activity_id)
 
     if activity_status.is_favorited:
@@ -112,7 +220,7 @@ def favorite(request, activity_id: int):
 
 @login_required
 def unfavorite(request, activity_id: int):
-    activity_status: ActivityStatus = fetch_activity_status(request,
+    activity_status: ActivityStatus = utils.fetch_activity_status(request,
                                                             activity_id)
 
     if activity_status.is_favorited:
@@ -129,7 +237,7 @@ def unfavorite(request, activity_id: int):
 # TODO add check to not allow user to add themselves as friend
 @login_required
 def add_friend(request, friend_id: int):
-    friend_status = fetch_friend_status(request, friend_id)
+    friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
@@ -144,7 +252,7 @@ def add_friend(request, friend_id: int):
 # TODO add check to not allow user to remove themselves as friend
 @login_required
 def remove_friend(request, friend_id: int):
-    friend_status = fetch_friend_status(request, friend_id)
+    friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         friend_status.request_status = None
@@ -159,7 +267,7 @@ def remove_friend(request, friend_id: int):
 
 @login_required
 def accept_request(request, friend_id: int):
-    friend_status = fetch_friend_status(request, friend_id)
+    friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
@@ -174,7 +282,7 @@ def accept_request(request, friend_id: int):
 
 @login_required
 def decline_request(request, friend_id: int):
-    friend_status = fetch_friend_status(request, friend_id)
+    friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")

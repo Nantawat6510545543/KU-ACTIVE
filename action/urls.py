@@ -1,11 +1,16 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 from . import views
 
 app_name = 'action'
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
+    path('create/', views.ActivityCreateView.as_view(), name='create'),
     path('profile/', views.ProfileView.as_view(), name='profile'),
+    path('profile/edit', views.EditProfileView.as_view(), name='edit_profile'),
     path('friends/', views.FriendView.as_view(), name='friends'),
     path('friends/add/', views.AddFriendView.as_view(), name='add_view'),
     path('friends/requests/', views.RequestView.as_view(),
@@ -27,4 +32,4 @@ urlpatterns = [
          name='favorite'),
     path('<int:activity_id>/unfavorite/', views.unfavorite,
          name='unfavorite'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

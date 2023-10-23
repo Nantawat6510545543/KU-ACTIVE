@@ -5,11 +5,22 @@ profile
 {% endblock %}
 
 {% block content %}
+
+<form action="{% url 'action:edit_profile' %}">
+    <button type="submit">Edit Profile</button>
+</form>
+
 <h1>Username: {{ user.username }}</h1>
 <h1>Email: {{ user.email }}</h1>
 <h1>First Name: {{ user.first_name }}</h1>
 <h1>Last Name: {{ user.last_name }}</h1>
-<h1>Profile Picture: 
+
+<h1>Profile Picture:
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="profile_picture">
+        <button type="submit">Upload Profile Picture</button>
+    </form>
     <img src="{{ user.profile_picture }}" alt="{{ user.username }}'s Profile Picture">
 </h1>
 
