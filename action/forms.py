@@ -1,10 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from decouple import config
 
 from .models import Activity, Tag, User
 from .process_strategy import ProfilePicture, StrategyContext
-from .utils import firebase_utils as fu
 
 
 class ActivityAdminForm(forms.ModelForm):
@@ -37,49 +35,23 @@ class UserForm(UserCreationForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        username = cleaned_data.get('username')
+        print(cleaned_data)
+        user_account = User.objects.filter(username=cleaned_data.get('username'))
 
-        if username:
-            # If the username has been changed, apply validation
-            if User.objects.filter(username=username).exclude(pk=self.instance.pk).exists():
-                raise forms.ValidationError('Username already exists.')
+        # If the username has been changed, apply validation
+        # TODO tell this to shut up
+        print(f"Instance PK: {self.instance.pk}")
 
-        image_file = cleaned_data.get('profile_picture')
-        print(image_file)
-        image_name = f"{self.instance.username}{self.instance.pk}"
-        print(image_name)
-
-        storage = fu.get_firebase_instance().storage()
-        image_path = f"Profile_picture/{image_name}"
-
-        storage.child(image_path).put(image_file)
-        file_url = storage.child(image_path).get_url(None)
+        if user_account.exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError('Username already exists.')
 
         # Handle the profile picture if it exists in the request
-        # if image_file:
-        #     context = StrategyContext()
-        #     context.set_process(ProfilePicture())
-        #     profile_picture = context.process_image_url(image_file, image_name)
-        # else:
-        #     profile_picture = config("DEFAULT_BACKGROUND", default='')
+        context = StrategyContext()
+        context.set_process(ProfilePicture())
+        file_url = context.upload_and_get_image_url(self)
 
-        self.cleaned_data['profile_picture'] = file_url
-        print(self.cleaned_data['username'])
-        print(self.cleaned_data['profile_picture'])
+        cleaned_data['profile_picture'] = file_url
         return cleaned_data
-
-    # def clean_profile_picture(self):
-    #     profile_picture = self.cleaned_data['profile_picture']
-
-    #     if 'profile_picture' in self.changed_data:
-    #         profile_picture = user new picture
-    #     else:
-    #         profile_picture = user existing picture (URLField)
-
-    #     if not data:
-    #         profile_picture = config("DEFAULT_BACKGROUND", default='')
-
-    #     return profile_picture
 
 
 class ActivityForm(forms.ModelForm):
@@ -92,16 +64,6 @@ class ActivityForm(forms.ModelForm):
         model = Activity
         fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
-        super(ActivityForm, self).__init__(*args, **kwargs)
-
-        for field_name, field in self.fields.items():
-            if field_name in Activity._meta.get_fields():
-                field.label = Activity._meta.get_field(field_name).verbose_name
-
     # TODO merge into clean()
-    def clean_background_picture(self):
-        data = self.cleaned_data['background_picture']
-        if not data:
-            data = config("DEFAULT_BACKGROUND", default='')
-        return data
+    def clean(self):
+        pass

@@ -6,7 +6,6 @@ from django.utils import timezone
 from decouple import config
 
 
-# TODO use modelform
 # TODO look into Manager and QuerySetManager class
 # TODO use ABC for inheritance, not subclass
 
