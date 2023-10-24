@@ -99,6 +99,9 @@
 
 {% for activity in activity_list %}
     <div class="activity">
+        <div class="activity-pics">
+            <img src="{{ activity.picture }}" alt="{{ activity.title }}'s Picture" width="400" height="240">
+        </div>
         <div class="activity-title">
             <a>{{ activity.title }}</a>
         </div>
