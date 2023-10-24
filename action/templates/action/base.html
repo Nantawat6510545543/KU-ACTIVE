@@ -26,14 +26,20 @@
             <a class="title" href="{% url 'action:index' %}">KU-ACTIVE</a>
 
         {% if user.is_authenticated %}
-            <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}<img src="{{ user.profile_picture }}"></a>
+            <div class="user-box">
+                <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
+                <img class="img" src="{{ user.profile_picture }}">
+            </div>
             <a class="friends" href="{% url 'action:friends' %}">Friends</a>
             <a class="new-activity" href="{% url 'action:create' %}">Create New Activity!</a>
         {% if user.is_superuser %}
             <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
         {% endif%}
         {% else %}
-            <a class="user" href="{% url 'login' %}?next={{ request.path }}">guest<img src="https:///20x20" /></a>
+            <div class="user-box">
+                <a class="user" href="{% url 'action:profile' %}">guest</a>
+                <img class="img" src="{% static 'action/images/guest-img.png' %}">
+            </div>
         {% endif %}
         {% endblock %}
         </div>
