@@ -2,23 +2,38 @@
 
 {% block content %}
 
-<h1>
-<a href="{% url 'action:friends' %}">Friend List</a>
-<a href="{% url 'action:add_view' %}">Add Friends</a>
-<a href="{% url 'action:request_view' %}">Friend Request</a>
-</h1>
-
-<h3>
-
-{% for each_friend in friend_add_list %}
-    {{ each_friend }}
-    <form action="{% url 'action:add_friend' friend_id=each_friend.id %}">
-        <button type="submit">Add Friend</button>
-    </form>
-{% empty %}
-    No friend.
-{% endfor %}
-
-</h3>
+<div class="friend">
+<div class="friend-menu">
+    <div class="friend-nav-bar">
+        <a href="{% url 'action:friends' %}">Friend List</a>
+        <a href="{% url 'action:add_view' %}">Add Friends</a>
+        <a href="{% url 'action:request_view' %}">Friend Request</a>
+    </div>
+    <div class="friend-list-box">
+    {% for each_friend in friend_add_list %}
+        <div class="each-friend">
+            <p class="friend-name">{{ each_friend }}</p>
+            <form action="{% url 'action:add_friend' friend_id=each_friend.id %}">
+                <button type="submit">Add Friend</button>
+            </form>
+        </div>
+        <div class="each-friend">
+            <p class="friend-name">{{ each_friend }}</p>
+            <form action="{% url 'action:add_friend' friend_id=each_friend.id %}">
+                <button type="submit">Add Friend</button>
+            </form>
+        </div>
+        <div class="each-friend">
+            <p class="friend-name">{{ each_friend }}</p>
+            <form action="{% url 'action:add_friend' friend_id=each_friend.id %}">
+                <button type="submit">Add Friend</button>
+            </form>
+        </div>
+    {% empty %}
+        No friend.
+    {% endfor %}
+    </div>
+</div>
+</div>
 
 {% endblock %}
