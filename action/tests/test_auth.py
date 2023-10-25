@@ -13,9 +13,8 @@ class UserAuthTest(Tester):
         super().setUp()
         self.username = "testuser"
         self.password = "testpass"
-        self.user1 = self.create_user(self.username, self.password,
-                                      "Tester")
-        self.activity = self.create_activity(self.user1)
+        self.user = self.create_user(self.username, self.password)
+        self.activity = self.create_activity(self.user)
 
     def test_logout(self):
         """A user can log out using the logout url.

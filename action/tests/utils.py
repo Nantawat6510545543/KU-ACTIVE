@@ -37,9 +37,30 @@ class Tester(TestCase):
         self.social_app.save()
 
     @staticmethod
-    def create_user(username, password, first_name):
+    def create_user(username='tester', password='password', **kwargs):
         user = User.objects.create_user(username=username, password=password)
-        user.first_name = first_name
+
+        user_fields = {
+            "email": None,
+            "first_name": None,
+            "last_name": None,
+            "active": None,
+        }
+
+        user_fields.update(kwargs)
+
+        if user_fields["email"] is not None:
+            user.email = user_fields["email"]
+
+        if user_fields["first_name"] is not None:
+            user.first_name = user_fields["first_name"]
+
+        if user_fields["last_name"] is not None:
+            user.last_name = user_fields["last_name"]
+
+        if user_fields["active"] is not None:
+            user.active = user_fields["active"]
+
         user.save()
         return user
 
@@ -50,43 +71,76 @@ class Tester(TestCase):
         return tag
 
     @staticmethod
-    def create_activity(owner, date=None, pub_date=None, end_date=None,
-                        participant_limit=-1, tags=None):
-        activity = Activity.objects.create(owner=owner)
+    def create_activity(owner, **kwargs):
+        defaults = {
+            "title": "Test",
+            "date": timezone.now() + timezone.timedelta(days=2),
+            "pub_date": timezone.now(),
+            "end_date": timezone.now() + timezone.timedelta(days=1),
+            "description": None,
+            "place": None,
+            "full_description": None,
+            "participant_limit": -1,
+            "tags": None,
+        }
 
-        if date is None:
-            activity.date = timezone.now() + timezone.timedelta(days=2)
-        if pub_date is None:
-            activity.pub_date = timezone.now()
-        if end_date is None:
-            activity.end_date = timezone.now() + timezone.timedelta(days=1)
-        if participant_limit > -1:
-            activity.participant_limit = participant_limit
-        if tags is not None:
-            activity.tags.set(tags)
+        defaults.update(kwargs)
+
+        activity = Activity.objects.create(
+            owner=owner,
+            title=defaults["title"],
+            date=defaults["date"],
+            pub_date=defaults["pub_date"],
+            end_date=defaults["end_date"]
+        )
+
+        if defaults["description"] is not None:
+            activity.description = defaults["description"]
+
+        if defaults["place"] is not None:
+            activity.place = defaults["place"]
+
+        if defaults["full_description"] is not None:
+            activity.full_description = defaults["full_description"]
+
+        if (defaults["participant_limit"] is not None and
+                defaults["participant_limit"] > 0):
+            activity.participant_limit = defaults["participant_limit"]
+
+        if defaults["tags"] is not None:
+            activity.tags.set(defaults["tags"])
 
         activity.save()
+
         return activity
 
     @staticmethod
-    def create_activity_status(participants, activity, participated=True,
-                               favorite=False):
+    def create_activity_status(participants, activity, participated=None,
+                               favorite=None):
         activity_status = ActivityStatus.objects.create(
             participants=participants,
-            activity=activity,
-            is_participated=participated,
-            is_favorited=favorite
+            activity=activity
         )
+
+        if participated is not None:
+            activity_status.is_participated = participated
+        if favorite is not None:
+            activity_status.is_favorited = favorite
+
         activity_status.save()
 
         return activity_status
 
     @staticmethod
-    def create_friend_status(sender, receiver, choices="Pending"):
+    def create_friend_status(sender, receiver, choices=None, is_friend=None):
         friend_status = FriendStatus.objects.create(
             sender=sender,
             receiver=receiver,
-            choices=choices,
         )
+        if choices is not None:
+            friend_status.choices = choices
+        if is_friend is not None:
+            friend_status.is_friend = is_friend
+
         friend_status.save()
         return friend_status
