@@ -105,8 +105,6 @@ class ActivityForm(forms.ModelForm):
         # print(f"Owner: {self.instance}")
         # current_owner = User.objects.filter(pk=self.instance.owner)
 
-        cleaned_data['owner'] = User.objects.get(username='mossg')
-
         context = StrategyContext()
         # # Set the activity's picture attribute
         # if 'picture' in self.request.FILES:
