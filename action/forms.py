@@ -1,8 +1,9 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from decouple import config
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
 from .models import Activity, Tag, User
+from .process_strategy import ActivityBackgroundPicture, ActivityPicture, \
+    ProfilePicture, StrategyContext
 
 
 class ActivityAdminForm(forms.ModelForm):
@@ -18,6 +19,8 @@ class ActivityAdminForm(forms.ModelForm):
 
 
 class UserForm(UserCreationForm):
+    profile_picture = forms.FileField(required=False)
+
     class Meta:
         model = User
         fields = [
@@ -31,20 +34,52 @@ class UserForm(UserCreationForm):
             'profile_picture'
         ]
 
-    # TODO merge into clean()
-    def clean_username(self):
-        username = self.cleaned_data['username']
+    def clean(self):
+        cleaned_data = super().clean()
+        user_account = User.objects.filter(
+            username=cleaned_data.get('username'))
 
         # If the username has been changed, apply validation
-        if User.objects.filter(username=username).exclude(pk=self.instance.pk).exists():
+        if user_account.exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError('Username already exists.')
-        return username
+
+        # Handle the profile picture
+        context = StrategyContext()
+        context.set_process(ProfilePicture())
+        file_url = context.upload_and_get_image_url(self)
+
+        cleaned_data['profile_picture'] = file_url
+        return cleaned_data
 
 
 class ProfilePictureForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['profile_picture']
+
+
+class UserEditForm(UserChangeForm):
+    password = forms.PasswordInput()
+
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'bio'
+        ]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        user_account = User.objects.filter(
+            username=cleaned_data.get('username'))
+
+        if user_account.exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError('Username already exists.')
+
+        return cleaned_data
 
 
 class ActivityForm(forms.ModelForm):
@@ -57,17 +92,22 @@ class ActivityForm(forms.ModelForm):
         model = Activity
         fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
-        super(ActivityForm, self).__init__(*args, **kwargs)
-
-        for field_name, field in self.fields.items():
-            if field_name in Activity._meta.get_fields():
-                field.label = Activity._meta.get_field(field_name).verbose_name
-
     # TODO merge into clean()
-    def clean_background_picture(self):
-        data = self.cleaned_data['background_picture']
-        if not data:
-            data = config("DEFAULT_BACKGROUND", default='')
-        print(data)
-        return data
+    def clean(self):
+        cleaned_data = super().clean()
+        # print(f"Owner: {self.instance}")
+        # current_owner = User.objects.filter(pk=self.instance.owner)
+
+        context = StrategyContext()
+        # # Set the activity's picture attribute
+        # if 'picture' in self.request.FILES:
+        context.set_process(ActivityPicture())
+        cleaned_data['picture'] = context.upload_and_get_image_url(self)
+
+        # # Set the activity's background picture attribute
+        # if 'background_picture' in self.request.FILES:
+        context.set_process(ActivityBackgroundPicture())
+        cleaned_data['background_picture'] = context.upload_and_get_image_url(
+            self)
+
+        return cleaned_data

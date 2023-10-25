@@ -1,4 +1,5 @@
 {% extends "action/base.html" %}
+{% load static %}
 
 {% block content_topnav %}
 {% if user.is_authenticated %}
@@ -7,6 +8,7 @@
             Welcome to KU active, {{ user.username.title }}</a>
 {% endif %}
 {% endblock %}
+
 
 {% block message %}
     {% if messages %}
@@ -21,101 +23,104 @@
     <p></p>
 {% endblock %}
 
+
 {% block content %}
 
-{% comment %} 
-    # TODO fix path from http://127.0.0.1:8000/action/?criteria=title&q=test 
-    to http://127.0.0.1:8000/action/?title=test for all criteria
-
-    # TODO finish WIP date
-{% endcomment %}
-
-<form action="{% url 'action:index' %}">
-    Search By:
-    <select name="criteria">
-        <option value="title">Title</option>
-        <option value="owner">Owner</option>
-        <option value="tag">Tag</option>
-        <option value="place">Place</option>
-        <option value="date">[Work In Progress]</option>
-    </select>
-    <input type="search" placeholder="Search..." name="q" value="{{ query }}">
-    <button type="submit">Search</button>
-</form>
-
-{% comment %}
-    For frontend, change these three to navbar buttons
-{% endcomment %}
-<form action="{% url 'action:index' %}">
-    Sort By:
-    <select name="criteria">
-        <option disabled selected hidden>---------</option>
-        <option value="upcoming">Upcoming</option>
-        <option value="popularity">Popularity</option>
-        <option value="recent">Recent</option>
-    </select>
-    <button type="submit">Sort</button>
-</form><br>
+<div class="search-system">
+    <form action="{% url 'action:index' %}">
+        <select class="search-criteria" name="criteria">
+            <option value="title">Title</option>
+            <option value="owner">Owner</option>
+            <option value="tag">Tag</option>
+            <option value="place">Place</option>
+            <option value="date">Date</option>
+        </select>
+        <input type="search" class="search-bar" placeholder="Search :" name="q" value="{{ query }}">
+        <button type="submit" class="search-button">Search</button>
+    </form>
+</div>
 
 {% if activity_list %}
-<table class="style1">
-    <thead>
-        <tr>
-            <th>Activity</th>
-            <th>Description</th>
-            <th>Published date</th>
-            <th>End date</th>
-            <th>Participation Limit</th>
-            <th>Status</th>
-            <th>Tags</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for activity in activity_list %}
-        <tr>
-            <td>
-                {% if activity.can_participate %}
-                <a href="{% url 'action:detail' activity.id %}">{{ activity.title }}</a>
-                {% else %}
-                <a style="color: rgb(128, 128, 128);">{{ activity.title }}</a>
-                {% endif %}
-            </td>
-            <td>
+<!--    <table class="style1">-->
+<!--        <thead>-->
+<!--            <tr>-->
+<!--                <th>Activity</th>-->
+<!--                <th>Description</th>-->
+<!--                <th>Published date</th>-->
+<!--                <th>End date</th>-->
+<!--                <th>Participation Limit</th>-->
+<!--                <th>Status</th>-->
+<!--                <th>Tags</th>-->
+<!--            </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--            {% for activity in activity_list %}-->
+<!--            <tr>-->
+<!--                <td>-->
+<!--                    {% if activity.can_participate %}-->
+<!--                        <a href="{% url 'action:detail' activity.id %}">{{ activity.title }}</a>-->
+<!--                    {% else %}-->
+<!--                        <a style="color: rgb(128, 128, 128);">{{ activity.title }}</a>-->
+<!--                    {% endif %}-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    {{ activity.description }}-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    {{ activity.pub_date }}-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    {% if activity.end_date is none %}-->
+<!--                        This activity has no end date.-->
+<!--                    {% else %}-->
+<!--                        {{ activity.end_date }}-->
+<!--                    {% endif %}-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    {{ activity.participant_limit }}-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    {% if activity.can_participate %}-->
+<!--                        <b style="color: rgb(0,100,0);">Available</b>-->
+<!--                    {% else %}-->
+<!--                        <b style="color: rgb(255,0,0);">Not available</b>-->
+<!--                    {% endif %}-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    {% for tag in activity.tags.all %}-->
+<!--                        {{ tag.name }}-->
+<!--                        {% if not forloop.last %}, {% endif %}-->
+<!--                    {% endfor %}-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            {% endfor %}-->
+<!--        </tbody>-->
+<!--    </table>-->
+
+{% for activity in activity_list %}
+    <div class="activity">
+        <div class="activity-pics">
+           <img src="{% if activity.picture %} {{ activity.picture }}
+                     {% else %} {% static 'action/images/background.png' %}
+                     {% endif %}"
+                alt="{{ activity.title }}'s Picture" width="400" height="240">
+
+        </div>
+        <div class="activity-title">
+            <a>{{ activity.title }}</a>
+        </div>
+        <div class="activity-information">
+            <div class="brief-detail">
                 {{ activity.description }}
-            </td>
-            <td>
-                {{ activity.pub_date }}
-            </td>
-            <td>
-                {% if activity.end_date is none %}
-                This activity has no end date.
-                {% else %}
-                {{ activity.end_date }}
-                {% endif %}
-            </td>
-            <td>
-                {{ activity.participant_limit }}
-            </td>
-            <td>
-                {% if activity.can_participate %}
-                <b style="color: rgb(0,100,0);">Available</b>
-                {% else %}
-                <b style="color: rgb(255,0,0);">Not available</b>
-                {% endif %}
-            </td>
-            <td>
-                {% for tag in activity.tags.all %}
-                    {{ tag.name }}
-                    {% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+            </div>
+        </div>
+        <a class="detail-button" href="{% url 'action:detail' activity.id %}">Detail</a>
+    </div>
+{% endfor %}
+
 
 {% else %}
-<h1>No activity found.</h1>
+    <h1>No activity found.</h1>
 {% endif %}
 
 {% endblock %}

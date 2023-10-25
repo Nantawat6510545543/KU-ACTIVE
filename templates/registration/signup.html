@@ -7,11 +7,20 @@
         <title class="form">Register</title>
     </head>
     <body>
-        <form method="POST" class="form-container">
+        {{ form.errors }}
+        <form method="POST" class="form-container" enctype="multipart/form-data">
             <h2>Register</h2>
             {% csrf_token %}
             <table class="form-table">
-                {{ form.as_table }}
+                {% for field in form %}
+                    {% if field.name == "profile_picture" %}
+                        <h4>{{ field.label_tag }}</h4>
+                        <input type="file" name="profile_picture">
+                    {% else %}
+                        <h4>{{ field.label_tag }} {{ field }}</h4>
+                        {{ field.help_text }}<br>
+                    {% endif %}
+                {% endfor %}
                 <tr>
                     <td colspan="2" class="form-submit">
                         <button type="submit" class="submit-button">Register</button>
