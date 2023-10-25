@@ -115,42 +115,32 @@ class Tester(TestCase):
         return activity
 
     @staticmethod
-    def create_activity_status(participants, activity, **kwargs):
-        defaults = {
-            'participated': None,
-            'favorite': None,
-        }
-
-        defaults.update(kwargs)
-
+    def create_activity_status(participants, activity, participated=None,
+                               favorite=None):
         activity_status = ActivityStatus.objects.create(
             participants=participants,
-            activity=activity,
-            is_participated=defaults['participated'],
-            is_favorited=defaults['favorite']
+            activity=activity
         )
+
+        if participated is not None:
+            activity_status.is_participated = participated
+        if favorite is not None:
+            activity_status.is_favorited = favorite
 
         activity_status.save()
 
         return activity_status
 
     @staticmethod
-    def create_friend_status(sender, receiver, **kwargs):
-        defaults = {
-            'choices': None,
-            'is_friend': None,
-        }
-
-        defaults.update(kwargs)
-
+    def create_friend_status(sender, receiver, choices=None, is_friend=None):
         friend_status = FriendStatus.objects.create(
             sender=sender,
             receiver=receiver,
-            choices=defaults['choices'],
-            is_friend=defaults['is_friend']
         )
+        if choices is not None:
+            friend_status.choices = choices
+        if is_friend is not None:
+            friend_status.is_friend = is_friend
 
         friend_status.save()
-
         return friend_status
-
