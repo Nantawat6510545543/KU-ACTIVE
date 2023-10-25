@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.views import generic
 
 from ..forms import ActivityForm
-from ..utils import firebase_utils as fu
+from ..utils import firebase_utils as fb_utils
 
 
 class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
@@ -18,28 +18,12 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
         initial['pub_date'] = timezone.now()
         return initial
 
-    # def process_image(self, form):
-    #     # Create an Activity instance and set its attributes
-    #     activity = form.save(commit=False)
-
-    #     if form.is_valid():
-    #         context = StrategyContext()
-    #         # Set the activity's picture attribute
-    #         if 'picture' in self.request.FILES:
-    #             context.set_process(ActivityPicture())
-    #             activity.picture = context.upload_and_get_image_url(form)
-
-    #         # Set the activity's background picture attribute
-    #         if 'background_picture' in self.request.FILES:
-    #             context.set_process(ActivityBackgroundPicture())
-    #             activity.background_picture = context.upload_and_get_image_url(form)
-
     def process_image(self, form):
         # Create an Activity instance and set its attributes
         activity = form.save(commit=False)
         activity.title = self.request.POST['title']
         image_name = f"{activity.title}{activity.id}"
-        storage = fu.get_firebase_instance().storage()
+        storage = fb_utils.get_firebase_instance().storage()
         # Add activity picture
         if form.is_valid() and 'picture' in self.request.FILES:
             # Process the image and save it to the user

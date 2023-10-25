@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from .utils import firebase_utils as fu
+from .utils import firebase_utils as fb_utils
 
 
 class StrategyContext:
@@ -20,7 +20,7 @@ class StrategyContext:
         if self.strategy is None:
             raise ValueError("No Strategy set for process image!")
 
-        storage = fu.get_firebase_instance().storage()
+        storage = fb_utils.get_firebase_instance().storage()
         image_file, image_path = self.strategy.get_image_data(form)
         print(f"Image file = {image_file}")
         print(f"Image path = {image_path}")
