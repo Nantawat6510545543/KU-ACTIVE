@@ -23,6 +23,8 @@ class StrategyContext:
 
         storage = fu.get_firebase_instance().storage()
         image_file, image_path = self.strategy.get_image_data(form)
+        print(f"Image file = {image_file}")
+        print(f"Image path = {image_path}")
 
         if image_file:
             storage.child(image_path).put(image_file)
@@ -48,7 +50,7 @@ class ProfilePicture(ProcessStrategy):
     def get_image_data(self, form):
         image_name = form.cleaned_data.get('username')
         image_file = form.cleaned_data.get('profile_picture')
-        image_path = f"Profile_picture/{image_name}"
+        image_path = f"Profile_picture/{image_file}"
 
         return image_file, image_path
 
@@ -62,7 +64,7 @@ class ActivityPicture(ProcessStrategy):
         image_name = form.cleaned_data.get('title')
         # print(f"IMAGE ACTIVITY NAME = {image_name}")
         image_file = form.cleaned_data.get('picture')
-        image_path = f"Activity_picture/{image_name}"
+        image_path = f"Activity_picture/{image_file}"
 
         return image_file, image_path
 
@@ -74,7 +76,7 @@ class ActivityBackgroundPicture(ProcessStrategy):
     def get_image_data(self, form):
         image_name = form.cleaned_data.get('title')
         image_file = form.cleaned_data.get('background_picture')
-        image_path = f"Activity_background_picture/{image_name}"
+        image_path = f"Activity_background_picture/{image_file}"
 
         return image_file, image_path
     

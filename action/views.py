@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
 
-from .forms import ActivityForm, UserForm
+from .forms import ActivityForm, UserEditForm
 from .models import Activity, ActivityStatus, FriendStatus, User
 from .process_strategy import (ActivityBackgroundPicture, ActivityPicture,
                                ProfilePicture, StrategyContext)
@@ -23,26 +23,15 @@ class ProfileView(LoginRequiredMixin, generic.ListView):
 
 
 class EditProfileView(LoginRequiredMixin, generic.UpdateView):
-    model = User
-    form_class = UserForm
+    form_class = UserEditForm
     template_name = 'action/edit_profile.html'
 
     def get_object(self):
         return User.objects.get(pk=self.request.user.id)
 
     def form_valid(self, form):
-        # Save the form data to the user profile
-        profile = form.save(commit=False)
-
-        # Handle the profile picture if it exists in the request
-        if 'profile_picture' in self.request.FILES:
-            context = StrategyContext()
-            context.set_process(ProfilePicture())
-            profile.profile_picture = context.upload_and_get_image_url(form)
-
         super().form_valid(form)
-        # Update the user's session to prevent session fixation
-        update_session_auth_hash(self.request, profile)
+
         messages.success(self.request, 'Profile edited successfully.')
         return redirect(self.get_success_url())
 
