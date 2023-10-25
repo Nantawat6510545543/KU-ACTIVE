@@ -9,10 +9,13 @@ from mysite.settings import SITE_ID, SITE_NAME, SITE_DOMAIN
 
 class Tester(TestCase):
     """
-    Tests user authentication.
+    Utility class for creating test cases.
     """
 
     def setUp(self):
+        """
+        Set up the test environment.
+        """
         super().setUp()
         site, _ = Site.objects.get_or_create(
             id=SITE_ID,
@@ -47,27 +50,39 @@ class Tester(TestCase):
         return tag
 
     @staticmethod
-    def create_activity(owner, tags=None):
-        activity = Activity.objects.create(
-            owner=owner,
-            pub_date=timezone.now(),
-        )
+    def create_activity(owner, date=None, pub_date=None, end_date=None,
+                        participant_limit=-1, tags=None):
+        activity = Activity.objects.create(owner=owner)
+
+        if date is None:
+            activity.date = timezone.now() + timezone.timedelta(days=2)
+        if pub_date is None:
+            activity.pub_date = timezone.now()
+        if end_date is None:
+            activity.end_date = timezone.now() + timezone.timedelta(days=1)
+        if participant_limit > -1:
+            activity.participant_limit = participant_limit
         if tags is not None:
             activity.tags.set(tags)
+
         activity.save()
         return activity
 
     @staticmethod
-    def create_activity_status(participants, activity):
+    def create_activity_status(participants, activity, participated=True,
+                               favorite=False):
         activity_status = ActivityStatus.objects.create(
             participants=participants,
             activity=activity,
+            is_participated=participated,
+            is_favorited=favorite
         )
         activity_status.save()
+
         return activity_status
 
     @staticmethod
-    def create_friend_status(sender, receiver, choices):
+    def create_friend_status(sender, receiver, choices="Pending"):
         friend_status = FriendStatus.objects.create(
             sender=sender,
             receiver=receiver,
