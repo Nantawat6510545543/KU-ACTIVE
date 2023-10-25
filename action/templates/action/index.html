@@ -1,5 +1,5 @@
 {% extends "action/base.html" %}
-
+{% load static %}
 
 {% block content_topnav %}
 {% if user.is_authenticated %}
@@ -100,7 +100,11 @@
 {% for activity in activity_list %}
     <div class="activity">
         <div class="activity-pics">
-            <img src="{{ activity.picture }}" alt="{{ activity.title }}'s Picture" width="400" height="240">
+           <img src="{% if activity.picture %} {{ activity.picture }}
+                     {% else %} {% static 'action/images/background.png' %}
+                     {% endif %}"
+                alt="{{ activity.title }}'s Picture" width="400" height="240">
+
         </div>
         <div class="activity-title">
             <a>{{ activity.title }}</a>

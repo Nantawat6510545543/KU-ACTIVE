@@ -1,4 +1,5 @@
 {% extends "action/base.html" %}
+{% load static %}
 
 {% block content %}
 <div class="outer-details">
@@ -32,11 +33,13 @@
     <div class="activity-owner">
         <p><strong>Owner:</strong> {{ activity.owner.username }}</p>
         <p><strong>Picture:</strong> 
-            <img src="{{ activity.picture }}" alt="{{ activity.title }}'s Picture">
+            <img src="{% if activity.picture %} {{ activity.picture }}
+                     {% else %} {% static 'action/images/background.png' %}
+                     {% endif %}"
+                alt="{{ activity.title }}'s Picture" width="400" height="240">
         </p>
         <div class="activity-details">
             <p><strong>Date Published:</strong> {{ activity.pub_date }}</p>
-            <p><strong>Picture: </strong> {{ activity.picture }}</p>
             <p><strong>End Date:</strong> {{ activity.end_date }}</p>
             <p><strong>Date of Activity:</strong> {{ activity.date }}</p>
             <p><strong>Description:</strong> {{ activity.description }}</p>
@@ -44,7 +47,10 @@
             <p><strong>Participants:</strong> {{ activity.participants }}</p>
             <p><strong>Participant Counts:</strong> {{ activity.participants.count }}</p>
             <p><strong>Background Picture:</strong> 
-                <img src="{{ activity.background_picture }}" alt="{{ activity.title }}'s Background Picture">
+                <img src="{% if activity.picture %} {{ activity.picture }}
+                     {% else %} {% static 'action/images/guest-img.png' %}
+                     {% endif %}"
+                alt="{{ activity.title }}'s Picture" width="400" height="240">
             </p>
 
             <p><strong>Participant Limit:</strong>

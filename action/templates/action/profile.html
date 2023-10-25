@@ -1,4 +1,5 @@
 {% extends "action/base.html" %}
+{% load static %}
 
 {% block title %}
 profile
@@ -17,7 +18,10 @@ profile
         <button type="submit">Upload Profile Picture</button>
     </form>
     <div class="profile-img">
-        <img src="{{ user.profile_picture }}" alt="{{ user.username }}'s Profile Picture" width="220px" height="220px"
+        <img src="{% if activity.picture %} {{ activity.picture }}
+                     {% else %} {% static 'action/images/guest-img.png' %}
+                     {% endif %}"
+             alt="{{ user.username }}'s Profile Picture" width="220px" height="220px"
         style="border-radius: 20px;">
     </div>
     <div class="right-detail">

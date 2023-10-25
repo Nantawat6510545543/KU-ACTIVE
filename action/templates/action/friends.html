@@ -17,18 +17,6 @@
                 <button type="submit">Remove Friend</button>
             </form>
         </div>
-        <div class="each-friend">
-            <p class="friend-name">{{ each_friend }}</p>
-            <form action="{% url 'action:remove_friend' friend_id=each_friend.id %}">
-                <button type="submit">Remove Friend</button>
-            </form>
-        </div>
-        <div class="each-friend">
-            <p class="friend-name">{{ each_friend }}</p>
-            <form action="{% url 'action:remove_friend' friend_id=each_friend.id %}">
-                <button type="submit">Remove Friend</button>
-            </form>
-        </div>
     {% empty %}
         No friend.
     {% endfor %}
