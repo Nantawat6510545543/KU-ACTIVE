@@ -60,28 +60,27 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     def get_initial(self):
         # Set the initial value for the field
         initial = super().get_initial()
-        initial['owner'] = str(self.request.user)
         initial['pub_date'] = timezone.now()
         return initial
 
-    def process_image(self, form):
-        # Create an Activity instance and set its attributes
-        activity = form.save(commit=False)
+    # def process_image(self, form):
+    #     # Create an Activity instance and set its attributes
+    #     activity = form.save(commit=False)
 
-        if form.is_valid():
-            context = StrategyContext()
-            # Set the activity's picture attribute
-            if 'picture' in self.request.FILES:
-                context.set_process(ActivityPicture())
-                activity.picture = context.upload_and_get_image_url(form)
+    #     if form.is_valid():
+    #         context = StrategyContext()
+    #         # Set the activity's picture attribute
+    #         if 'picture' in self.request.FILES:
+    #             context.set_process(ActivityPicture())
+    #             activity.picture = context.upload_and_get_image_url(form)
 
-            # Set the activity's background picture attribute
-            if 'background_picture' in self.request.FILES:
-                context.set_process(ActivityBackgroundPicture())
-                activity.background_picture = context.upload_and_get_image_url(form)
+    #         # Set the activity's background picture attribute
+    #         if 'background_picture' in self.request.FILES:
+    #             context.set_process(ActivityBackgroundPicture())
+    #             activity.background_picture = context.upload_and_get_image_url(form)
 
     def form_valid(self, form):
-        self.process_image(form)
+        # self.process_image(form)
         messages.success(self.request, 'Activity created successfully.')
         return super().form_valid(form)
 

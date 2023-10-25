@@ -98,9 +98,14 @@ class ActivityForm(forms.ModelForm):
         model = Activity
         fields = '__all__'
 
+
     # TODO merge into clean()
     def clean(self):
         cleaned_data = super().clean()
+        # print(f"Owner: {self.instance}")
+        # current_owner = User.objects.filter(pk=self.instance.owner)
+
+        cleaned_data['owner'] = User.objects.get(username='mossg')
 
         context = StrategyContext()
         # # Set the activity's picture attribute
