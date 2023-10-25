@@ -117,7 +117,7 @@ class FriendView(LoginRequiredMixin, generic.ListView):
 
 
 class AddFriendView(LoginRequiredMixin, generic.ListView):
-    template_name = 'action/friend_add.html'
+    template_name = 'action/friends_add.html'
     context_object_name = 'friend_add_list'
 
     def get_queryset(self):
@@ -125,7 +125,7 @@ class AddFriendView(LoginRequiredMixin, generic.ListView):
 
 
 class RequestView(LoginRequiredMixin, generic.ListView):
-    template_name = 'action/friend_request.html'
+    template_name = 'action/friends_request.html'
     context_object_name = 'friend_request_list'
 
     def get_queryset(self):

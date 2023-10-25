@@ -1,5 +1,6 @@
 /*top navigation bar*/
 nav {
+    z-index: 9999;
     top: 0%;
     position: fixed;
     width: 100%;
@@ -59,26 +60,40 @@ nav {
 .topnav a.friends {
     float: right;
     display:inline-block;
+
     padding: 17px;
     margin-right: 1%;
     border-radius: 45px;
-
     background-color: #04AA6D;
     color: black;
     background: white;
 }
 
-.topnav a.user {
+.topnav .user-box{
+    display: flex;
+    align-items: center;
     float: right;
-    display:inline-block;
-    padding: 15px;
+
+    margin: 6px;
     margin-right: 1%;
     border-radius: 45px;
-
-    background-color: #04AA6D;
-    color: black;
-    background: white;
+    background-color: white;
 }
+
+.topnav .user-box a {
+    margin:8px;
+    padding:8px 0px 8px 8px;
+
+    color:black;
+}
+
+.topnav .img {
+    width:30px;
+    height:30px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
 
 .topnav a.login {
     position: absolute;

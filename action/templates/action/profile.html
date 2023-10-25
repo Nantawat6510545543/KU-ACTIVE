@@ -14,7 +14,8 @@ profile
         <button type="submit">Upload Profile Picture</button>
     </form>
     <div class="profile-img">
-        <img src="{{ user.profile_picture }}" alt="{{ user.username }}'s Profile Picture">
+        <img src="{{ user.profile_picture }}" alt="{{ user.username }}'s Profile Picture" width="220px" height="220px"
+        style="border-radius: 20px;">
     </div>
     <div class="right-detail">
         <div class="box-color">
@@ -44,21 +45,20 @@ profile
             <h1> {{ user.bio }}</h1>
         </div>
     </div>
-    <h1>Friends: {{ user.friends.all }} </h1>
-    <h1>Friend Count: {{ user.friends.count }} </h1>
+<!--    <h1>Friends: {{ user.friends.all }} </h1>-->
+<!--    <h1>Friend Count: {{ user.friends.count }} </h1>-->
     <div class="participated-activity">
-        <h1>Participated Activities:</h1>
+        <h1>Participated Activities: {{ user.participated_activity.count }}</h1>
         <div class="scroll">
             {% for participated in  user.participated_activity  %}
-                <li><a href="#">{{ participated }}</a></li>
+                <li class="Participated-box"><a href="{% url 'action:detail' participated.id %}">{{ participated }}</a></li>
             {% endfor %}
         </div>
-        <h1>Participated Activity Count: {{ user.participated_activity.count }} </h1>
     </div>
-        <h1>Participated Activities: {{ user.participated_activity }} </h1>
-        <h1>Participated Activity Count: {{ user.participated_activity.count }} </h1>
-        <h1>Favorite Activities: {{ user.favorited_activity }} </h1>
-        <h1>Favorite Activity Count: {{ user.favorited_activity.count }} </h1>
+<!--        <h1>Participated Activities: {{ user.participated_activity }} </h1>-->
+<!--        <h1>Participated Activity Count: {{ user.participated_activity.count }} </h1>-->
+<!--        <h1>Favorite Activities: {{ user.favorited_activity }} </h1>-->
+<!--        <h1>Favorite Activity Count: {{ user.favorited_activity.count }} </h1>-->
     <div class="logout"><a href="{% url 'logout' %}"> Logout </a></div>
 </div>
 {% endblock %}

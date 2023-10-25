@@ -103,18 +103,49 @@
 }
 
 /*'not done yet' this is on the bottom right*/
+
+.participated-activity h1{
+    background :#4B4B4B;
+    margin: 0%;
+    padding: 15px;
+
+    color: white;
+    font-size: 20px;
+    font-family: Inter;
+    font-weight: 700;
+    word-wrap: break-word
+}
 .profile-box .participated-activity {
     position: absolute;
-    bottom: 60px;
-    right: 10px;
+    bottom: 138px;
+    right: 50px;
 }
 
 .participated-activity .scroll{
-    overflow: scroll;
-    height:100px;
-    background-color: white;
+    overflow-y: scroll;
+    height:150px;
+    width:400px;
+    background-color: #2B2B2B;
 }
 
+.Participated-box{
+    text-align: center;
+    list-style-type: none;
+    background-color: #B8B8B8;
+    margin-bottom:2px;
+    padding:10px;
+    border-radius:45px;
+}
+
+.scroll a {
+    color: white;
+    font-size: 24px;
+    font-family: Inter;
+    font-weight: 700;
+    word-wrap: break-word;
+    text-decoration: none;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
 
 /*this is on the bottom left*/
 .profile-box .bottom-left{
