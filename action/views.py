@@ -9,8 +9,7 @@ from django.views import generic
 
 from .forms import ActivityForm, UserEditForm
 from .models import Activity, ActivityStatus, FriendStatus, User
-from .process_strategy import (ActivityBackgroundPicture, ActivityPicture,
-                               ProfilePicture, StrategyContext)
+from .process_strategy import (ActivityBackgroundPicture, ActivityPicture, StrategyContext)
 from .utils import (activity_status_utils as asu,
                     friend_status_utils as fsu,
                     search_utils as su)

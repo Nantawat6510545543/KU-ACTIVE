@@ -26,11 +26,24 @@ class StrategyContext:
         print(f"Image file = {image_file}")
         print(f"Image path = {image_path}")
 
-        if image_file:
-            storage.child(image_path).put(image_file)
+        # TODO extract method
+        # Check if the file exists
+        try:
+            # Attempt to get the URL of the file (checks if it exists)
             file_url = storage.child(image_path).get_url(None)
-        else:
-            file_url = self.strategy.get_default_url()
+            print(f"FILE = {file_url}")
+        except Exception as e:
+            print(f"The file at {image_path} does not exist or an error occurred. Uploading the file...")
+
+            if image_file:
+                # Upload the file
+                storage.child(image_path).put(image_file)
+
+                # Get the URL of the uploaded file
+                file_url = storage.child(image_path).get_url(None)
+                print(f"The file has been uploaded and its URL is: {file_url}")
+            else:
+                file_url = self.strategy.get_default_url()
 
         return file_url
 
@@ -48,7 +61,6 @@ class ProcessStrategy(ABC):
 # TODO add error for invalid form types
 class ProfilePicture(ProcessStrategy):
     def get_image_data(self, form):
-        image_name = form.cleaned_data.get('username')
         image_file = form.cleaned_data.get('profile_picture')
         image_path = f"Profile_picture/{image_file}"
 
@@ -61,8 +73,6 @@ class ProfilePicture(ProcessStrategy):
 # TODO add error for invalid form types
 class ActivityPicture(ProcessStrategy):
     def get_image_data(self, form):
-        image_name = form.cleaned_data.get('title')
-        # print(f"IMAGE ACTIVITY NAME = {image_name}")
         image_file = form.cleaned_data.get('picture')
         image_path = f"Activity_picture/{image_file}"
 
@@ -71,10 +81,10 @@ class ActivityPicture(ProcessStrategy):
     def get_default_url(self):
         return config("DEFAULT_PICTURE", default='')
 
+
 # TODO add error for invalid form types
 class ActivityBackgroundPicture(ProcessStrategy):
     def get_image_data(self, form):
-        image_name = form.cleaned_data.get('title')
         image_file = form.cleaned_data.get('background_picture')
         image_path = f"Activity_background_picture/{image_file}"
 
