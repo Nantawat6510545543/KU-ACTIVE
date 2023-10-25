@@ -1,55 +1,21 @@
 """Tests of authentication."""
-from allauth.socialaccount.models import SocialApp
-
-import django.test
 from django.urls import reverse
-from action.models import User, Activity
 from mysite import settings
-from django.contrib.sites.models import Site
-from decouple import config
-
-from mysite.settings import SITE_ID, SITE_NAME, SITE_DOMAIN
+from .utils import Tester
 
 
-class UserAuthTest(django.test.TestCase):
+class UserAuthTest(Tester):
     """
     Tests user authentication.
     """
 
     def setUp(self):
         super().setUp()
-
-        self.site, _ = Site.objects.get_or_create(
-            id=SITE_ID,
-            defaults={
-                'name': SITE_NAME,
-                'domain': SITE_DOMAIN,
-            },
-        )
-
-        self.social_app, _ = SocialApp.objects.get_or_create(
-            provider='google',
-            defaults={
-                'name': 'Login with Google OAuth',
-                'client_id': config('GOOGLE_OAUTH_CLIENT_ID'),
-                'secret': config('GOOGLE_OAUTH_SECRET_KEY'),
-            },
-        )
-
-        self.social_app.sites.add(self.site)
-        self.social_app.save()
-
         self.username = "testuser"
         self.password = "testpass"
-        self.user1 = User.objects.create_user(
-            username=self.username,
-            password=self.password,
-        )
-        self.user1.first_name = "Tester"
-        self.user1.save()
-        a = Activity.objects.create(owner=self.user1)
-        a.save()
-        self.activity = a
+        self.user1 = self.create_user(self.username, self.password,
+                                      "Tester")
+        self.activity = self.create_activity(self.user1)
 
     def test_logout(self):
         """A user can log out using the logout url.
