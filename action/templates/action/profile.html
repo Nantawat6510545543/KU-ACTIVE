@@ -5,9 +5,12 @@ profile
 {% endblock %}
 
 {% block content %}
+
 <div class="profile-box">
     <h2 class="title-profile">Your Profile</h2>
-    <a href="#" class="edit">edit</a>
+    <form action="{% url 'action:edit_profile' %}">
+        <button type="submit">Edit Profile</button>
+    </form>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="profile_picture">

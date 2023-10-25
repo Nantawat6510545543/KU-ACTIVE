@@ -1,25 +1,18 @@
-from django.test import TestCase
-from action.models import User, Activity, ActivityStatus
+from .utils import Tester
 
 
-class ActivityStatusTestCase(TestCase):
+class ActivityStatusTestCase(Tester):
     def setUp(self):
-        self.user = User.objects.create_user(username="testuser",
-                                             password="testpassword")
-        self.activity = Activity.objects.create(owner=self.user,
-                                                title="Test Activity",
-                                                description="Test Description")
-        self.activity_status = ActivityStatus.objects.create(
-            participants=self.user, activity=self.activity)
+        super().setUp()
+        user = self.create_user()
+        activity = self.create_activity(owner=user)
+        self.activity_status = self.create_activity_status(participants=user,
+                                                           activity=activity)
 
-    def test_activity_status_participants(self):
-        self.assertEqual(self.activity_status.participants, self.user)
+    def test_activity_status_attributes(self):
+        activity_status = self.activity_status
 
-    def test_activity_status_activity(self):
-        self.assertEqual(self.activity_status.activity, self.activity)
-
-    def test_activity_status_is_participated(self):
-        self.assertFalse(self.activity_status.is_participated)
-
-    def test_activity_status_is_favorited(self):
-        self.assertFalse(self.activity_status.is_favorited)
+        self.assertEqual(activity_status.participants,
+                         activity_status.activity.owner)
+        self.assertFalse(activity_status.is_participated)
+        self.assertFalse(activity_status.is_favorited)

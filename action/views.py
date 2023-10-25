@@ -1,50 +1,50 @@
 from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
-from decouple import config
-import pyrebase
 
-from .forms import ActivityForm
+from .forms import ActivityForm, UserEditForm
 from .models import Activity, ActivityStatus, FriendStatus, User
-from .utils import fetch_activity_status, fetch_friend_status, \
-    get_index_queryset
-
-firebase = pyrebase.initialize_app({
-    "apiKey": config('FIREBASE_API_KEY'),
-    "authDomain": config('FIREBASE_AUTH_DOMAIN'),
-    "projectId": config('FIREBASE_PROJECT_ID'),
-    "storageBucket": config('FIREBASE_STORAGE_BUCKET'),
-    "messagingSenderId": config('FIREBASE_MESSAGING_SENDER_ID'),
-    "appId": config('FIREBASE_APP_ID'),
-    "measurementId": config('FIREBASE_MEASUREMENT_ID'),
-    "databaseURL": config('FIREBASE_DATABASE_URL')
-})
-
-storage = firebase.storage()
+from .process_strategy import (ActivityBackgroundPicture, ActivityPicture,
+                               StrategyContext)
+from .utils import (activity_status_utils as asu,
+                    firebase_utils as fu,
+                    friend_status_utils as fsu,
+                    search_utils as su)
 
 
 # TODO refactor to separate file (utils.py + each views/models), especially get_queryset()
-
 class ProfileView(LoginRequiredMixin, generic.ListView):
     model = User
     template_name = 'action/profile.html'
 
-    # TODO move to EditProfileView, maybe Strategy Pattern
-    def post(self, request, *args, **kwargs):
-        if 'profile_picture' in request.FILES:
-            user = request.user
-            image_file = request.FILES['profile_picture']
-            image_name = f"{user.username}{user.id}"
-            storage.child(f"Profile_picture/{image_name}").put(image_file)
-            file_url = storage.child(f"Profile_picture/{image_name}").get_url(
-                None)
-            request.user.profile_picture = file_url
-            request.user.save()
-        return redirect('action:profile')
+
+class EditProfileView(LoginRequiredMixin, generic.UpdateView):
+    form_class = UserEditForm
+    template_name = 'action/edit_profile.html'
+
+    def get_object(self):
+        return User.objects.get(pk=self.request.user.id)
+
+    def form_valid(self, form):
+        super().form_valid(form)
+
+        messages.success(self.request, 'Profile edited successfully.')
+        return redirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        # Render the form with errors if it's invalid
+        messages.error(self.request,
+                       'Profile edit failed. Please check the form.')
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_success_url(self):
+        # Define the URL to redirect to on form success
+        return reverse('action:profile')
 
 
 class IndexView(generic.ListView):
@@ -52,7 +52,7 @@ class IndexView(generic.ListView):
     context_object_name = 'activity_list'
 
     def get_queryset(self):
-        return get_index_queryset(self.request)
+        return su.get_index_queryset(self.request)
 
 
 class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
@@ -62,17 +62,31 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     def get_initial(self):
         # Set the initial value for the field
         initial = super().get_initial()
-        initial['owner'] = self.request.user
         initial['pub_date'] = timezone.now()
         return initial
 
-    # TODO the same for background image
+    # def process_image(self, form):
+    #     # Create an Activity instance and set its attributes
+    #     activity = form.save(commit=False)
+
+    #     if form.is_valid():
+    #         context = StrategyContext()
+    #         # Set the activity's picture attribute
+    #         if 'picture' in self.request.FILES:
+    #             context.set_process(ActivityPicture())
+    #             activity.picture = context.upload_and_get_image_url(form)
+
+    #         # Set the activity's background picture attribute
+    #         if 'background_picture' in self.request.FILES:
+    #             context.set_process(ActivityBackgroundPicture())
+    #             activity.background_picture = context.upload_and_get_image_url(form)
+
     def process_image(self, form):
         # Create an Activity instance and set its attributes
         activity = form.save(commit=False)
         activity.title = self.request.POST['title']
         image_name = f"{activity.title}{activity.id}"
-
+        storage = fu.get_firebase_instance().storage()
         # Add activity picture
         if form.is_valid() and 'picture' in self.request.FILES:
             # Process the image and save it to the user
@@ -141,7 +155,7 @@ class DetailView(generic.DetailView):
             self.pk = self.kwargs['pk']
             context = {
                 "activity": Activity.objects.get(pk=self.pk),
-                "activity_status": fetch_activity_status(request, self.pk)
+                "activity_status": asu.fetch_activity_status(request, self.pk)
             }
             return render(request, self.template_name, context)
 
@@ -153,8 +167,8 @@ class DetailView(generic.DetailView):
 
 @login_required
 def participate(request, activity_id: int):
-    activity_status: ActivityStatus = fetch_activity_status(request,
-                                                            activity_id)
+    activity_status: ActivityStatus = asu.fetch_activity_status(request,
+                                                                activity_id)
 
     if activity_status.is_participated:
         messages.info(request, "You are already participating.")
@@ -168,8 +182,8 @@ def participate(request, activity_id: int):
 
 @login_required
 def leave(request, activity_id: int):
-    activity_status: ActivityStatus = fetch_activity_status(request,
-                                                            activity_id)
+    activity_status: ActivityStatus = asu.fetch_activity_status(request,
+                                                                activity_id)
 
     if activity_status.is_participated:
         activity_status.is_participated = False
@@ -184,8 +198,8 @@ def leave(request, activity_id: int):
 
 @login_required
 def favorite(request, activity_id: int):
-    activity_status: ActivityStatus = fetch_activity_status(request,
-                                                            activity_id)
+    activity_status: ActivityStatus = asu.fetch_activity_status(request,
+                                                                activity_id)
 
     if activity_status.is_favorited:
         messages.info(request, "You have already favorited this activity.")
@@ -200,8 +214,8 @@ def favorite(request, activity_id: int):
 
 @login_required
 def unfavorite(request, activity_id: int):
-    activity_status: ActivityStatus = fetch_activity_status(request,
-                                                            activity_id)
+    activity_status: ActivityStatus = asu.fetch_activity_status(request,
+                                                                activity_id)
 
     if activity_status.is_favorited:
         activity_status.is_favorited = False
@@ -217,7 +231,7 @@ def unfavorite(request, activity_id: int):
 # TODO add check to not allow user to add themselves as friend
 @login_required
 def add_friend(request, friend_id: int):
-    friend_status = fetch_friend_status(request, friend_id)
+    friend_status = fsu.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
@@ -232,7 +246,7 @@ def add_friend(request, friend_id: int):
 # TODO add check to not allow user to remove themselves as friend
 @login_required
 def remove_friend(request, friend_id: int):
-    friend_status = fetch_friend_status(request, friend_id)
+    friend_status = fsu.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         friend_status.request_status = None
@@ -247,7 +261,7 @@ def remove_friend(request, friend_id: int):
 
 @login_required
 def accept_request(request, friend_id: int):
-    friend_status = fetch_friend_status(request, friend_id)
+    friend_status = fsu.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
@@ -262,7 +276,7 @@ def accept_request(request, friend_id: int):
 
 @login_required
 def decline_request(request, friend_id: int):
-    friend_status = fetch_friend_status(request, friend_id)
+    friend_status = fsu.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
