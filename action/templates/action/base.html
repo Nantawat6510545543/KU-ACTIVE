@@ -5,7 +5,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'action/style.css' %}">
+    <link rel="stylesheet" href="{% static 'action/base.css'%}">
+    <link rel="stylesheet" href="{% static 'action/detail.css' %}">
+    <link rel="stylesheet" href="{% static 'action/friends.css'%}">
+    <link rel="stylesheet" href="{% static 'action/friends_add.css' %}">
+    <link rel="stylesheet" href="{% static 'action/friends_request.css'%}">
+    <link rel="stylesheet" href="{% static 'action/index.css' %}">
+    <link rel="stylesheet" href="{% static 'action/profile.css'%}">
+    <link rel="stylesheet" href="{% static 'action/style.css'%}">
     <title>
     {% block title %}
     {% endblock %}
@@ -13,55 +20,54 @@
 </head>
 
 <body>
-    <div class="topnav">
-    {% block content_topnav %}
-        <a href="{% url 'action:index' %}"
-        style="color: #00FFFF;">Go to Home</a>
-        {% if user.is_authenticated %}
-            <a style="color: rgb(125, 125, 225)" href="{% url 'action:profile' %}"
-                >User: {{ user.username.title }}</a>
-        {% endif %}
-    {% endblock %}
+    <nav class="navigation-bar">
+        <div class="topnav">
+        {% block account_topnav %}
+            <a class="title" href="{% url 'action:index' %}">KU-ACTIVE</a>
 
-    {% block account_topnav %}
+        {% if user.is_authenticated %}
+            <div class="user-box">
+                <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
+                <img class="img" src="{{ user.profile_picture }}">
+            </div>
+            <a class="friends" href="{% url 'action:friends' %}">Friends</a>
+            <a class="new-activity" href="{% url 'action:create' %}">Create New Activity!</a>
         {% if user.is_superuser %}
-        <a class="link" style="color: rgb(0, 125, 255)"
-                href="{% url 'admin:index' %}">Admin</a>
-        {% endif %}
-
-        {% if user.is_authenticated %}
-        <a href="{% url 'action:create' %}">
-            Create Activity
-        </a>
-
-        <a style="color: rgb(255,69,0);"
-            href="{% url 'logout' %}">
-            Logout
-        </a>
-
-        <a href="{% url 'action:friends' %}"> Friend List </a>
+            <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
+        {% endif%}
         {% else %}
-        <a class="link" style="color: rgb(0, 128, 0)"
-            href="{% url 'login' %}?next={{ request.path }}">
-            Login
-        </a>
-        <a class="link" style="color: rgb(255, 165, 0)"
-            href="{% url 'signup' %}">
-            Register
-        </a>
+            <div class="user-box">
+                <a class="user" href="{% url 'action:profile' %}">guest</a>
+                <img class="img" src="{% static 'action/images/guest-img.png' %}">
+            </div>
         {% endif %}
-    {% endblock %}
+        {% endblock %}
+        </div>
+
+        <div class="secnav">
+            <a class="title" href="{% url 'action:index' %}">Registered Activity</a>
+            <a class="title" href="{% url 'action:index' %}">Interested Activity</a>
+            <a class="title" href="{% url 'action:index' %}">Your Friends Join!</a>
+            <a class="title" href="{% url 'action:index' %}?criteria=upcoming">Upcoming</a>
+            <a class="title" href="{% url 'action:index' %}?criteria=popular">Popular</a>
+            <a class="title" href="{% url 'action:index' %}?criteria=recent">Recent</a>
+            <a class="title" href="{% url 'action:index' %}">Category</a>
+        </div>
+    </nav>
+
+    <div class="message">
+        {% block message %}
+            {% if messages %}
+                {% for message in messages %}
+                    <a>{{ message }}</a>
+                {% endfor %}
+            {% endif %}
+        {% endblock %}
     </div>
 
-    {% block message %}
-        {% if messages %}
-            {% for message in messages %}
-                <a>{{ message }}</a>
-            {% endfor %}
-        {% endif %}
-    {% endblock %}
-
-    {% block content %}
-    {% endblock %}
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
 </body>
 </html>

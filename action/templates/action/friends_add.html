@@ -10,23 +10,23 @@
         <a href="{% url 'action:request_view' %}">Friend Request</a>
     </div>
     <div class="friend-list-box">
-    {% for each_friend in user.friends %}
+    {% for each_friend in friend_add_list %}
         <div class="each-friend">
             <p class="friend-name">{{ each_friend }}</p>
-            <form action="{% url 'action:remove_friend' friend_id=each_friend.id %}">
-                <button type="submit">Remove Friend</button>
+            <form action="{% url 'action:add_friend' friend_id=each_friend.id %}">
+                <button type="submit">Add Friend</button>
             </form>
         </div>
         <div class="each-friend">
             <p class="friend-name">{{ each_friend }}</p>
-            <form action="{% url 'action:remove_friend' friend_id=each_friend.id %}">
-                <button type="submit">Remove Friend</button>
+            <form action="{% url 'action:add_friend' friend_id=each_friend.id %}">
+                <button type="submit">Add Friend</button>
             </form>
         </div>
         <div class="each-friend">
             <p class="friend-name">{{ each_friend }}</p>
-            <form action="{% url 'action:remove_friend' friend_id=each_friend.id %}">
-                <button type="submit">Remove Friend</button>
+            <form action="{% url 'action:add_friend' friend_id=each_friend.id %}">
+                <button type="submit">Add Friend</button>
             </form>
         </div>
     {% empty %}
