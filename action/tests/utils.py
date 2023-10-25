@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.contrib.sites.models import Site
-from decouple import config
 from django.utils import timezone
 from allauth.socialaccount.models import SocialApp
 from action.models import User, Activity, ActivityStatus, FriendStatus, Tag
@@ -29,8 +28,8 @@ class Tester(TestCase):
             provider='google',
             defaults={
                 'name': 'Login with Google OAuth',
-                'client_id': config('GOOGLE_OAUTH_CLIENT_ID'),
-                'secret': config('GOOGLE_OAUTH_SECRET_KEY'),
+                'client_id': "",
+                'secret': "",
             },
         )
         self.social_app.sites.add(site)
