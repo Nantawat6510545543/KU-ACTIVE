@@ -7,23 +7,24 @@
     {{ form.errors }}
     {% for field in form %}
         {% if field.name == 'owner' %}
-            {{ field.label_tag }} {{ user }}<br>
+            {{ field.label_tag }} <input value="{{ field.value }}" disabled>
         {% elif field.name == 'picture' or field.name == 'background_picture' %}
-            {{ field.label_tag }} <input type="file" name="{{ field.name }}"><br>
+            {{ field.label_tag }} <input type="file" name="{{ field.name }}">
         {% elif field.name == 'tags' %}
-            {{ field.label_tag }}<br>
+            {{ field.label_tag }}
             {% for tag in field.field.queryset %}
-            <label>
+            <label><br>
                 <input type="checkbox" name="{{ field.name }}" value="{{ tag.id }}"
                     {% if tag in field.value.all %}checked{% endif %}>
                     {{ tag }}
-            </label><br>
+            </label>
             {% empty %}
-                No tag currently available.<br>
+                No tag currently available.
             {% endfor %}
         {% else %}
-            {{ field.label_tag }} {{ field }}<br>
+            {{ field.label_tag }} {{ field }}
         {% endif %}
+        <br>
     {% endfor %}
     <input type="submit" value="Create">
 </form>

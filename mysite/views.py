@@ -10,9 +10,7 @@ class SignupView(CreateView):
     form_class = UserForm
     template_name = 'registration/signup.html'
 
-
     def form_valid(self, form):
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
         super().form_valid(form)
 
         username = form.cleaned_data.get('username')
@@ -22,7 +20,6 @@ class SignupView(CreateView):
         return redirect(self.get_success_url())
 
     def form_invalid(self, form):
-        print("NNNNNNNNNNNNNN")
         # Handle the case when the form is invalid
         return self.render_to_response(self.get_context_data(form=form))
 

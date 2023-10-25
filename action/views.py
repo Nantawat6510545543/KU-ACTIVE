@@ -21,18 +21,6 @@ class ProfileView(LoginRequiredMixin, generic.ListView):
     model = User
     template_name = 'action/profile.html'
 
-    # TODO move to EditProfileView, then refactor
-    def post(self, *args, **kwargs):
-        if 'profile_picture' in self.request.FILES:
-            user = self.request.user
-            image_name = f"{user.username}{user.id}"
-
-            context = StrategyContext()
-            context.set_process(ProfilePicture())
-            user.profile_picture = context.process_image_url(self.request, image_name)
-            user.save()
-        return redirect('action:profile')
-
 
 class EditProfileView(LoginRequiredMixin, generic.UpdateView):
     model = User
@@ -45,18 +33,17 @@ class EditProfileView(LoginRequiredMixin, generic.UpdateView):
     def form_valid(self, form):
         # Save the form data to the user profile
         profile = form.save(commit=False)
-        image_name = f"{profile.username}{profile.id}"
 
         # Handle the profile picture if it exists in the request
         if 'profile_picture' in self.request.FILES:
             context = StrategyContext()
             context.set_process(ProfilePicture())
-            profile.profile_picture = context.process_image_url(self.request, image_name)
-            messages.success(self.request, 'Profile edited successfully.')
+            profile.profile_picture = context.upload_and_get_image_url(form)
 
         super().form_valid(form)
         # Update the user's session to prevent session fixation
         update_session_auth_hash(self.request, profile)
+        messages.success(self.request, 'Profile edited successfully.')
         return redirect(self.get_success_url())
 
     def form_invalid(self, form):
@@ -85,26 +72,25 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     def get_initial(self):
         # Set the initial value for the field
         initial = super().get_initial()
-        initial['owner'] = self.request.user
+        initial['owner'] = str(self.request.user)
         initial['pub_date'] = timezone.now()
         return initial
 
     def process_image(self, form):
         # Create an Activity instance and set its attributes
         activity = form.save(commit=False)
-        image_name = f"{activity.title}{activity.id}"
 
         if form.is_valid():
             context = StrategyContext()
             # Set the activity's picture attribute
             if 'picture' in self.request.FILES:
                 context.set_process(ActivityPicture())
-                activity.picture = context.process_image_url(self.request, image_name)
+                activity.picture = context.upload_and_get_image_url(form)
 
             # Set the activity's background picture attribute
             if 'background_picture' in self.request.FILES:
                 context.set_process(ActivityBackgroundPicture())
-                activity.background_picture = context.process_image_url(self.request, image_name)
+                activity.background_picture = context.upload_and_get_image_url(form)
 
     def form_valid(self, form):
         self.process_image(form)
