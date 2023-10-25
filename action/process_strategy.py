@@ -26,24 +26,15 @@ class StrategyContext:
         print(f"Image file = {image_file}")
         print(f"Image path = {image_path}")
 
-        # TODO extract method
-        # Check if the file exists
-        try:
-            # Attempt to get the URL of the file (checks if it exists)
+        # IF picture not in database
+        #       put the picture in datasbase
+        # 
+        #  Then get fire_url   
+        if image_file:
+            storage.child(image_path).put(image_file)
             file_url = storage.child(image_path).get_url(None)
-            print(f"FILE = {file_url}")
-        except Exception as e:
-            print(f"The file at {image_path} does not exist or an error occurred. Uploading the file...")
-
-            if image_file:
-                # Upload the file
-                storage.child(image_path).put(image_file)
-
-                # Get the URL of the uploaded file
-                file_url = storage.child(image_path).get_url(None)
-                print(f"The file has been uploaded and its URL is: {file_url}")
-            else:
-                file_url = self.strategy.get_default_url()
+        else:
+            file_url = self.strategy.get_default_url()
 
         return file_url
 
