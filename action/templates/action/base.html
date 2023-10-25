@@ -28,7 +28,7 @@
         {% if user.is_authenticated %}
             <div class="user-box">
                 <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
-                <img class="img" src="{% if activity.picture %} {{ activity.picture }}
+                <img class="img" src="{% if user.profile_picture %} {{ user.profile_picture }}
                      {% else %} {% static 'action/images/guest-img.png' %}
                      {% endif %}"
 >
