@@ -9,8 +9,10 @@ from django.views import generic
 
 from .forms import ActivityForm, UserEditForm
 from .models import Activity, ActivityStatus, FriendStatus, User
-from .process_strategy import (ActivityBackgroundPicture, ActivityPicture, StrategyContext)
+from .process_strategy import (ActivityBackgroundPicture, ActivityPicture,
+                               StrategyContext)
 from .utils import (activity_status_utils as asu,
+                    firebase_utils as fu,
                     friend_status_utils as fsu,
                     search_utils as su)
 
@@ -79,8 +81,36 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     #             context.set_process(ActivityBackgroundPicture())
     #             activity.background_picture = context.upload_and_get_image_url(form)
 
+    def process_image(self, form):
+        # Create an Activity instance and set its attributes
+        activity = form.save(commit=False)
+        activity.title = self.request.POST['title']
+        image_name = f"{activity.title}{activity.id}"
+        storage = fu.get_firebase_instance().storage()
+        # Add activity picture
+        if form.is_valid() and 'picture' in self.request.FILES:
+            # Process the image and save it to the user
+            image_file = self.request.FILES['picture']
+            image_path = f"Activity_picture/{image_name}"
+
+            # Set the activity's picture attribute
+            storage.child(image_path).put(image_file)
+            file_url = storage.child(image_path).get_url(None)
+            activity.picture = file_url
+
+        # Add activity background picture
+        if form.is_valid() and 'background_picture' in self.request.FILES:
+            # Process the image and save it to the user
+            image_file = self.request.FILES['background_picture']
+            image_path = f"Activity_background_picture/{image_name}"
+
+            # Set the activity's picture attribute
+            storage.child(image_path).put(image_file)
+            file_url = storage.child(image_path).get_url(None)
+            activity.background_picture = file_url
+
     def form_valid(self, form):
-        # self.process_image(form)
+        self.process_image(form)
         messages.success(self.request, 'Activity created successfully.')
         return super().form_valid(form)
 
@@ -138,7 +168,7 @@ class DetailView(generic.DetailView):
 @login_required
 def participate(request, activity_id: int):
     activity_status: ActivityStatus = asu.fetch_activity_status(request,
-                                                            activity_id)
+                                                                activity_id)
 
     if activity_status.is_participated:
         messages.info(request, "You are already participating.")
@@ -153,7 +183,7 @@ def participate(request, activity_id: int):
 @login_required
 def leave(request, activity_id: int):
     activity_status: ActivityStatus = asu.fetch_activity_status(request,
-                                                            activity_id)
+                                                                activity_id)
 
     if activity_status.is_participated:
         activity_status.is_participated = False
@@ -169,7 +199,7 @@ def leave(request, activity_id: int):
 @login_required
 def favorite(request, activity_id: int):
     activity_status: ActivityStatus = asu.fetch_activity_status(request,
-                                                            activity_id)
+                                                                activity_id)
 
     if activity_status.is_favorited:
         messages.info(request, "You have already favorited this activity.")
@@ -185,7 +215,7 @@ def favorite(request, activity_id: int):
 @login_required
 def unfavorite(request, activity_id: int):
     activity_status: ActivityStatus = asu.fetch_activity_status(request,
-                                                            activity_id)
+                                                                activity_id)
 
     if activity_status.is_favorited:
         activity_status.is_favorited = False
