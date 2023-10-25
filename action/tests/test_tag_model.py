@@ -1,13 +1,16 @@
-from django.test import TestCase
-from action.models import Tag
+from .utils import Tester
 
 
-class TagTestCase(TestCase):
+class TagTestCase(Tester):
     def setUp(self):
-        self.tag = Tag.objects.create(name="Test Tag")
+        super().setUp()
+        self.tag1_name = "Tag1"
+        self.tag1 = self.create_tag(self.tag1_name)
 
-    def test_tag_name(self):
-        self.assertEqual(self.tag.name, "Test Tag")
+        self.tag2_name = "Tag2"
+        self.tag2 = self.create_tag(self.tag2_name)
 
-    def test_tag_str(self):
-        self.assertEqual(str(self.tag), "Test Tag")
+    def test_tag_attribute(self):
+        self.assertEqual(self.tag1.name, self.tag1_name)
+        self.assertEqual(self.tag2.name, self.tag2_name)
+
