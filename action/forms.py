@@ -47,15 +47,9 @@ class UserForm(UserCreationForm):
         # context = StrategyContext()
         # context.set_process(ProfilePicture())
         # file_url = context.upload_and_get_image_url(self)
-
+        #
         # cleaned_data['profile_picture'] = file_url
         return cleaned_data
-
-
-class ProfilePictureForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['profile_picture']
 
 
 class UserEditForm(UserChangeForm):
@@ -87,11 +81,12 @@ class ActivityForm(forms.ModelForm):
         widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         input_formats=['%Y-%m-%dT%H:%M']
     )
+    picture = forms.FileField(required=False)
+    background_picture = forms.FileField(required=False)
 
     class Meta:
         model = Activity
         fields = '__all__'
-
 
     def clean(self):
         cleaned_data = super().clean()

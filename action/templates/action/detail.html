@@ -47,7 +47,7 @@
             <p><strong>Participants:</strong> {{ activity.participants }}</p>
             <p><strong>Participant Counts:</strong> {{ activity.participants.count }}</p>
             <p><strong>Background Picture:</strong> 
-                <img src="{% if activity.picture %} {{ activity.picture }}
+                <img src="{% if activity.background_picture %} {{ activity.background_picture }}
                      {% else %} {% static 'action/images/guest-img.png' %}
                      {% endif %}"
                 alt="{{ activity.title }}'s Picture" width="400" height="240">
