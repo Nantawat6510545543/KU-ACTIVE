@@ -34,10 +34,12 @@
 >
             </div>
             <a class="friends" href="{% url 'action:friends' %}">Friends</a>
-            <a class="new-activity" href="{% url 'action:create' %}">Create New Activity!</a>
+
+            <a class="new-activity" href="{% url 'action:manage' %}">Manage Your Activity!</a>
+
         {% if user.is_superuser %}
             <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
-        {% endif%}
+        {% endif %}
         {% else %}
             <div class="user-box">
                 <a class="user" href="{% url 'action:profile' %}">guest</a>
@@ -47,7 +49,7 @@
         {% endblock %}
         </div>
 
-        <div class="secnav">
+        {% comment %} <div class="secnav">
             <a class="title" href="{% url 'action:index' %}">Registered Activity</a>
             <a class="title" href="{% url 'action:index' %}">Interested Activity</a>
             <a class="title" href="{% url 'action:index' %}">Your Friends Join!</a>
@@ -55,7 +57,7 @@
             <a class="title" href="{% url 'action:index' %}?criteria=popular">Popular</a>
             <a class="title" href="{% url 'action:index' %}?criteria=recent">Recent</a>
             <a class="title" href="{% url 'action:index' %}">Category</a>
-        </div>
+        </div> {% endcomment %}
     </nav>
 
     <div class="message">

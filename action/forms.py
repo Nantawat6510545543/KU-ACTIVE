@@ -19,7 +19,7 @@ class ActivityAdminForm(forms.ModelForm):
 
 
 class UserForm(UserCreationForm):
-    profile_picture = forms.FileField(required=False)
+    # profile_picture = forms.FileField(required=False)
 
     class Meta:
         model = User
@@ -31,7 +31,7 @@ class UserForm(UserCreationForm):
             'first_name',
             'last_name',
             'bio',
-            'profile_picture'
+            # 'profile_picture'
         ]
 
     def clean(self):
@@ -44,11 +44,11 @@ class UserForm(UserCreationForm):
             raise forms.ValidationError('Username already exists.')
 
         # Handle the profile picture
-        context = StrategyContext()
-        context.set_process(ProfilePicture())
-        file_url = context.upload_and_get_image_url(self)
+        # context = StrategyContext()
+        # context.set_process(ProfilePicture())
+        # file_url = context.upload_and_get_image_url(self)
 
-        cleaned_data['profile_picture'] = file_url
+        # cleaned_data['profile_picture'] = file_url
         return cleaned_data
 
 
@@ -92,9 +92,10 @@ class ActivityForm(forms.ModelForm):
         model = Activity
         fields = '__all__'
 
-    # TODO merge into clean()
+
     def clean(self):
         cleaned_data = super().clean()
+        print("SSSS")
         # print(f"Owner: {self.instance}")
         # current_owner = User.objects.filter(pk=self.instance.owner)
 
