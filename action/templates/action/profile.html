@@ -10,7 +10,7 @@ profile
 <div class="profile-box">
     <h2 class="title-profile">Your Profile</h2>
     <form action="{% url 'action:edit_profile' %}">
-        <button type="submit">Edit Profile</button>
+        <button type="submit" class="edit">Edit Profile</button>
     </form>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
