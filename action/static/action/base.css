@@ -49,6 +49,18 @@ nav {
     border-radius: 45px;
 }
 
+.topnav a.calendar {
+    float: right;
+    display:inline-block;
+    padding: 17px;
+    margin-right: 1%;
+
+    background-color: #04AA6D;
+    color: black;
+    background: white;
+    border-radius: 45px;
+}
+
 .topnav a:hover {
     font-size: 20px;
 }
@@ -77,7 +89,7 @@ nav {
     background: white;
 }
 
-.topnav .user-box{
+.topnav .user-box {
     display: flex;
     align-items: center;
     float: right;
@@ -237,14 +249,6 @@ nav {
 .content {
     position: static;
     overflow-y: auto;
-}
-
-
-/*condition when screen sized is more than 1171px*/
-@media only screen and (min-width: 1171px) {
-    .secnav {
-        display: block;
-    }
 }
 
 
