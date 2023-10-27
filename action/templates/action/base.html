@@ -30,8 +30,8 @@
                 <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
                 <img class="img" src="{% if user.profile_picture %} {{ user.profile_picture }}
                      {% else %} {% static 'action/images/guest-img.png' %}
-                     {% endif %}"
->
+                     {% endif %}">
+                <a class="user" href="{% url 'logout' %}"> Logout </a>
             </div>
             <a class="friends" href="{% url 'action:friends' %}">Friends</a>
 
