@@ -23,26 +23,26 @@
     <nav class="navigation-bar">
         <div class="topnav">
         {% block account_topnav %}
-            <a class="title" href="{% url 'action:index' %}">KU-ACTIVE</a>
+        <a class="title" href="{% url 'action:index' %}">KU-ACTIVE</a>
 
         {% if user.is_authenticated %}
             <div class="user-box">
-                <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
+                <a class="user" href="{% url 'action:profile' user_id=user.id %}"> {{ user.username.title }}</a>
                 <img class="img" src="{% if user.profile_picture %} {{ user.profile_picture }}
                      {% else %} {% static 'action/images/guest-img.png' %}
                      {% endif %}"
 >
             </div>
             <a class="friends" href="{% url 'action:friends' %}">Friends</a>
-
             <a class="new-activity" href="{% url 'action:manage' %}">Manage Your Activity!</a>
 
-        {% if user.is_superuser %}
-            <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
-        {% endif %}
+            {% if user.is_superuser %}
+                <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
+            {% endif %}
+
         {% else %}
             <div class="user-box">
-                <a class="user" href="{% url 'action:profile' %}">guest</a>
+                <a class="user" href="{% url 'login' %}">guest</a>
                 <img class="img" src="{% static 'action/images/guest-img.png' %}">
             </div>
         {% endif %}

@@ -19,8 +19,9 @@ app_name = 'action'
 
 urlpatterns = [
     path('', IndexView.IndexView.as_view(), name='index'),
-    path('profile/', ProfileView.ProfileView.as_view(), name='profile'),
     path('profile/edit', EditProfileView.EditProfileView.as_view(), name='edit_profile'),
+    path('profile/', ProfileView.ProfileView.as_view(), name='profile'),
+    path('profile/<int:user_id>', ProfileView.ProfileView.as_view(), name='profile'),
 
     path('friends/', FriendView.FriendView.as_view(), name='friends'),
     path('friends/add/', FriendView.AddFriendView.as_view(), name='add_view'),
