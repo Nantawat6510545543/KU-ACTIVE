@@ -3,16 +3,13 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
-from decouple import config
 
 
 # TODO look into Manager and QuerySetManager class
 # TODO use ABC for inheritance, not subclass
 
 class User(AbstractUser):
-    profile_picture = models.URLField(max_length=500,
-                                      default=config("DEFAULT_PROFILE",
-                                                     default=''), blank=True)
+    profile_picture = models.TextField(max_length=100000, blank=True)
     bio = models.TextField(blank=True)
 
     @property
@@ -63,9 +60,8 @@ class Activity(models.Model):
                                             default=None)
     place = models.CharField('Place', max_length=200, blank=True)
     full_description = models.TextField('Full Description', blank=True)
-    # TODO make default picture for background image
-    picture = models.URLField(max_length=500, blank=True, default='')
-    background_picture = models.URLField(max_length=500, blank=True)
+    picture = models.TextField(max_length=500, blank=True, default='')
+    background_picture = models.TextField(max_length=500, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
 
     @property

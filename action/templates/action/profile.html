@@ -18,7 +18,7 @@ profile
         <button type="submit">Upload Profile Picture</button>
     </form>
     <div class="profile-img">
-        <img src="{% if user.profile_picture %} {{ user.profile_picture }}
+        <img src="{% if user.profile_picture %} data:image/png;base64,{{ user.profile_picture }}
                      {% else %} {% static 'action/images/guest-img.png' %}
                      {% endif %}"
              alt="{{ user.username }}'s Profile Picture" width="220px" height="220px"

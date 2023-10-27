@@ -1,25 +1,21 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.views import generic
+import base64
 
 from ..models import User
-from ..utils import firebase_utils as fs_utils
+from ..utils import encoder
 
 
 # TODO refactor to separate file (utils.py + each views/models), especially get_queryset()
+def post(request):
+    if 'profile_picture' in request.FILES:
+        image_file = request.FILES['profile_picture']
+        request.user.profile_picture = encoder.image_to_base64(image_file)
+        request.user.save()
+    return redirect('action:profile')
+
+
 class ProfileView(LoginRequiredMixin, generic.ListView):
     model = User
     template_name = 'action/profile.html'
-
-    def post(self, request, *args, **kwargs):
-        if 'profile_picture' in request.FILES:
-            user = request.user
-            storage = fs_utils.get_firebase_instance().storage()
-            image_file = request.FILES['profile_picture']
-            image_name = f"{user.username}{user.id}"
-            storage.child(f"Profile_picture/{image_name}").put(image_file)
-            file_url = storage.child(f"Profile_picture/{image_name}").get_url(
-                None)
-            request.user.profile_picture = file_url
-            request.user.save()
-        return redirect('action:profile')
