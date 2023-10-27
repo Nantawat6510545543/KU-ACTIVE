@@ -62,7 +62,7 @@ profile
     <div class="participated-activity">
         <h1>Participated Activities: {{ profile.participated_activity.count }}</h1>
         <div class="scroll">
-            {% for participated in  profile.participated_activity  %}
+            {% for participated in profile.participated_activity  %}
                 <li class="Participated-box"><a href="{% url 'action:detail' participated.id %}">{{ participated }}</a></li>
             {% endfor %}
         </div>
@@ -73,7 +73,9 @@ profile
 <!--        <h1>Favorite Activity Count: {{ user.favorited_activity.count }} </h1>-->
 
     {% if user.id == profile.id %}
-        <div class="logout"><a href="{% url 'logout' %}">Logout</a></div>
+        <div class="logout">
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
     {% endif %}
 </div>
 {% endblock %}
