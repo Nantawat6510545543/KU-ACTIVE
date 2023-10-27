@@ -37,7 +37,7 @@
                 </div>
                 <a class="friends" href="{% url 'action:friends' %}">Friends</a>
                 <a class="new-activity" href="{% url 'action:create' %}">Create New Activity!</a>
-                <a class="calendar" href="#">Calendar</a>
+                <a class="calendar" href="{% url 'action:calendar' %}">Calendar</a>
                 {% if user.is_superuser %}
                     <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
                 {% endif%}

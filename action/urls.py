@@ -11,6 +11,7 @@ from .views import (
     FriendView,
     IndexView,
     ProfileView,
+    CalendarView,
 )
 
 app_name = 'action'
@@ -32,4 +33,5 @@ urlpatterns = [
     path('<int:activity_id>/leave/', Activity.leave, name='leave'),
     path('<int:activity_id>/favorite/', Activity.favorite, name='favorite'),
     path('<int:activity_id>/unfavorite/', Activity.unfavorite, name='unfavorite'),
+    path('calendar/', CalendarView.CalendarView.as_view(), name='calendar'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
