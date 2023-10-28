@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.views import generic
 
 from ..models import Activity
-from ..utils import activity_status_utils as as_utils
+from .. import utils
 
 
 class DetailView(generic.DetailView):
@@ -14,7 +14,7 @@ class DetailView(generic.DetailView):
             self.pk = self.kwargs['pk']
             context = {
                 "activity": Activity.objects.get(pk=self.pk),
-                "activity_status": as_utils.fetch_activity_status(request, self.pk)
+                "activity_status": utils.fetch_activity_status(request, self.pk)
             }
             return render(request, self.template_name, context)
 

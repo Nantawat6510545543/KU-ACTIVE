@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.views import generic
 
 from ..models import User
-from ..utils import firebase_utils as fs_utils
+from .. import utils
 
 
 # TODO refactor to separate file (utils.py + each views/models), especially get_queryset()
@@ -32,7 +32,7 @@ class ProfileView(LoginRequiredMixin, generic.ListView):
     def post(self, request, *args, **kwargs):
         if 'profile_picture' in request.FILES:
             user = request.user
-            storage = fs_utils.get_firebase_instance().storage()
+            storage = utils.get_firebase_instance().storage()
             image_file = request.FILES['profile_picture']
             image_name = f"{user.username}{user.id}"
             storage.child(f"Profile_picture/{image_name}").put(image_file)

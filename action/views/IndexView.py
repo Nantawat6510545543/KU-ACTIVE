@@ -1,6 +1,6 @@
 from django.views import generic
 
-from ..utils import search_utils as su
+from .. import utils
 
 
 class IndexView(generic.ListView):
@@ -8,4 +8,4 @@ class IndexView(generic.ListView):
     context_object_name = 'activity_list'
 
     def get_queryset(self):
-        return su.get_index_queryset(self.request)
+        return utils.get_index_queryset(self.request)
