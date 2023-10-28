@@ -88,11 +88,9 @@ class ActivityForm(forms.ModelForm):
         model = Activity
         fields = '__all__'
 
+
     def clean(self):
         cleaned_data = super().clean()
-        print("SSSS")
-        # print(f"Owner: {self.instance}")
-        # current_owner = User.objects.filter(pk=self.instance.owner)
 
         context = StrategyContext()
         # # Set the activity's picture attribute

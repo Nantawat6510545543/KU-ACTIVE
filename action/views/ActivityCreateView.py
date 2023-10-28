@@ -14,6 +14,7 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     def get_initial(self):
         # Set the initial value for the field
         initial = super().get_initial()
+        initial['owner'] = self.request.user
         initial['pub_date'] = timezone.now()
         return initial
 

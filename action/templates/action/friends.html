@@ -4,13 +4,22 @@
 
 <div class="friend">
     <div class="friend-menu">
+        {% comment %} 
+            using base inheritance for friend will probaly save about 80% of the lines,
+            consider using it 
+        {% endcomment %}
         <div class="friend-nav-bar">
             <a href="{% url 'action:friends' %}">Friend List</a>
             <a href="{% url 'action:add_view' %}">Add Friends</a>
             <a href="{% url 'action:request_view' %}">Friend Request</a>
+            <form> 
+                <input type="search" id="query" name="q" placeholder="Search...">
+                <button>Search</button>
+            </form>
         </div>
+
         <div class="friend-list-box">
-        {% for each_friend in user.friends %}
+        {% for each_friend in friend_list %}
             <div class="each-friend">
                 <p class="friend-name">
                     <a href="{% url 'action:profile' user_id=each_friend.id %}">{{ each_friend }}</a>

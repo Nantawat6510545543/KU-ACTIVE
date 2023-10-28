@@ -7,7 +7,9 @@
     {% csrf_token %}
     {{ form.errors }}
     {% for field in form %}
-        {% if field.name == 'picture' or field.name == 'background_picture' %}
+        {% if field.name == 'owner' %}
+            {{ field.label_tag }} {{ field.as_hidden }} {{ user }}
+        {% elif field.name == 'picture' or field.name == 'background_picture' %}
             {{ field.label_tag }} <input type="file" name="{{ field.name }}">
         {% elif field.name == 'tags' %}
             {{ field.label_tag }}

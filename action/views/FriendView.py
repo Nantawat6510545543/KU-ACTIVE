@@ -5,8 +5,16 @@ from ..models import FriendStatus, User
 
 
 class FriendView(LoginRequiredMixin, generic.ListView):
-    model = User
     template_name = 'action/friends.html'
+    context_object_name = 'friend_list'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        user_friend = self.request.user.friends
+
+        if query:
+            user_friend = user_friend.filter(username__icontains=query)
+        return user_friend
 
 
 class AddFriendView(LoginRequiredMixin, generic.ListView):
@@ -14,7 +22,15 @@ class AddFriendView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'friend_add_list'
 
     def get_queryset(self):
-        return User.objects.exclude(username=self.request.user)
+        query = self.request.GET.get('q')
+        user = self.request.user
+
+        # Exclude yourself from the list and people you are already friends with
+        add_list = User.objects.exclude(id=user.id).exclude(id__in=user.friends)
+
+        if query:
+            add_list = add_list.filter(username__icontains=query)
+        return add_list
 
 
 class RequestView(LoginRequiredMixin, generic.ListView):
@@ -22,5 +38,14 @@ class RequestView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'friend_request_list'
 
     def get_queryset(self):
-        return FriendStatus.objects.filter(receiver=self.request.user,
-                                           request_status='Pending')
+        query = self.request.GET.get('q')
+
+        # Retrieve friend requests that are in a 'Pending' state
+        friend_request = FriendStatus.objects.filter(
+            receiver=self.request.user,
+            request_status='Pending'
+        )
+
+        if query:
+            friend_request = friend_request.filter(sender__username__icontains=query)
+        return friend_request
