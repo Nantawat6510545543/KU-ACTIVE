@@ -57,6 +57,11 @@
     word-wrap: break-word
 }
 
+.top-details .Participate-btn:hover{
+    background: green;
+    color: #eaf6eb;
+}
+
 .top-details .Favorite{
     float: right;
     margin: 2% 2% 0% 2%;
@@ -76,6 +81,11 @@
     font-family: Inter;
     font-weight: 700;
     word-wrap: break-word
+}
+
+.top-details .Favorite-btn:hover {
+    background: #E00201;
+    color: #ffeaea;
 }
 
 
