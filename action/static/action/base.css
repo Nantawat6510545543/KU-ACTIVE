@@ -272,15 +272,15 @@ nav {
 
     .topnav a.title {
         float:left;
-        margin-top:5px;
+        margin-top:10px;
         color: white;
-        font-size:45px;
+        font-size:40px;
     }
 
     .topnav a.title:hover {
-        margin-top:0px;
+        margin-top:5px;
         color: black;
-        font-size:55px;
+        font-size:45px;
     }
 
     .topnav .drop-button {
