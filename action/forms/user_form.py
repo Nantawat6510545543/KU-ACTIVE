@@ -6,7 +6,7 @@ from .. import utils
 
 
 class UserForm(UserCreationForm):
-    profile_picture = forms.FileField(required=False)
+    profile_picture = forms.ImageField(required=False)
 
     class Meta:
         model = User

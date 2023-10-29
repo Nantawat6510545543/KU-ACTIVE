@@ -4,14 +4,12 @@ from ..models import Activity
 from . import utils
 
 
-
 class ActivityForm(forms.ModelForm):
     date = pub_date = end_date = forms.DateTimeField(
         widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         input_formats=['%Y-%m-%dT%H:%M']
     )
-    picture = forms.FileField(required=False)
-    background_picture = forms.FileField(required=False)
+    picture = background_picture = forms.ImageField(required=False)
 
     class Meta:
         model = Activity
