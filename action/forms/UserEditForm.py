@@ -5,8 +5,6 @@ from ..models import User
 
 
 class UserEditForm(UserChangeForm):
-    password = forms.PasswordInput()
-
     class Meta:
         model = User
         fields = [
