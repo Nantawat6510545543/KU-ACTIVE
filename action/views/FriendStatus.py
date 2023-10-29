@@ -39,7 +39,7 @@ def remove_friend(request, friend_id: int):
 
 @login_required
 def accept_request(request, friend_id: int):
-    friend_status = fs_utils.fetch_friend_status(request, friend_id)
+    friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
@@ -54,7 +54,7 @@ def accept_request(request, friend_id: int):
 
 @login_required
 def decline_request(request, friend_id: int):
-    friend_status = fs_utils.fetch_friend_status(request, friend_id)
+    friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")

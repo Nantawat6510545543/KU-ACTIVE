@@ -31,13 +31,7 @@ class ProfileView(LoginRequiredMixin, generic.ListView):
 
     def post(self, request, *args, **kwargs):
         if 'profile_picture' in request.FILES:
-            user = request.user
-            storage = utils.get_firebase_instance().storage()
             image_file = request.FILES['profile_picture']
-            image_name = f"{user.username}{user.id}"
-            storage.child(f"Profile_picture/{image_name}").put(image_file)
-            file_url = storage.child(f"Profile_picture/{image_name}").get_url(
-                None)
-            request.user.profile_picture = file_url
+            request.user.profile_picture = utils.image_to_base64(image_file)
             request.user.save()
         return redirect('action:profile')

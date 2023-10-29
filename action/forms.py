@@ -2,8 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
 from .models import Activity, Tag, User
-from .process_strategy import ActivityBackgroundPicture, ActivityPicture, \
-    ProfilePicture, StrategyContext
+from . import utils
 
 
 class ActivityAdminForm(forms.ModelForm):
@@ -19,7 +18,7 @@ class ActivityAdminForm(forms.ModelForm):
 
 
 class UserForm(UserCreationForm):
-    # profile_picture = forms.FileField(required=False)
+    profile_picture = forms.FileField(required=False)
 
     class Meta:
         model = User
@@ -31,7 +30,7 @@ class UserForm(UserCreationForm):
             'first_name',
             'last_name',
             'bio',
-            # 'profile_picture'
+            'profile_picture'
         ]
 
     def clean(self):
@@ -44,11 +43,8 @@ class UserForm(UserCreationForm):
             raise forms.ValidationError('Username already exists.')
 
         # Handle the profile picture
-        # context = StrategyContext()
-        # context.set_process(ProfilePicture())
-        # file_url = context.upload_and_get_image_url(self)
-        #
-        # cleaned_data['profile_picture'] = file_url
+        image_file = self.cleaned_data.get('profile_picture')
+        cleaned_data['profile_picture'] = utils.image_to_base64(image_file)
         return cleaned_data
 
 
@@ -88,20 +84,16 @@ class ActivityForm(forms.ModelForm):
         model = Activity
         fields = '__all__'
 
-
     def clean(self):
-        cleaned_data = super().clean()
+        cleaned_data = super().clean() 
 
-        context = StrategyContext()
         # # Set the activity's picture attribute
-        # if 'picture' in self.request.FILES:
-        context.set_process(ActivityPicture())
-        cleaned_data['picture'] = context.upload_and_get_image_url(self)
+        image_file = self.cleaned_data.get('picture')
+        cleaned_data['picture'] = utils.image_to_base64(image_file)
 
         # # Set the activity's background picture attribute
-        # if 'background_picture' in self.request.FILES:
-        context.set_process(ActivityBackgroundPicture())
-        cleaned_data['background_picture'] = context.upload_and_get_image_url(
-            self)
+        image_file = self.cleaned_data.get('background_picture')
+        cleaned_data['background_picture'] = utils.image_to_base64(
+            image_file)
 
         return cleaned_data

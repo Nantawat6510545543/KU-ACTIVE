@@ -23,7 +23,7 @@ profile
     {% endif %}
 
     <div class="profile-img">
-        <img src="{% if profile.profile_picture %} {{ profile.profile_picture }}
+        <img src="{% if profile.profile_picture %} data:image/png;base64,{{ profile.profile_picture }}
                      {% else %} {% static 'action/images/guest-img.png' %}
                      {% endif %}"
              alt="{{ profile.username }}'s Profile Picture" width="220px" height="220px"
