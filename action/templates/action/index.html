@@ -32,12 +32,11 @@
         </form>
     </div>
 
-
     {% if activity_list %}
         {% for activity in activity_list %}
             <div class="activity">
                 <div class="activity-pics">
-                   <img src="{% if activity.picture %} {{ activity.picture }}
+                   <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
                              {% else %} {% static 'action/images/background.png' %}
                              {% endif %}"
                         alt="{{ activity.title }}'s Picture" width="400" height="240">

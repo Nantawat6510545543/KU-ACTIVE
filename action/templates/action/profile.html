@@ -8,6 +8,7 @@ profile
 {% block content %}
 
 <div class="profile-box">
+    {% if user.id == profile.id %}
     <h2 class="title-profile">Your Profile</h2>
     <form action="{% url 'action:edit_profile' %}">
         <button type="submit" class="edit">Edit Profile</button>
@@ -17,47 +18,51 @@ profile
         <input type="file" name="profile_picture">
         <button type="submit">Upload Profile Picture</button>
     </form>
+    {% else %}
+        <h2 class="title-profile">{{ profile.username }}'s Profile</h2>
+    {% endif %}
+
     <div class="profile-img">
-        <img src="{% if user.profile_picture %} {{ user.profile_picture }}
+        <img src="{% if profile.profile_picture %} data:image/png;base64,{{ profile.profile_picture }}
                      {% else %} {% static 'action/images/guest-img.png' %}
                      {% endif %}"
-             alt="{{ user.username }}'s Profile Picture" width="220px" height="220px"
+             alt="{{ profile.username }}'s Profile Picture" width="220px" height="220px"
         style="border-radius: 20px;">
     </div>
     <div class="right-detail">
         <div class="box-color">
             <h1 class="First-Name">First Name:</h1>
-            <p class="First-Name">{{ user.first_name }}</p>
+            <p class="First-Name">{{ profile.first_name }}</p>
         </div>
         <div class="box-color">
             <h1 class="Last-Name">Last Name:</h1>
-            <p class="Last-Name">{{ user.last_name }}</p>
+            <p class="Last-Name">{{ profile.last_name }}</p>
         </div>
         <div class="box-color">
             <h1 class="Email">Email:</h1>
-            <p class="Email">{{ user.email }}</p>
+            <p class="Email">{{ profile.email }}</p>
         </div>
         <div class="box-color">
             <h1 class="Count">Friend Count:</h1>
-            <p class="Count">{{ user.friends.count }} </p>
+            <p class="Count">{{ profile.friends.count }} </p>
         </div>
     </div>
     <div class="bottom-left">
         <div class="name">
             <h1 class="user-name">Username:</h1>
-            <p class="user-name">{{ user.username }}</p>
+            <p class="user-name">{{ profile.username }}</p>
         </div>
         <div class="bio">
             <p>Bio:</p>
-            <h1> {{ user.bio }}</h1>
+            <h1> {{ profile.bio }}</h1>
         </div>
     </div>
 <!--    <h1>Friends: {{ user.friends.all }} </h1>-->
 <!--    <h1>Friend Count: {{ user.friends.count }} </h1>-->
     <div class="participated-activity">
-        <h1>Participated Activities: {{ user.participated_activity.count }}</h1>
+        <h1>Participated Activities: {{ profile.participated_activity.count }}</h1>
         <div class="scroll">
-            {% for participated in  user.participated_activity  %}
+            {% for participated in profile.participated_activity  %}
                 <li class="Participated-box"><a href="{% url 'action:detail' participated.id %}">{{ participated }}</a></li>
             {% endfor %}
         </div>
@@ -66,6 +71,11 @@ profile
 <!--        <h1>Participated Activity Count: {{ user.participated_activity.count }} </h1>-->
 <!--        <h1>Favorite Activities: {{ user.favorited_activity }} </h1>-->
 <!--        <h1>Favorite Activity Count: {{ user.favorited_activity.count }} </h1>-->
-    <div class="logout"><a href="{% url 'logout' %}"> Logout </a></div>
+
+    {% if user.id == profile.id %}
+        <div class="logout">
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
