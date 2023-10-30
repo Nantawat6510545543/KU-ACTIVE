@@ -51,16 +51,18 @@ class Activity(models.Model):
     owner = models.ForeignKey(User, related_name='owner',
                               on_delete=models.CASCADE)
     title = models.CharField(max_length=100, blank=True)
-    date = models.DateTimeField('Date of Activity', null=True,
-                                blank=True)
     pub_date = models.DateTimeField('Date published', default=timezone.now)
-    end_date = models.DateTimeField('Date ended', null=True, blank=True)
+    end_date = models.DateTimeField('Application Deadline', null=True,
+                                    blank=True)
+    start_date = models.DateTimeField('Date of Activity', null=True,
+                                      blank=True)
+    last_date = models.DateTimeField('Last date of activity', null=True,
+                                     blank=True)
     description = models.CharField('Description', max_length=200)
     participant_limit = models.IntegerField(null=True, blank=True,
                                             default=None)
     place = models.CharField('Place', max_length=200, blank=True)
     full_description = models.TextField('Full Description', blank=True)
-    # TODO make default picture for background image
     picture = models.TextField(max_length=136533, blank=True, default='')
     background_picture = models.TextField(max_length=136533, blank=True,
                                           default='')
