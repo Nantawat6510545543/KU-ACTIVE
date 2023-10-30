@@ -3,11 +3,10 @@
 # in the same way as for standalone Postgres.
 import dj_database_url
 from decouple import config
-
 from mysite.settings import BASE_DIR
 
-DATABASE_URL = config("DATABASE_URL", default=None)
-if DATABASE_URL not in [None, "Neon-Database-URL"]:
+try:
+    DATABASE_URL = config("DATABASE_URL", default=None)
     DATABASES = {
         'default': dj_database_url.config(
             default=DATABASE_URL,
@@ -15,7 +14,7 @@ if DATABASE_URL not in [None, "Neon-Database-URL"]:
             conn_health_checks=True
         )
     }
-else:
+except ValueError:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

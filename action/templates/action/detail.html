@@ -33,21 +33,22 @@
     <div class="activity-owner">
         <p><strong>Owner:</strong> {{ activity.owner.username }}</p>
         <p><strong>Picture:</strong> 
-            <img src="{% if activity.picture %} {{ activity.picture }}
+            <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
                      {% else %} {% static 'action/images/background.png' %}
                      {% endif %}"
                 alt="{{ activity.title }}'s Picture" width="400" height="240">
         </p>
         <div class="activity-details">
             <p><strong>Date Published:</strong> {{ activity.pub_date }}</p>
-            <p><strong>End Date:</strong> {{ activity.end_date }}</p>
-            <p><strong>Date of Activity:</strong> {{ activity.date }}</p>
+            <p><strong>Application Deadline:</strong> {{ activity.end_date }}</p>
+            <p><strong>Date of Activity:</strong> {{ activity.start_date }}</p>
+            <p><strong>Last date of activity:</strong> {{ activity.last_date }}</p>
             <p><strong>Description:</strong> {{ activity.description }}</p>
             <p><strong>Place:</strong> {{ activity.place }}</p>
             <p><strong>Participants:</strong> {{ activity.participants }}</p>
             <p><strong>Participant Counts:</strong> {{ activity.participants.count }}</p>
             <p><strong>Background Picture:</strong> 
-                <img src="{% if activity.picture %} {{ activity.picture }}
+                <img src="{% if activity.background_picture %} data:image/png;base64,{{ activity.background_picture }}
                      {% else %} {% static 'action/images/guest-img.png' %}
                      {% endif %}"
                 alt="{{ activity.title }}'s Picture" width="400" height="240">

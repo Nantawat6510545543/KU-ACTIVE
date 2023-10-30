@@ -3,13 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.urls import reverse
 
-from ..utils import friend_status_utils as fs_utils
+from .. import utils
 
 
 # TODO add check to not allow user to add themselves as friend
 @login_required
 def add_friend(request, friend_id: int):
-    friend_status = fs_utils.fetch_friend_status(request, friend_id)
+    friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
@@ -24,7 +24,7 @@ def add_friend(request, friend_id: int):
 # TODO add check to not allow user to remove themselves as friend
 @login_required
 def remove_friend(request, friend_id: int):
-    friend_status = fs_utils.fetch_friend_status(request, friend_id)
+    friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         friend_status.request_status = None
@@ -39,7 +39,7 @@ def remove_friend(request, friend_id: int):
 
 @login_required
 def accept_request(request, friend_id: int):
-    friend_status = fs_utils.fetch_friend_status(request, friend_id)
+    friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
@@ -54,7 +54,7 @@ def accept_request(request, friend_id: int):
 
 @login_required
 def decline_request(request, friend_id: int):
-    friend_status = fs_utils.fetch_friend_status(request, friend_id)
+    friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")

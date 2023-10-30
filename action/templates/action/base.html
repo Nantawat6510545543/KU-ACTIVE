@@ -23,31 +23,33 @@
     <nav class="navigation-bar">
         <div class="topnav">
         {% block account_topnav %}
-            <a class="title" href="{% url 'action:index' %}">KU-ACTIVE</a>
+        <a class="title" href="{% url 'action:index' %}">KU-ACTIVE</a>
 
         {% if user.is_authenticated %}
             <div class="user-box">
-                <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
-                <img class="img" src="{% if user.profile_picture %} {{ user.profile_picture }}
+                <a class="user" href="{% url 'action:profile' user_id=user.id %}"> {{ user.username.title }}</a>
+                <img class="img" src="{% if user.profile_picture %} data:image/png;base64,{{ user.profile_picture }}
                      {% else %} {% static 'action/images/guest-img.png' %}
-                     {% endif %}"
->
+                     {% endif %}">
+                <a class="user" href="{% url 'logout' %}"> Logout </a>
             </div>
             <a class="friends" href="{% url 'action:friends' %}">Friends</a>
-            <a class="new-activity" href="{% url 'action:create' %}">Create New Activity!</a>
-        {% if user.is_superuser %}
-            <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
-        {% endif%}
+            <a class="new-activity" href="{% url 'action:manage' %}">Manage Your Activity!</a>
+
+            {% if user.is_superuser %}
+                <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
+            {% endif %}
+
         {% else %}
             <div class="user-box">
-                <a class="user" href="{% url 'action:profile' %}">guest</a>
+                <a class="user" href="{% url 'login' %}">guest</a>
                 <img class="img" src="{% static 'action/images/guest-img.png' %}">
             </div>
         {% endif %}
         {% endblock %}
         </div>
 
-        <div class="secnav">
+        {% comment %} <div class="secnav">
             <a class="title" href="{% url 'action:index' %}">Registered Activity</a>
             <a class="title" href="{% url 'action:index' %}">Interested Activity</a>
             <a class="title" href="{% url 'action:index' %}">Your Friends Join!</a>
@@ -55,7 +57,7 @@
             <a class="title" href="{% url 'action:index' %}?criteria=popular">Popular</a>
             <a class="title" href="{% url 'action:index' %}?criteria=recent">Recent</a>
             <a class="title" href="{% url 'action:index' %}">Category</a>
-        </div>
+        </div> {% endcomment %}
     </nav>
 
     <div class="message">

@@ -3,16 +3,13 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
-from decouple import config
 
 
 # TODO look into Manager and QuerySetManager class
 # TODO use ABC for inheritance, not subclass
 
 class User(AbstractUser):
-    profile_picture = models.URLField(max_length=500,
-                                      default=config("DEFAULT_PROFILE",
-                                                     default=''), blank=True)
+    profile_picture = models.TextField(max_length=136533, blank=True)
     bio = models.TextField(blank=True)
 
     @property
@@ -54,18 +51,21 @@ class Activity(models.Model):
     owner = models.ForeignKey(User, related_name='owner',
                               on_delete=models.CASCADE)
     title = models.CharField(max_length=100, blank=True)
-    date = models.DateTimeField('Date of Activity', null=True,
-                                blank=True)
     pub_date = models.DateTimeField('Date published', default=timezone.now)
-    end_date = models.DateTimeField('Date ended', null=True, blank=True)
+    end_date = models.DateTimeField('Application Deadline', null=True,
+                                    blank=True)
+    start_date = models.DateTimeField('Date of Activity', null=True,
+                                      blank=True)
+    last_date = models.DateTimeField('Last date of activity', null=True,
+                                     blank=True)
     description = models.CharField('Description', max_length=200)
     participant_limit = models.IntegerField(null=True, blank=True,
                                             default=None)
     place = models.CharField('Place', max_length=200, blank=True)
     full_description = models.TextField('Full Description', blank=True)
-    # TODO make default picture for background image
-    picture = models.URLField(max_length=500, blank=True, default='')
-    background_picture = models.URLField(max_length=500, blank=True)
+    picture = models.TextField(max_length=136533, blank=True, default='')
+    background_picture = models.TextField(max_length=136533, blank=True,
+                                          default='')
     tags = models.ManyToManyField(Tag, blank=True)
 
     @property

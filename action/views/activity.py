@@ -4,13 +4,13 @@ from django.shortcuts import redirect
 from django.urls import reverse
 
 from ..models import ActivityStatus
-from ..utils import activity_status_utils as as_utils
+from .. import utils
 
 
 @login_required
 def participate(request, activity_id: int):
-    activity_status: ActivityStatus = as_utils.fetch_activity_status(request,
-                                                                     activity_id)
+    activity_status: ActivityStatus = utils.fetch_activity_status(request,
+                                                                  activity_id)
 
     if activity_status.is_participated:
         messages.info(request, "You are already participating.")
@@ -24,8 +24,8 @@ def participate(request, activity_id: int):
 
 @login_required
 def leave(request, activity_id: int):
-    activity_status: ActivityStatus = as_utils.fetch_activity_status(request,
-                                                                     activity_id)
+    activity_status: ActivityStatus = utils.fetch_activity_status(request,
+                                                                  activity_id)
 
     if activity_status.is_participated:
         activity_status.is_participated = False
@@ -40,8 +40,8 @@ def leave(request, activity_id: int):
 
 @login_required
 def favorite(request, activity_id: int):
-    activity_status: ActivityStatus = as_utils.fetch_activity_status(request,
-                                                                     activity_id)
+    activity_status: ActivityStatus = utils.fetch_activity_status(request,
+                                                                  activity_id)
 
     if activity_status.is_favorited:
         messages.info(request, "You have already favorited this activity.")
@@ -56,8 +56,8 @@ def favorite(request, activity_id: int):
 
 @login_required
 def unfavorite(request, activity_id: int):
-    activity_status: ActivityStatus = as_utils.fetch_activity_status(request,
-                                                                     activity_id)
+    activity_status: ActivityStatus = utils.fetch_activity_status(request,
+                                                                  activity_id)
 
     if activity_status.is_favorited:
         activity_status.is_favorited = False

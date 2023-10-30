@@ -1,6 +1,6 @@
 {% extends "action/base.html" %}
 
-
+{% comment %} reuse actiivity-form base/create_activity.html?? {% endcomment %}
 {% block content %}
 <h3>
 <form method="post" enctype="multipart/form-data">
@@ -27,7 +27,7 @@
         {% endif %}
         <br>
     {% endfor %}
-    <input type="submit" value="Create">
+    <input type="submit" value="Edit">
 </form>
 </h3>
 {% endblock %}

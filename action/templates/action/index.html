@@ -33,7 +33,7 @@
             <option value="owner">Owner</option>
             <option value="tag">Tag</option>
             <option value="place">Place</option>
-            <option value="date">Date</option>
+            {% comment %} <option value="date">Date</option> {% endcomment %}
         </select>
         <input type="search" class="search-bar" placeholder="Search :" name="q" value="{{ query }}">
         <button type="submit" class="search-button">Search</button>
@@ -100,7 +100,7 @@
 {% for activity in activity_list %}
     <div class="activity">
         <div class="activity-pics">
-           <img src="{% if activity.picture %} {{ activity.picture }}
+           <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
                      {% else %} {% static 'action/images/background.png' %}
                      {% endif %}"
                 alt="{{ activity.title }}'s Picture" width="400" height="240">
