@@ -1,21 +1,6 @@
 {% extends "action/base.html" %}
 
-{% block message %}
-    {% if messages %}
-        {% for message in messages %}
-        <a>| </a>
-        <a style="color: rgb(255,255,0);"
-            {% if message.tags %} class="{{ message.tags }}"
-            {% endif %}>{{ message }}
-        </a>
-        {% endfor %}
-    {% endif %}
-    <p></p>
-{% endblock %}
-
-
 {% block content %}
-
 <h1><a href="{% url 'action:create' %}">Create New Activity</a></h1>
 
 {% for each_activity in activity_manage_list %}

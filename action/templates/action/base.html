@@ -5,6 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css">
     <link rel="stylesheet" href="{% static 'action/base.css'%}">
     <link rel="stylesheet" href="{% static 'action/detail.css' %}">
     <link rel="stylesheet" href="{% static 'action/friends.css'%}">
@@ -27,8 +28,8 @@
 
         {% if user.is_authenticated %}
             <div class="user-box">
-                <a class="user" href="{% url 'action:profile' user_id=user.id %}"> {{ user.username.title }}</a>
-                <img class="img" src="{% if user.profile_picture %} data:image/png;base64,{{ user.profile_picture }}
+                <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
+                <img class="img" src="{% if user.profile_picture %} data:image/png;base64, {{ user.profile_picture }}
                      {% else %} {% static 'action/images/guest-img.png' %}
                      {% endif %}">
                 <a class="user" href="{% url 'logout' %}"> Logout </a>
@@ -49,14 +50,32 @@
         {% endblock %}
         </div>
 
-        {% comment %} <div class="secnav">
-            <a class="title" href="{% url 'action:index' %}">Registered Activity</a>
-            <a class="title" href="{% url 'action:index' %}">Interested Activity</a>
-            <a class="title" href="{% url 'action:index' %}">Your Friends Join!</a>
-            <a class="title" href="{% url 'action:index' %}?criteria=upcoming">Upcoming</a>
-            <a class="title" href="{% url 'action:index' %}?criteria=popular">Popular</a>
-            <a class="title" href="{% url 'action:index' %}?criteria=recent">Recent</a>
-            <a class="title" href="{% url 'action:index' %}">Category</a>
+        {% comment %} TODO FIX THIS WHEN MERGE/TODO FIX THIS WHEN MERGE {% comment %}
+        {% comment %} TODO FIX THIS WHEN MERGE/TODO FIX THIS WHEN MERGE {% comment %}
+
+        {% comment %} <div id="Dropdown" class="dropbox">
+            {% if user.is_superuser %}
+                <li><a class="drop-item" href="{% url 'admin:index' %}">Admin Interface</a></li>
+            {% endif %}
+            <li><a class="drop-item" href="{% url 'action:create' %}">Create New Activity!</a></li>
+            <li><a class="drop-item" href="{% url 'action:friends' %}">Friends</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}">Registered Activity</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}">Interested Activity</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}">Your Friends Join!</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}?tag=upcoming">Upcoming</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}?tag=popular">Popular</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}?tag=recent">Recent</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}">Category</a></li>
+        </div>
+
+        <div class="secnav">
+            <li><a class="title" href="{% url 'action:index' %}">Registered Activity</a></li>
+            <li><a class="title" href="{% url 'action:index' %}">Interested Activity</a></li>
+            <li><a class="title" href="{% url 'action:index' %}">Your Friends Join!</a></li>
+            <li><a class="title" href="{% url 'action:index' %}?tag=upcoming">Upcoming</a></li>
+            <li><a class="title" href="{% url 'action:index' %}?tag=popular">Popular</a></li>
+            <li><a class="title" href="{% url 'action:index' %}?tag=recent">Recent</a></li>
+            <li><a class="title" href="{% url 'action:index' %}">Category</a></li>
         </div> {% endcomment %}
     </nav>
 
