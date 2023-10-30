@@ -50,21 +50,6 @@
             {% endblock %}
         </div>
 
-        <div id="Dropdown" class="dropbox">
-            {% if user.is_superuser %}
-                <li><a class="drop-item" href="{% url 'admin:index' %}">Admin Interface</a></li>
-            {% endif%}
-            <li><a class="drop-item" href="{% url 'action:create' %}">Create New Activity!</a></li>
-            <li><a class="drop-item" href="{% url 'action:friends' %}">Friends</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Registered Activity</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Interested Activity</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Your Friends Join!</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}?criteria=upcoming">Upcoming</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}?criteria=popular">Popular</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}?criteria=recent">Recent</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Category</a></li>
-        </div>
-
         <div class="secnav">
             <li><a class="title" href="{% url 'action:index' %}">Registered Activity</a></li>
             <li><a class="title" href="{% url 'action:index' %}">Interested Activity</a></li>
