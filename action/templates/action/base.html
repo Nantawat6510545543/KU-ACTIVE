@@ -16,38 +16,40 @@
     <link rel="stylesheet" href="{% static 'action/style.css'%}">
     <link rel="stylesheet" href="{% static 'action/style.css'%}">
     <script src="{% static 'action/base.js' %}"></script>
+    <title>
+    {% block title %}
+    {% endblock %}
+    </title>
 </head>
 
 <body>
     <nav class="navigation-bar">
         <div class="topnav">
-            {% block account_topnav %}
-                <div onclick="show_hide()" class="drop-button">
-                    <button class="fas fa-bars"></button>
-                </div>
-                <a class="title" href="{% url 'action:index' %}">KU-ACTIVE</a>
+        {% block account_topnav %}
+            <div onclick="show_hide()" class="drop-button">
+                <button class="fas fa-bars"></button>
+            </div>
+            <a class="title" href="{% url 'action:index' %}">KU-ACTIVE</a>
 
-            {% if user.is_authenticated %}
-                <a class="logout" href="{% url 'logout' %}"> Logout </a>
-                <div class="user-box">
-                    <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
-                    <img class="img" src="{% if user.profile_picture %} {{ user.profile_picture }}
-                         {% else %} {% static 'action/images/guest-img.png' %}
-                         {% endif %}">
-                </div>
-                <a class="friends" href="{% url 'action:friends' %}">Friends</a>
-                <a class="new-activity" href="{% url 'action:create' %}">Create New Activity!</a>
-                <a class="calendar" href="{% url 'action:calendar' %}">Calendar</a>
-                {% if user.is_superuser %}
-                    <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
-                {% endif%}
-            {% else %}
-                <div class="user-box">
-                    <a class="user" href="{% url 'action:profile' %}">guest</a>
-                    <img class="img" src="{% static 'action/images/guest-img.png' %}">
-                </div>
-            {% endif %}
-            {% endblock %}
+        {% if user.is_authenticated %}
+            <a class="logout" href="{% url 'logout' %}"> Logout </a>
+            <div class="user-box">
+                <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
+                <img class="img" src="{% if user.profile_picture %} data:image/png;base64,{{ user.profile_picture }}
+                     {% else %} {% static 'action/images/guest-img.png' %}
+                     {% endif %}">
+            </div>
+            <a class="friends" href="{% url 'action:friends' %}">Friends</a>
+            <a class="new-activity" href="{% url 'action:create' %}">Create New Activity!</a>
+            <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
+
+        {% else %}
+            <div class="user-box">
+                <a class="user" href="{% url 'action:profile' %}">guest</a>
+                <img class="img" src="{% static 'action/images/guest-img.png' %}">
+            </div>
+        {% endif %}
+        {% endblock %}
         </div>
 
         <div id="Dropdown" class="dropbox">
