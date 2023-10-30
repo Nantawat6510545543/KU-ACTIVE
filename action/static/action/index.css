@@ -25,7 +25,6 @@ table.style1 a {
 .search-system {
     text-align: center;
     margin-bottom: 1%;
-
 }
 
 .search-criteria {
@@ -75,7 +74,7 @@ table.style1 a {
     width: 400px;
     height: 520px;
     margin-left: 4%;
-    margin-top: 4%;
+    margin-top: 2%;
 }
 
 .activity:nth-child(2n + 1) {

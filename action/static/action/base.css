@@ -77,7 +77,7 @@ nav {
     background: white;
 }
 
-.topnav .user-box{
+.topnav .user-box {
     display: flex;
     align-items: center;
     float: right;
@@ -227,6 +227,7 @@ nav {
 	list-style-type: none;
     transition: font-size 0.3s, color 0.3s
 }
+
 
 .dropbox .drop-item:hover {
     color: white;
