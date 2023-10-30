@@ -2,59 +2,54 @@
 {% load static %}
 
 
-{% block message %}
-    {% if messages %}
-        {% for message in messages %}
-            <a>| </a>
-            <a style="color: rgb(255,255,0);"
-                {% if message.tags %} class="{{ message.tags }}"
-                {% endif %}>{{ message }}
-            </a>
-        {% endfor %}
-    {% endif %}
-    <p></p>
+{% block content_topnav %}
+{% if user.is_authenticated %}
+    <a class="link" style="color: rgb(125, 125, 225)"
+        href="{% url 'action:profile' %}">
+            Welcome to KU active, {{ user.username.title }}</a>
+{% endif %}
 {% endblock %}
 
-
+TODO, use Javscript instead of manual if/else
 {% block content %}
-
-    <div class="search-system">
-        <form action="{% url 'action:index' %}">
-            <select class="search-criteria" name="criteria">
-                <option value="title">Title</option>
-                <option value="owner">Owner</option>
-                <option value="tag">Tag</option>
-                <option value="place">Place</option>
-                <option value="date">Date</option>
-            </select>
-            <input type="search" class="search-bar" placeholder="Search :" name="q" value="{{ query }}">
-            <button type="submit" class="search-button">Search</button>
-        </form>
-    </div>
-
-    {% if activity_list %}
-        {% for activity in activity_list %}
-            <div class="activity">
-                <div class="activity-pics">
-                   <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
-                             {% else %} {% static 'action/images/background.png' %}
-                             {% endif %}"
-                        alt="{{ activity.title }}'s Picture" width="400" height="240">
-                </div>
-                <div class="activity-title">
-                    <a>{{ activity.title }}</a>
-                </div>
-                <div class="activity-information">
-                    <div class="brief-detail">
-                        {{ activity.description }}
-                    </div>
-                </div>
-                <a class="detail-button" href="{% url 'action:detail' activity.id %}">Detail</a>
-            </div>
+<div class="search-system">
+    <form action="{% url 'action:index' %}">
+        <select class="search-criteria" name="tag">
+        {% for tag_option, tag_label in tags %}
+            <option value="{{ tag_option }}" {% if request.session.tag == tag_option %} selected {% endif %}>
+                {{ tag_label }}
+            </option>
         {% endfor %}
+        </select>
+        <input type="search" class="search-bar" name="q" 
+            placeholder=" {% if request.session.query %}{{ request.session.query }}{% else %}Search :{% endif %}"
+            value="{% if request.session.query %}{{ request.session.query }}{% endif %}">
+        <button type="submit" class="search-button">Search</button>
+    </form>
+</div>
 
-    {% else %}
-        <h1>No activity found.</h1>
-    {% endif %}
+{% if activity_list %}
+    {% for activity in activity_list %}
+        <div class="activity">
+            <div class="activity-pics">
+                <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
+                            {% else %} {% static 'action/images/background.png' %}
+                            {% endif %}"
+                    alt="{{ activity.title }}'s Picture" width="400" height="240">
+            </div>
+            <div class="activity-title">
+                <a>{{ activity.title }}</a>
+            </div>
+            <div class="activity-information">
+                <div class="brief-detail">
+                    {{ activity.description }}
+                </div>
+            </div>
+            <a class="detail-button" href="{% url 'action:detail' activity.id %}">Detail</a>
+        </div>
+    {% endfor %}
+{% else %}
+    <h1>No activity found.</h1>
+{% endif %}
 
 {% endblock %}
