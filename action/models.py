@@ -44,6 +44,18 @@ class Tag(models.Model):
         return self.name
 
 
+def default_end_date():
+    return timezone.now() + timezone.timedelta(hours=1)
+
+
+def default_start_date():
+    return timezone.now() + timezone.timedelta(days=1)
+
+
+def default_last_date():
+    return timezone.now() + timezone.timedelta(days=2)
+
+
 class Activity(models.Model):
     """
     Represents an activity in the application.
@@ -52,12 +64,12 @@ class Activity(models.Model):
                               on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     pub_date = models.DateTimeField('Date published', default=timezone.now)
-    end_date = models.DateTimeField('Application Deadline', null=True,
-                                    blank=True)
-    start_date = models.DateTimeField('Date of Activity', null=True,
-                                      blank=True)
-    last_date = models.DateTimeField('Last date of activity', null=True,
-                                     blank=True)
+    end_date = models.DateTimeField('Application Deadline',
+                                    default=default_end_date)
+    start_date = models.DateTimeField('Date of Activity',
+                                      default=default_start_date)
+    last_date = models.DateTimeField('Last date of activity',
+                                     default=default_last_date)
     description = models.CharField('Description', max_length=200)
     participant_limit = models.IntegerField(null=True, blank=True,
                                             default=None)

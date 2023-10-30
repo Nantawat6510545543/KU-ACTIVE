@@ -15,7 +15,7 @@ class ActivityAdmin(admin.ModelAdmin):
 
         ('Date information', {
             'fields': [
-                'pub_date', 'end_date', 'date'
+                'pub_date', 'end_date', 'start_date', 'last_date'
             ],
             'classes': [
                 'collapse'
