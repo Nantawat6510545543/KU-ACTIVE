@@ -117,6 +117,8 @@ SITE_DOMAIN = 'http://127.0.0.1:8000/'
 LOGIN_REDIRECT_URL = 'action:index'
 LOGOUT_REDIRECT_URL = 'login'
 
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': ['profile', 'email'],

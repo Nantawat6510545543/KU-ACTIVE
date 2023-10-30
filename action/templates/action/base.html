@@ -40,8 +40,10 @@
                      {% endif %}">
             </div>
             <a class="friends" href="{% url 'action:friends' %}">Friends</a>
-            <a class="new-activity" href="{% url 'action:create' %}">Create New Activity!</a>
-            <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
+            <a class="new-activity" href="{% url 'action:manage' %}">Manage Your Activity!</a>
+            {% if user.is_superuser %}
+                <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
+            {% endif %}
 
         {% else %}
             <div class="user-box">
