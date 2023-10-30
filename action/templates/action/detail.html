@@ -30,22 +30,26 @@
             <p>Login to participate in this activity.</p>
         {% endif %}
     </div>
-    <div class="activity-owner">
-        <p><strong>Owner:</strong> {{ activity.owner.username }}</p>
-        <p><strong>Picture:</strong> 
+    <div class="activity-owner"> 
+        <p class="top-owner"><strong>Owner:</strong> {{ activity.owner.username }}</p>
+        <div class="big_image">
             <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
                      {% else %} {% static 'action/images/background.png' %}
                      {% endif %}"
-                alt="{{ activity.title }}'s Picture" width="400" height="240">
-        </p>
+                alt="{{ activity.title }}'s Picture">
+        </div>
         <div class="activity-details">
+            <div class="Description">
+                <p><strong>Description:</strong></p>
+                <p class="full-detail">{{ activity.full_description }}</p>
+            </div>
             <p><strong>Date Published:</strong> {{ activity.pub_date }}</p>
             <p><strong>Application Deadline:</strong> {{ activity.end_date }}</p>
             <p><strong>Date of Activity:</strong> {{ activity.start_date }}</p>
             <p><strong>Last date of activity:</strong> {{ activity.last_date }}</p>
             <p><strong>Description:</strong> {{ activity.description }}</p>
             <p><strong>Place:</strong> {{ activity.place }}</p>
-            <p><strong>Participants:</strong> {{ activity.participants }}</p>
+<!--            <p><strong>Participants:</strong> {{ activity.participants }}</p>-->
             <p><strong>Participant Counts:</strong> {{ activity.participants.count }}</p>
             <p><strong>Background Picture:</strong> 
                 <img src="{% if activity.background_picture %} data:image/png;base64,{{ activity.background_picture }}
@@ -62,7 +66,7 @@
             {% endif %}
             </p>
 
-            <h3>Tags:</h3>
+            <p><strong>Tags:</strong></p>
             <ul>
             {% for tag in activity.tags.all %}
                 <li>{{ tag.name }}</li>
