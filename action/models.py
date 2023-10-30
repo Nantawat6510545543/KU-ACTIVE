@@ -50,7 +50,7 @@ class Activity(models.Model):
     """
     owner = models.ForeignKey(User, related_name='owner',
                               on_delete=models.CASCADE)
-    title = models.CharField(max_length=100, blank=True)
+    title = models.CharField(max_length=100)
     pub_date = models.DateTimeField('Date published', default=timezone.now)
     end_date = models.DateTimeField('Application Deadline', null=True,
                                     blank=True)
