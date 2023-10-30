@@ -8,3 +8,4 @@ from .friend_view import *
 from .activity_create_view import *
 from .activity_manage_view import *
 from .profile_view import *
+from .calendar_view import *

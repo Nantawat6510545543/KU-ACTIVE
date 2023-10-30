@@ -2,7 +2,7 @@
 nav {
     z-index: 9999;
     top: 0%;
-    position: fixed;
+    position: sticky;
     width: 100%;
 }
 
@@ -19,6 +19,7 @@ nav {
     font-size: 17px;
     margin-top: 5px;
     margin-bottom: 5px;
+    transition: font-size 0.5s;
 }
 
 .topnav a.title {
@@ -27,10 +28,13 @@ nav {
     font-family: Inter;
     font-weight: 700;
     margin-left: 1%;
+
+    transition: font-size 1s, background-color 0.3s, color 0.3s, margin-top 1s;
 }
 
 .topnav a.title:hover {
-    text-decoration: underline;
+    font-size: 60px;
+    color: black;
 }
 
 .topnav a.admin {
@@ -43,6 +47,10 @@ nav {
     color: black;
     background: white;
     border-radius: 45px;
+}
+
+.topnav a:hover {
+    font-size: 20px;
 }
 
 .topnav a.new-activity {
@@ -69,7 +77,7 @@ nav {
     background: white;
 }
 
-.topnav .user-box{
+.topnav .user-box {
     display: flex;
     align-items: center;
     float: right;
@@ -94,6 +102,24 @@ nav {
     border-radius: 50%;
 }
 
+.topnav a.logout {
+    display: flex;
+    align-items: center;
+    float: right;
+
+    color:black;
+    margin: 6px;
+    padding: 16px;
+    margin-right: 1%;
+    border-radius: 45px;
+    background-color: white;
+    transition: color 0.3s,font-size 0.3s;
+}
+
+.topnav a.logout:hover {
+    color: red;
+    font-size: 20px;
+}
 
 .topnav a.login {
     position: absolute;
@@ -105,20 +131,49 @@ nav {
     border-radius: 45px;
 }
 
+.topnav .drop-button {
+    display:inline-block;
+    float: left;
+    display: none;
+}
+
+.topnav .drop-button button{
+    border:none;
+    padding: 10px;
+    margin-left: 10px;
+    border-radius: 100%;
+
+    color: #4B4545;
+    text-align: center;
+    text-decoration: none;
+    font-size: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    transition:0.3s font-size ease-out;
+}
+
+.topnav .drop-button button:hover{
+    font-size: 35px;
+    color: black;
+}
+
 
 /*second navigation bar*/
 .secnav {
     background: #B0D9B1;
     overflow: hidden;
-    position: fixed;
     width: 100%;
     text-align: center;
 }
 
-.secnav a {
+.secnav li{
     display:inline-block;
+    padding: 10px 2% 10px 2%;
     text-align: center;
-    padding: 10px 40px 10px 40px;
+}
+
+.secnav .title{
+    text-align: center;
     text-decoration: none;
     font-size: 20px;
     text-align: center;
@@ -128,21 +183,110 @@ nav {
     word-wrap: break-word;
 }
 
-.secnav a:hover {
-    background-color: #618264;
-    color: white;
+.secnav a {
+    padding-top:10px;
+    padding-bottom:10px;
+    transition: font-size 1s;
 }
 
+.secnav a:hover {
+    font-size: 25px;
+}
+
+/* Dropbox */
+.dropbox {
+    display: none;
+    margin:0%;
+    background: #B0D9B1;
+    padding:1%;
+}
+
+.dropbox li {
+    padding: 5px 0px 5px 0px;
+    text-decoration: none;
+	list-style-type: none;
+    text-align: center;
+    text-align: center;
+    text-decoration: none;
+    font-size: 17px;
+    transition: background-color 1s;
+}
+
+.dropbox li:hover {
+    background-color:gray;
+}
+
+.dropbox .drop-item {
+    color: black;
+    font-size: 20px;
+    font-weight: 700;
+    margin-left: 1%;
+
+    text-align: center;
+    text-decoration: none;
+	list-style-type: none;
+    transition: font-size 0.3s, color 0.3s
+}
+
+
+.dropbox .drop-item:hover {
+    color: white;
+    font-size: 25px;
+}
 
 /* Content block */
 .content {
     position: static;
-    margin-top: 10%;
     overflow-y: auto;
 }
 
-@media (max-width: 768px) {
-    .content {
-        margin-top: 60px; /* Margin for navigation bar */
+
+/*condition when screen sized is more than 1171px*/
+@media only screen and (min-width: 1171px) {
+    .secnav {
+        display: block;
     }
+}
+
+
+/*condition when screen sized is less than 1170px*/
+@media screen and (max-width: 1170px) {
+    .topnav a.friends {
+        display: none;
+    }
+
+    .topnav a.new-activity {
+        display: none;
+    }
+
+    .topnav a.admin {
+        display: none;
+    }
+
+    .topnav a.logout {
+        display: none;
+    }
+
+    .topnav a.title {
+        float:left;
+        margin-top:5px;
+        color: white;
+        font-size:45px;
+    }
+
+    .topnav a.title:hover {
+        margin-top:0px;
+        color: black;
+        font-size:55px;
+    }
+
+    .topnav .drop-button {
+        display:block;
+        float:left;
+    }
+
+    .secnav {
+        display: none;
+    }
+
 }
