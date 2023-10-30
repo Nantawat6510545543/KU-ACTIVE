@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css">
     <link rel="stylesheet" href="{% static 'action/base.css'%}">
@@ -14,6 +15,8 @@
     <link rel="stylesheet" href="{% static 'action/index.css' %}">
     <link rel="stylesheet" href="{% static 'action/profile.css'%}">
     <link rel="stylesheet" href="{% static 'action/style.css'%}">
+    <link rel="stylesheet" href="{% static 'action/style.css'%}">
+    <script src="{% static 'action/base.js' %}"></script>
     <title>
     {% block title %}
     {% endblock %}
@@ -24,44 +27,45 @@
     <nav class="navigation-bar">
         <div class="topnav">
         {% block account_topnav %}
-        <a class="title" href="{% url 'action:index' %}">KU-ACTIVE</a>
+            <div onclick="show_hide()" class="drop-button">
+                <button class="fas fa-bars"></button>
+            </div>
+            <a class="title" href="{% url 'action:index' %}">KU-ACTIVE</a>
 
         {% if user.is_authenticated %}
+            <a class="logout" href="{% url 'logout' %}"> Logout </a>
             <div class="user-box">
                 <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
                 <img class="img" src="{% if user.profile_picture %} data:image/png;base64, {{ user.profile_picture }}
                      {% else %} {% static 'action/images/guest-img.png' %}
                      {% endif %}">
-                <a class="user" href="{% url 'logout' %}"> Logout </a>
             </div>
             <a class="friends" href="{% url 'action:friends' %}">Friends</a>
             <a class="new-activity" href="{% url 'action:manage' %}">Manage Your Activity!</a>
-
             {% if user.is_superuser %}
                 <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
             {% endif %}
 
         {% else %}
             <div class="user-box">
-                <a class="user" href="{% url 'login' %}">guest</a>
+                <a class="user" href="{% url 'action:profile' %}">guest</a>
                 <img class="img" src="{% static 'action/images/guest-img.png' %}">
             </div>
         {% endif %}
         {% endblock %}
         </div>
 
-        {% comment %} TODO FIX THIS WHEN MERGE/TODO FIX THIS WHEN MERGE {% comment %}
-        {% comment %} TODO FIX THIS WHEN MERGE/TODO FIX THIS WHEN MERGE {% comment %}
-
-        {% comment %} <div id="Dropdown" class="dropbox">
+        <div id="Dropdown" class="dropbox">
             {% if user.is_superuser %}
                 <li><a class="drop-item" href="{% url 'admin:index' %}">Admin Interface</a></li>
-            {% endif %}
+            {% endif%}
+
             <li><a class="drop-item" href="{% url 'action:create' %}">Create New Activity!</a></li>
             <li><a class="drop-item" href="{% url 'action:friends' %}">Friends</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}">Registered Activity</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}">Interested Activity</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}">Your Friends Join!</a></li>
+
             <li><a class="drop-item" href="{% url 'action:index' %}?tag=upcoming">Upcoming</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}?tag=popular">Popular</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}?tag=recent">Recent</a></li>
@@ -76,7 +80,7 @@
             <li><a class="title" href="{% url 'action:index' %}?tag=popular">Popular</a></li>
             <li><a class="title" href="{% url 'action:index' %}?tag=recent">Recent</a></li>
             <li><a class="title" href="{% url 'action:index' %}">Category</a></li>
-        </div> {% endcomment %}
+        </div>
     </nav>
 
     <div class="message">

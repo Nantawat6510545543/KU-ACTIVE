@@ -1,6 +1,7 @@
 {% extends "action/base.html" %}
 {% load static %}
 
+
 {% block content_topnav %}
 {% if user.is_authenticated %}
     <a class="link" style="color: rgb(125, 125, 225)"
@@ -47,7 +48,6 @@ TODO, use Javscript instead of manual if/else
             <a class="detail-button" href="{% url 'action:detail' activity.id %}">Detail</a>
         </div>
     {% endfor %}
-
 {% else %}
     <h1>No activity found.</h1>
 {% endif %}

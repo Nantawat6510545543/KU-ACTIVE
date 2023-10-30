@@ -30,4 +30,6 @@ urlpatterns = [
     path('<int:activity_id>/leave/', views.leave, name='leave'),
     path('<int:activity_id>/favorite/', views.favorite, name='favorite'),
     path('<int:activity_id>/unfavorite/', views.unfavorite, name='unfavorite'),
+
+    path('calendar/', views.CalendarView.as_view(), name='calendar')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

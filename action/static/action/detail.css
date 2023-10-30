@@ -1,35 +1,14 @@
-.activity-details {
-    background-color: white;
-    border-radius: 0px 0px 30px 30px;
-    padding-bottom: 10px;
-    border-style: solid;
-}
-
-.img {
-    margin: 0%;
-    padding: 0%;
-    width: 100%;
-    height: 300px;
-    border-style: solid;
-}
-
-.activity-owner {
-    background-color: #618264;
-    margin: 0% 2% 2% 2%;
-    border-radius: 30px;
-}
-
-p {
-    margin-top: 10px;
-    margin-left: 10px;
-}
 
 .outer-details {
     background-color: #79AC78;
     margin: 3% 10% 20px 10%;
     border-radius: 30px;
     padding-bottom: 10px;
+    border-style:solid;
+    border-color:#145A32;
+    border-width:2px;
 }
+
 
 .top-details .back{
     margin: 0% 2% 0% 2%;
@@ -78,6 +57,11 @@ p {
     word-wrap: break-word
 }
 
+.top-details .Participate-btn:hover{
+    background: green;
+    color: #eaf6eb;
+}
+
 .top-details .Favorite{
     float: right;
     margin: 2% 2% 0% 2%;
@@ -97,4 +81,78 @@ p {
     font-family: Inter;
     font-weight: 700;
     word-wrap: break-word
+}
+
+.top-details .Favorite-btn:hover {
+    background: #E00201;
+    color: #ffeaea;
+}
+
+
+.activity-owner p.top-owner{
+    text-decoration: none;
+    color: white;
+    font-size: 30px;
+    font-family: Inter;
+    font-weight: 700;
+    padding:1%;
+    padding-left: 3%;
+    margin:0%;
+    margin-top:1%;
+}
+
+.activity-owner {
+    background-color: #618264;
+    margin: 0% 2% 2% 2%;
+    border-radius: 30px;
+}
+
+
+.big_image img {
+    margin: 0%;
+    padding: 0%;
+    width: 100%;
+    height: 500px;
+}
+
+.activity-details {
+    background-color: white;
+    border-radius: 0px 0px 30px 30px;
+    padding-bottom: 10px;
+    margin-top:0%;
+    padding-top:2%;
+}
+
+.activity-details .Description{
+    border-radius: 20px;
+    background: #5A5A5A;
+    padding: 1%;
+    margin: 0px 2% 0px 2%;
+
+}
+.activity-details .Description p{
+    color: white;
+    font-size: 30px;
+    font-family: Inter;
+    font-weight: 700;
+    margin:1%;
+}
+
+.activity-details .Description p.full-detail{
+    color: white;
+    font-size: 25px;
+    font-family: Inter;
+    font-weight: 500;
+    margin:1%;
+}
+
+.activity-details p{
+    padding-left:3%;
+    font-size: 25px;
+    margin-bottom:3%;
+}
+
+.activity-details li{
+    margin-left:2%;
+    font-size: 25px;
 }
