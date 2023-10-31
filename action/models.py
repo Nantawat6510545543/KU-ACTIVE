@@ -14,13 +14,15 @@ class User(AbstractUser):
 
     @property
     def participated_activity(self):
-        return ActivityStatus.objects.filter(participants=self,
-                                             is_participated=True)
+        # Filter and return the Activity objects where the user has participated
+        return Activity.objects.filter(
+            activity__participants=self, activity__is_participated=True)
 
     @property
     def favorited_activity(self):
-        return ActivityStatus.objects.filter(participants=self,
-                                             is_favorited=True)
+        # Filter and return the Activity objects where the user has favorited
+        return Activity.objects.filter(
+            activity__participants=self, activity__is_favorited=True)
 
     @property
     def friends(self):
@@ -70,10 +72,8 @@ class Activity(models.Model):
 
     @property
     def participants(self):
-        participation = ActivityStatus.objects.filter(activity=self,
-                                                      is_participated=True)
-        participants = participation.values_list('participants__username',
-                                                 flat=True)
+        participants = User.objects.filter(
+            participants__activity=self, participants__is_participated=True)
         return participants
 
     def __str__(self):
@@ -149,9 +149,6 @@ class ActivityStatus(models.Model):
 
     is_participated = models.BooleanField(default=False)
     is_favorited = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.activity.title
 
 
 class FriendStatus(models.Model):

@@ -21,11 +21,14 @@
     <div class="friend-list-box">
         {% for each_friend in user.friends %}
             <div class="each-friend">
-                <p class="friend-name">{{ each_friend }}</p>
+                <p class="friend-name">
+                    <a href="{% url 'action:profile' user_id=each_friend.id %}">
+                        {{ each_friend }}
+                    </a>
+                </p>
                 <form action="{% url 'action:remove_friend' friend_id=each_friend.id %}" class="remove-button">
                     <button type="submit">Remove Friend</button>
                 </form>
-
             </div>
         {% empty %}
             No friend.

@@ -2,7 +2,7 @@ from django.db.models import Count, Q
 from django.http import HttpRequest
 from django.utils import timezone
 
-from ..models import Activity
+from ..models import Activity, ActivityStatus
 
 
 def get_index_queryset(request: HttpRequest):
@@ -26,8 +26,25 @@ def get_index_queryset(request: HttpRequest):
                 filters |= Q(place__icontains=query)
 
             # TODO extract method
+            case 'registered':
+                filters |= Q(id__in=request.user.participated_activity)
+
+            case 'favorited':
+                filters |= Q(id__in=request.user.favorited_activity)
+
+            case 'friend_joined':
+                # Can't directly call activity__participants_is_participated,
+                # not supported by Django ManyToOneRel. So it's broken into two queries
+                # First call participants_is_participate, then filter by activity
+
+                # Get ActivityStatus objects for your friends and is_participated=True
+                activity_status = ActivityStatus.objects.filter(participants__in=request.user.friends, is_participated=True)
+
+                # Filter by related Activity objects
+                filters |= Q(activity__in=activity_status)
+
             case 'upcoming':
-                # TODO Default is one day before after activity, consider reassigning it or separate it
+                # TODO Default is one day before after activity, consider reassigning it or separating it
                 activities = Activity.objects.order_by('-pub_date')
                 filters |= Q(pub_date__range=(timezone.now(), timezone.now() + timezone.timedelta(1)))
             case 'popular':
@@ -39,6 +56,7 @@ def get_index_queryset(request: HttpRequest):
                 filters |= Q(pub_date__range=(timezone.now() - timezone.timedelta(1), timezone.now()))
 
     activities = activities.filter(filters)
+    print(activities)
     return activities
 
 
@@ -46,8 +64,6 @@ def update_sessions(request: HttpRequest):
     # Save the value of query and tag in the user sessions
     query = request.GET.get('q')
     tag = request.GET.get('tag')
-    # print(f"{query = }")
-    # print(f"{tag = }")
 
     if query is not None:
         request.session['query'] = query

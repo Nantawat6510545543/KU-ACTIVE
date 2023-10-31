@@ -1,16 +1,7 @@
 {% extends "action/base.html" %}
 {% load static %}
 
-
-{% block content_topnav %}
-{% if user.is_authenticated %}
-    <a class="link" style="color: rgb(125, 125, 225)"
-        href="{% url 'action:profile' %}">
-            Welcome to KU active, {{ user.username.title }}</a>
-{% endif %}
-{% endblock %}
-
-TODO, use Javscript instead of manual if/else
+{% comment %} TODO, use Javscript instead of manual if/else {% endcomment %}
 {% block content %}
 <div class="search-system">
     <form action="{% url 'action:index' %}">
@@ -22,8 +13,8 @@ TODO, use Javscript instead of manual if/else
         {% endfor %}
         </select>
         <input type="search" class="search-bar" name="q" 
-            placeholder=" {% if request.session.query %}{{ request.session.query }}{% else %}Search :{% endif %}"
-            value="{% if request.session.query %}{{ request.session.query }}{% endif %}">
+            placeholder=" {% if not request.session.query %}Search :{% endif %}"
+            value="{% if request.session.query %} {{ request.session.query }} {% endif %}">
         <button type="submit" class="search-button">Search</button>
     </form>
 </div>
