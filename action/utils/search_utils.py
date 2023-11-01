@@ -56,7 +56,6 @@ def get_index_queryset(request: HttpRequest):
                 filters |= Q(pub_date__range=(timezone.now() - timezone.timedelta(1), timezone.now()))
 
     activities = activities.filter(filters)
-    print(activities)
     return activities
 
 
