@@ -11,10 +11,11 @@ class DetailView(generic.DetailView):
 
     def get(self, request, *args, **kwargs):
         try:
-            self.pk = self.kwargs['pk']
+            activity_id = self.kwargs['activity_id']
             context = {
-                "activity": Activity.objects.get(pk=self.pk),
-                "activity_status": utils.fetch_activity_status(request, self.pk)
+                "activity": Activity.objects.get(pk=activity_id),
+                "activity_status": utils.fetch_activity_status(request,
+                                                               activity_id)
             }
             return render(request, self.template_name, context)
 
@@ -22,6 +23,3 @@ class DetailView(generic.DetailView):
             messages.error(request,
                            "Activity does not exist or is not published yet.")
             return redirect("action:index")
-
-
-
