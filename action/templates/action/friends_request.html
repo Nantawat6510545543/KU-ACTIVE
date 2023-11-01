@@ -1,47 +1,27 @@
-{% extends "action/base.html" %}
+{% extends "action/friends.html" %}
 
-{% block content %}
-
-<div class="friend">
-    <div class="friend-menu">
-        {% comment %} 
-            using base inheritance for friend will probaly save about 80% of the lines,
-            consider using it 
-        {% endcomment %}
-        <div class="friend-nav-bar">
-            <a href="{% url 'action:friends' %}">Friend List</a>
-            <a href="{% url 'action:add_view' %}">Add Friends</a>
-            <a href="{% url 'action:request_view' %}">Friend Request</a>
-            <form> 
-                <input type="search" id="query" name="q" placeholder="Search...">
-                <button>Search</button>
+{% block friend %}
+<div class="friend-list-box">
+    {% for each_request in friend_request_list %}
+        <div class="each-friend">
+            <div class="friend-name">
+                From:
+                <a href="{% url 'action:profile' user_id=each_request.sender.id %}">
+                    {{ each_request.sender }}<br>
+                </a>
+            </div>
+            <p class="friend-name">
+                To: {{ each_request.receiver }}
+            </p>
+            <form action="{% url 'action:accept_request' friend_id=each_request.sender.id %}">
+                <button type="submit">Accept Friend Request</button>
+            </form>
+            <form action="{% url 'action:decline_request' friend_id=each_request.sender.id %}">
+                <button type="submit">Decline Friend Request</button>
             </form>
         </div>
-
-        <div class="friend-list-box">
-        {% for each_request in friend_request_list %}
-            <div class="each-friend">
-                <p class="friend-name">
-                    From: 
-                    <a href="{% url 'action:profile' user_id=each_request.sender.id %}">
-                        {{ each_request.sender }}<br>
-                    </a>
-                </p>
-                <p class="friend-name">
-                    To: {{ each_request.receiver }}
-                </p>
-                <form action="{% url 'action:accept_request' friend_id=each_request.sender.id %}">
-                    <button type="submit">Accept Friend Request</button>
-                </form>
-                <form action="{% url 'action:decline_request' friend_id=each_request.sender.id %}">
-                    <button type="submit">Decline Friend Request</button>
-                </form>
-            </div>
-        {% empty %}
-            No friend request.
-        {% endfor %}
-        </div>
-    </div>
+    {% empty %}
+        <p class="no-friend">No friend request.</p>
+    {% endfor %}
 </div>
-
 {% endblock %}

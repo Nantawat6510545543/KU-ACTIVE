@@ -6,32 +6,35 @@
 }
 
 .friend {
+    position: sticky;
     display: flex;
-    justify-content: center; /* Horizontal centering */
-    align-items: center;
+    justify-content: center;
+    height: 650px;
 }
 
 .friend-menu {
     position: sticky;
     background-color: #79AC78;
-    width: 1300px;
-    height: 600px;
+    width: 95%;
+    height: 90%;
     border-radius: 15px;
     margin-top: 3%;
 }
 
 div.friend-nav-bar {
-    display: inline-block;
-    margin: 50px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    display: inline-flex;
+    width: 90%;
+    margin: 5%;
+    margin-top: 1%;
+    margin-bottom: 1%;
 }
 
 .friend-nav-bar a {
     color: white;
-    font-size: 40px;
+    font-size: 30px;
     text-decoration: none;
-    padding-right: 60px;
+    width: 20%;
+    overflow: hidden;
 }
 
 .friend-nav-bar a:hover {
@@ -39,14 +42,50 @@ div.friend-nav-bar {
     cursor: pointer;
 }
 
+.friend-search {
+    display: inline-flex;
+    width: 40%;
+}
+
+.friend-search input {
+    text-align: center;
+    border-radius: 15px;
+    background-color: #04AA6D;
+    color: black;
+    background: white;
+    font-size: 20px;
+    width: 75%;
+    height: 100%;
+    border: none;
+    margin-right: 5%;
+}
+
+.friend-search button {
+    text-align: center;
+    border-radius: 15px;
+    background-color: #04AA6D;
+    color: black;
+    background: white;
+    font-size: 20px;
+    width: 20%;
+    height: 100%;
+    border: none;
+    overflow: hidden;
+}
+
+.friend-search button:hover {
+    background-color: green;
+    color: white;
+}
+
 .friend-list-box {
     background-color: white;
-    width: 1250px;
-    height: 500px;
+    width: 95%;
+    height: 80%;
     border-radius: 15px;
     overflow: hidden;
     overflow-y: scroll;
-    margin-left: 25px;
+    margin-left: 2.5%;
 }
 
 .each-friend {
@@ -71,4 +110,10 @@ div.friend-nav-bar {
     position: sticky;
     right: 0%;
     align: right;
+}
+
+.no-friend {
+    font-size: 20px;
+    text-align: center;
+    margin-top: 15%;
 }
