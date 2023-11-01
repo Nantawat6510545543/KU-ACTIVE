@@ -14,9 +14,10 @@ class ActivityModelTest(Tester):
 
         self.activity_data = {
             'owner': self.user,
-            'date': time,
-            'pub_date': time,
-            'end_date': time + timezone.timedelta(days=1),
+            'start_date': time,
+            'last_date': time + timezone.timedelta(days=1),
+            'pub_date': time + timezone.timedelta(days=2),
+            'end_date': time + timezone.timedelta(days=3),
             'participant_limit': 10,
             'tags': [self.tag1, self.tag2]
         }
@@ -28,7 +29,8 @@ class ActivityModelTest(Tester):
         data = self.activity_data
 
         self.assertEqual(activity.owner, data['owner'])
-        self.assertEqual(activity.date, data['date'])
+        self.assertEqual(activity.start_date, data['start_date'])
+        self.assertEqual(activity.last_date, data['last_date'])
         self.assertEqual(activity.pub_date, data['pub_date'])
         self.assertEqual(activity.end_date, data['end_date'])
         self.assertEqual(activity.participant_limit, data['participant_limit'])

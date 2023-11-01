@@ -1,27 +1,18 @@
-{% extends "action/base.html" %}
+{% extends "action/friends.html" %}
 
-{% block content %}
-
-<div class="friend">
-<div class="friend-menu">
-    <div class="friend-nav-bar">
-        <a href="{% url 'action:friends' %}">Friend List</a>
-        <a href="{% url 'action:add_view' %}">Add Friends</a>
-        <a href="{% url 'action:request_view' %}">Friend Request</a>
-    </div>
-    <div class="friend-list-box">
+{% block friend %}
+<div class="friend-list-box">
     {% for each_friend in friend_add_list %}
         <div class="each-friend">
-            <p class="friend-name">{{ each_friend }}</p>
-            <form action="{% url 'action:add_friend' friend_id=each_friend.id %}">
-                <button type="submit">Add Friend</button>
-            </form>
+            <div class="friend-name">
+                <a href="{% url 'action:profile' user_id=each_friend.id %}">{{ each_friend }}</a>
+                <form action="{% url 'action:add_friend' friend_id=each_friend.id %}">
+                    <button type="submit">Add Friend</button>
+                </form>
+            </div>
         </div>
     {% empty %}
-        No friend.
+        <p class="no-friend">No user found.</p>
     {% endfor %}
-    </div>
 </div>
-</div>
-
 {% endblock %}

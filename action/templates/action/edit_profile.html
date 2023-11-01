@@ -19,6 +19,7 @@ Edit profile
                 {{ field.label_tag }}<br>
                 <input type="file" name="profile_picture"><br>
                 <img src="{{ user.profile_picture }}" alt="{{ user.username }}'s Profile Picture">
+            {% elif field.name == 'password' %}
             {% else %}
                 {{ field.label_tag }} {{ field }}<br>
             {% endif %}
