@@ -9,10 +9,9 @@
     <link rel="stylesheet" href="{% static 'action/base.css'%}">
     <link rel="stylesheet" href="{% static 'action/detail.css' %}">
     <link rel="stylesheet" href="{% static 'action/friends.css'%}">
-    <link rel="stylesheet" href="{% static 'action/friends_add.css' %}">
-    <link rel="stylesheet" href="{% static 'action/friends_request.css'%}">
     <link rel="stylesheet" href="{% static 'action/index.css' %}">
     <link rel="stylesheet" href="{% static 'action/profile.css'%}">
+    <link rel="stylesheet" href="{% static 'action/calendar.css'%}">
     <link rel="stylesheet" href="{% static 'action/style.css'%}">
     <link rel="stylesheet" href="{% static 'action/manage_activity.css'%}">
     <script src="{% static 'action/base.js' %}"></script>
@@ -41,6 +40,7 @@
             </div>
             <a class="friends" href="{% url 'action:friends' %}">Friends</a>
             <a class="new-activity" href="{% url 'action:manage' %}">Manage Your Activity!</a>
+            <a class="calendar" href="{% url 'action:calendar' %}">Calendar</a>
             {% if user.is_superuser %}
                 <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
             {% endif %}

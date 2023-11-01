@@ -53,6 +53,18 @@ nav {
     font-size: 20px;
 }
 
+.topnav a.calendar {
+    float: right;
+    display:inline-block;
+    padding: 17px;
+    margin-right: 1%;
+
+    background-color: #04AA6D;
+    color: black;
+    background: white;
+    border-radius: 45px;
+}
+
 .topnav a.new-activity {
     float: right;
     display:inline-block;
