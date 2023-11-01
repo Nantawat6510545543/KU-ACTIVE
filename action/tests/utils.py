@@ -73,9 +73,10 @@ class Tester(TestCase):
     def create_activity(owner, **kwargs):
         defaults = {
             "title": "Test",
-            "date": timezone.now() + timezone.timedelta(days=2),
-            "pub_date": timezone.now(),
-            "end_date": timezone.now() + timezone.timedelta(days=1),
+            "start_date": timezone.now(),
+            "last_date": timezone.now() + timezone.timedelta(days=1),
+            "pub_date": timezone.now() + timezone.timedelta(days=2),
+            "end_date": timezone.now() + timezone.timedelta(days=3),
             "description": None,
             "place": None,
             "full_description": None,
@@ -88,7 +89,8 @@ class Tester(TestCase):
         activity = Activity.objects.create(
             owner=owner,
             title=defaults["title"],
-            date=defaults["date"],
+            start_date=defaults["start_date"],
+            last_date=defaults["last_date"],
             pub_date=defaults["pub_date"],
             end_date=defaults["end_date"]
         )
