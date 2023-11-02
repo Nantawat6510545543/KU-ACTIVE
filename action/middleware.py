@@ -15,7 +15,7 @@ class RemoveWhitespaceMiddleware(BaseMiddleware):
 
         # Update the query parameters in the request
         request.GET = request.GET.copy()
-        request.GET['q'] = query
+        request.GET['q'] = query or ''
 
         response = self.get_response(request)
         return response
