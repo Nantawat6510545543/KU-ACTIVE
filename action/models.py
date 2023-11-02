@@ -121,15 +121,13 @@ class Activity(models.Model):
         checks if participation is allowed for this activity.
 
         Returns:
-            bool: True if the current date/time
-                  is between pub_date and end_date (if not null).
-                  If end_date is null,
-                  participation is allowed anytime after pub_date.
+            bool: True if the current date and time are within the time range,
+            and the number of participants is below the participant limit.
         """
-        now = timezone.now()
-        if self.end_date is None:
-            return now >= self.pub_date
-        return self.pub_date <= now <= self.end_date
+        current_time = timezone.now()
+        is_within_time_range = self.pub_date <= current_time <= self.end_date
+        is_under_limit = self.participants.count() < self.participant_limit
+        return is_within_time_range and is_under_limit
 
 
 class ActivityStatus(models.Model):
