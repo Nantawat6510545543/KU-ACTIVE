@@ -1,4 +1,4 @@
-from .utils import Tester
+from action.tests.utils import Tester
 from django.utils import timezone
 
 
@@ -6,19 +6,20 @@ class ActivityModelTest(Tester):
 
     def setUp(self):
         super().setUp()
-        self.user = self.create_user()
+        self.user1 = self.create_user('tester1')
+        self.user2 = self.create_user('tester2')
         self.tag1 = self.create_tag(name="Tag1")
         self.tag2 = self.create_tag(name="Tag2")
 
         time = timezone.now()
 
         self.activity_data = {
-            'owner': self.user,
+            'owner': self.user1,
             'start_date': time,
             'last_date': time + timezone.timedelta(days=1),
             'pub_date': time + timezone.timedelta(days=2),
             'end_date': time + timezone.timedelta(days=3),
-            'participant_limit': 10,
+            'participant_limit': 1,
             'tags': [self.tag1, self.tag2]
         }
 
