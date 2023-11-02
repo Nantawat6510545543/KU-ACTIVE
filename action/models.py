@@ -63,14 +63,61 @@ class Activity(models.Model):
     place = models.CharField('Place', max_length=200, blank=True)
     full_description = models.TextField('Full Description', blank=True)
     picture = models.TextField(blank=True, default='')
-    background_picture = models.TextField(blank=True,default='')
+    background_picture = models.TextField(blank=True, default='')
     tags = models.ManyToManyField(Tag, blank=True)
 
     @property
     def participants(self):
-        participants = User.objects.filter(
-            participants__activity=self, participants__is_participated=True)
+        participants = User.objects.filter(participants__activity=self,
+                                           participants__is_participated=True)
         return participants
+
+    @property
+    @admin.display(description='Time remain')
+    def time_remain(self):
+        """
+        Calculate and return the time remaining until the end date of the activity.
+
+        Returns:
+            str: A string representing the time remaining.
+                 If the remaining time is zero or negative,
+                 it returns "0 days, 0 hours."
+        """
+        now = timezone.now()
+        time_difference = self.end_date - now
+        if time_difference.total_seconds() > 0:
+            days = time_difference.days
+            hours, seconds = divmod(time_difference.seconds, 3600)
+            return f"{days} days, {hours} hours"
+        return "Registration closed"
+
+
+
+    @property
+    @admin.display(description='Count')
+    def participant_count(self):
+        """
+        Get the count of participants for this activity.
+
+        Returns:
+            int: The number of participants.
+        """
+        return self.participants.count()
+
+    @property
+    @admin.display(description='Remaining')
+    def remaining_space(self):
+        """
+       Calculate the number of remaining participant spaces in the activity.
+
+       Returns:
+           int/str: The number of remaining spaces if there is a limit,
+                    or "No limit" if there's no limit.
+       """
+        limit = self.participant_limit
+        if limit is None or limit == 0:
+            return "No limit"
+        return max(0, limit - self.participant_count)
 
     def __str__(self):
         """
@@ -78,11 +125,7 @@ class Activity(models.Model):
         """
         return self.title
 
-    @admin.display(
-        boolean=True,
-        ordering='pub_date',
-        description='Published recently?',
-    )
+    @admin.display(boolean=True, description='Published recently?', )
     def was_published_recently(self):
         """
         Checks if the activity was published recently.
@@ -94,18 +137,14 @@ class Activity(models.Model):
         now = timezone.now()
         return now - timezone.timedelta(days=1) <= self.pub_date <= now
 
-    @admin.display(
-        boolean=True,
-        ordering='pub_date',
-        description='Is published?',
-    )
+    @admin.display(boolean=True, description='Is published?', )
     def is_published(self):
         """
         Checks if the activity is published.
 
         Returns:
             bool: True if the current date is on or after the activity's
-            publication date.
+                  publication date.
         """
         now = timezone.now()
         return now >= self.pub_date
@@ -120,15 +159,15 @@ class Activity(models.Model):
         checks if participation is allowed for this activity.
 
         Returns:
-            bool: True if the current date and time are within the time range,
-            and the number of participants is below the participant limit.
+            bool: True if the current date are within the activity's time range
+            and there are remaining participant spaces available.
         """
-        current_time = timezone.now()
-        is_within_time_range = self.pub_date <= current_time <= self.end_date
-        limit = self.participant_limit
-        is_under_limit = (limit in (None, 0) or
-                          self.participants.count() < limit)
-        return is_within_time_range and is_under_limit
+        now = timezone.now()
+        is_within_time_range = self.pub_date <= now <= self.end_date
+        remaining_space = self.remaining_space
+        if remaining_space == "No limit":
+            return is_within_time_range
+        return is_within_time_range and remaining_space > 0
 
 
 class ActivityStatus(models.Model):
