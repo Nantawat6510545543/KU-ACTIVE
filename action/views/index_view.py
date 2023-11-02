@@ -8,7 +8,7 @@ TAG_OPTIONS = [
     ('owner', 'Owner'),
     ('tag', 'Tag'),
     ('place', 'Place'),
-    ('date', 'Date'),
+    ('start_date', 'Date'),
 ]
 
 

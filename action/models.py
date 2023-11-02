@@ -6,7 +6,7 @@ from django.utils import timezone
 
 
 class User(AbstractUser):
-    profile_picture = models.TextField(max_length=136533, blank=True)
+    profile_picture = models.TextField(blank=True)
     bio = models.TextField(blank=True)
 
     @property
@@ -58,13 +58,12 @@ class Activity(models.Model):
     last_date = models.DateTimeField('Last date of activity', null=True,
                                      blank=True)
     description = models.CharField('Description', max_length=200)
-    participant_limit = models.IntegerField(null=True, blank=True,
-                                            default=None)
+    participant_limit = models.PositiveIntegerField(null=True, blank=True,
+                                                    default=None)
     place = models.CharField('Place', max_length=200, blank=True)
     full_description = models.TextField('Full Description', blank=True)
-    picture = models.TextField(max_length=136533, blank=True, default='')
-    background_picture = models.TextField(max_length=136533, blank=True,
-                                          default='')
+    picture = models.TextField(blank=True, default='')
+    background_picture = models.TextField(blank=True,default='')
     tags = models.ManyToManyField(Tag, blank=True)
 
     @property
@@ -126,7 +125,9 @@ class Activity(models.Model):
         """
         current_time = timezone.now()
         is_within_time_range = self.pub_date <= current_time <= self.end_date
-        is_under_limit = self.participants.count() < self.participant_limit
+        limit = self.participant_limit
+        is_under_limit = (limit in (None, 0) or
+                          self.participants.count() < limit)
         return is_within_time_range and is_under_limit
 
 
