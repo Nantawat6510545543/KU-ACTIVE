@@ -5,9 +5,6 @@ from django.db.models import Q
 from django.utils import timezone
 
 
-# TODO look into Manager and QuerySetManager class
-# TODO use ABC for inheritance, not subclass
-
 class User(AbstractUser):
     profile_picture = models.TextField(max_length=136533, blank=True)
     bio = models.TextField(blank=True)

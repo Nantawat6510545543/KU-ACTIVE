@@ -39,5 +39,4 @@ class IndexView(generic.ListView):
 
         # Add the tag options to the context
         context['tags'] = TAG_OPTIONS
-        utils.update_sessions(self.request)
         return context

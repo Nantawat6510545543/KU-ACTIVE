@@ -7,9 +7,6 @@ from action.models import Activity, ActivityStatus
 
 def get_index_queryset(request: HttpRequest):
     query = request.GET.get('q')
-    if query:
-        query = query.strip()
-
     tag = request.GET.getlist('tag')
     activities = Activity.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
     filters = Q()  # Create an empty query
@@ -60,19 +57,3 @@ def get_index_queryset(request: HttpRequest):
 
     activities = activities.filter(filters)
     return activities
-
-# TODO refactor
-def update_sessions(request: HttpRequest):
-    # Save the value of query and tag in the user sessions
-    query = request.GET.get('q')
-    if query:
-        query = query.strip()
-
-    tag = request.GET.get('tag')
-
-    if query is not None:
-        request.session['query'] = query
-
-    # TODO This is a quick fix, will fix in detail later
-    if tag not in [None, 'upcoming', 'popular', 'recent']:
-        request.session['tag'] = tag
