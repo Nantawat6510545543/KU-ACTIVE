@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 
-from ..models import FriendStatus, User
+from action.models import FriendStatus, User
 
 
 class FriendView(LoginRequiredMixin, generic.ListView):

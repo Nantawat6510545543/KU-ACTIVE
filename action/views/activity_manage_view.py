@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.views import generic
 
 
-from ..models import Activity
+from action.models import Activity
 
 
 class ActivityManageView(LoginRequiredMixin, generic.ListView):

@@ -4,8 +4,8 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import generic
 
-from ..forms import ActivityForm
-from ..models import Activity
+from action.forms import ActivityForm
+from action.models import Activity
 
 
 class ActivityEditView(LoginRequiredMixin, generic.UpdateView):

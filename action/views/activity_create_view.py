@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
 
-from ..forms import ActivityForm
+from action.forms import ActivityForm
 
 
 class ActivityCreateView(LoginRequiredMixin, generic.CreateView):

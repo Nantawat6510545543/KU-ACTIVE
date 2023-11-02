@@ -1,6 +1,6 @@
 from django.views import generic
 
-from .. import utils
+from action import utils
 
 
 class CalendarView(generic.ListView):

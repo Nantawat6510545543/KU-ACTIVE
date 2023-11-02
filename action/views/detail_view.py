@@ -4,8 +4,8 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import generic
 
-from ..models import Activity
-from .. import utils
+from action.models import Activity
+from action import utils
 
 
 class DetailView(generic.DetailView):

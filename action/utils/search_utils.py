@@ -2,7 +2,7 @@ from django.db.models import Count, Q
 from django.http import HttpRequest
 from django.utils import timezone
 
-from ..models import Activity, ActivityStatus
+from action.models import Activity, ActivityStatus
 
 
 def get_index_queryset(request: HttpRequest):

@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.urls import reverse
 
-from .. import utils
+from action import utils
 
 
 # TODO add check to not allow user to add themselves as friend
