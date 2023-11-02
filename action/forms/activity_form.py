@@ -34,9 +34,12 @@ class ActivityForm(forms.ModelForm):
         start_date = cleaned_data.get('start_date')
         last_date = cleaned_data.get('last_date')
 
-        if pub_date.date() < timezone.now().date():
-            self.add_error('pub_date',
-                           "Publication Date must be at least today.")
+        activity_is_created = Activity.objects.filter(id=self.instance.id)
+
+        if not activity_is_created:
+            if pub_date.date() < timezone.now().date():
+                self.add_error('pub_date',
+                            "Publication Date must be at least today.")
 
         time_difference = end_date - pub_date
         if time_difference.total_seconds() < 3600:
