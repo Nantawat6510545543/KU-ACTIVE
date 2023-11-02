@@ -23,7 +23,7 @@ admin.site.site_header = "Action Administration"
 urlpatterns = [
     path('', RedirectView.as_view(pattern_name='action:index',
                                   permanent=False)),
-    path('action/', include('action.urls')),
+    path('action/', include('action.urls.base_urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
     path('signup/', views.SignupView.as_view(), name='signup'),

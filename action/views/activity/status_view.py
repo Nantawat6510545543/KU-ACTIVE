@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.urls import reverse
 
-from ..models import ActivityStatus
-from .. import utils
+from action.models import ActivityStatus
+from action import utils
 
 
 @login_required

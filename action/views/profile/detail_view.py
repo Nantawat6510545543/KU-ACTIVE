@@ -4,8 +4,8 @@ from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.views import generic
 
-from ..models import User
-from .. import utils
+from action.models import User
+from action import utils
 
 
 # TODO refactor to separate file (utils.py + each views/models), especially get_queryset()

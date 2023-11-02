@@ -4,8 +4,8 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import generic
 
-from ..forms import UserEditForm
-from ..models import User
+from action.forms import UserEditForm
+from action.models import User
 
 
 class EditProfileView(LoginRequiredMixin, generic.UpdateView):

@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from django.views import generic
 
-from .. import utils
+from action import utils
 
 TAG_OPTIONS = [
     ('title', 'Title'),
