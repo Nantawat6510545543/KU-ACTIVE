@@ -1,4 +1,4 @@
-from .utils import Tester
+from action.tests.utils import Tester
 
 
 class FriendStatusTestCase(Tester):
