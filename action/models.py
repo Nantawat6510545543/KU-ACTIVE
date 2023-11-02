@@ -76,12 +76,12 @@ class Activity(models.Model):
     @admin.display(description='Time remain')
     def time_remain(self):
         """
-        Calculate and return the time remaining until the end date of the activity.
+        Return the time remaining until registration close.
 
         Returns:
             str: A string representing the time remaining.
                  If the remaining time is zero or negative,
-                 it returns "0 days, 0 hours."
+                 it returns "Registration closed"
         """
         now = timezone.now()
         time_difference = self.end_date - now
@@ -90,8 +90,6 @@ class Activity(models.Model):
             hours, seconds = divmod(time_difference.seconds, 3600)
             return f"{days} days, {hours} hours"
         return "Registration closed"
-
-
 
     @property
     @admin.display(description='Count')
@@ -149,11 +147,7 @@ class Activity(models.Model):
         now = timezone.now()
         return now >= self.pub_date
 
-    @admin.display(
-        boolean=True,
-        ordering='pub_date',
-        description='Can participate?',
-    )
+    @admin.display(boolean=True, description='Can participate?', )
     def can_participate(self):
         """
         checks if participation is allowed for this activity.
