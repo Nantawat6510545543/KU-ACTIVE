@@ -1,6 +1,6 @@
 from django import forms
-from django.core.exceptions import ValidationError
 from django.utils import timezone
+from datetime import timedelta
 
 from ..models import Activity
 from . import utils
@@ -8,17 +8,21 @@ from . import utils
 
 class ActivityForm(forms.ModelForm):
     date_fields = {
-        'pub_date': 'Publication Date',
-        'end_date': 'Application Deadline',
-        'start_date': 'Date of Activity',
-        'last_date': 'Last date of activity'
+        'pub_date': ['Publication Date', 0],
+        'end_date': ['Application Deadline', 1],
+        'start_date': ['Date of Activity', 2],
+        'last_date': ['Last date of activity', 3]
     }
 
-    for field_name, field_label in date_fields.items():
+    for field_name, (field_label, days_to_add) in date_fields.items():
+        time = timezone.now() + timedelta(days=days_to_add)
+        default_value = time.strftime('%Y-%m-%dT%H:%M')
+
         locals()[field_name] = forms.DateTimeField(
             label=field_label,
             widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
-            input_formats=['%Y-%m-%dT%H:%M']
+            input_formats=['%Y-%m-%dT%H:%M'],
+            initial=default_value
         )
     picture = background_picture = forms.ImageField(required=False)
 
@@ -39,7 +43,7 @@ class ActivityForm(forms.ModelForm):
         if not activity_is_created:
             if pub_date.date() < timezone.now().date():
                 self.add_error('pub_date',
-                            "Publication Date must be at least today.")
+                               "Publication Date must be at least today.")
 
         time_difference = end_date - pub_date
         if time_difference.total_seconds() < 3600:
