@@ -123,7 +123,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'SCOPE': ['profile', 'email'],
+        'SCOPE': ['profile', 'email', 'https://www.googleapis.com/auth/calendar'],
         'AUTH_PARAMS': {'access_type': 'online'},
     }
 }
