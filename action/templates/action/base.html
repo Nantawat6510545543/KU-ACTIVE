@@ -57,25 +57,25 @@
         <div id="Dropdown" class="dropbox">
             {% if user.is_superuser %}
                 <li><a class="drop-item" href="{% url 'admin:index' %}">Admin Interface</a></li>
-            {% endif%}
+            {% endif %}
             <li><a class="drop-item" href="{% url 'action:manage' %}">Manage Your Activity!</a></li>
             <li><a class="drop-item" href="{% url 'action:friends' %}">Friends</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}">Registered Activity</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}">Interested Activity</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}">Your Friends Join!</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}?criteria=upcoming">Upcoming</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}?criteria=popular">Popular</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}?criteria=recent">Recent</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}">Upcoming</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}">Popular</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}">Recent</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}">Category</a></li>
         </div>
 
         <div class="secnav">
-            <li><a class="title" href="{% url 'action:index' %}">Registered Activity</a></li>
-            <li><a class="title" href="{% url 'action:index' %}">Interested Activity</a></li>
-            <li><a class="title" href="{% url 'action:index' %}">Your Friends Join!</a></li>
-            <li><a class="title" href="{% url 'action:index' %}?criteria=upcoming">Upcoming</a></li>
-            <li><a class="title" href="{% url 'action:index' %}?criteria=popular">Popular</a></li>
-            <li><a class="title" href="{% url 'action:index' %}?criteria=recent">Recent</a></li>
+            <li><a class="title" href="{% url 'action:index' %}?tag=registered">Registered Activity</a></li>
+            <li><a class="title" href="{% url 'action:index' %}?tag=favorited">Interested Activity</a></li>
+            <li><a class="title" href="{% url 'action:index' %}?tag=friend_joined">Your Friends Join!</a></li>
+            <li><a class="title" href="{% url 'action:index' %}?tag=upcoming">Upcoming</a></li>
+            <li><a class="title" href="{% url 'action:index' %}?tag=popular">Popular</a></li>
+            <li><a class="title" href="{% url 'action:index' %}?tag=recent">Recent</a></li>
             <li><a class="title" href="{% url 'action:index' %}">Category</a></li>
         </div>
     </nav>
