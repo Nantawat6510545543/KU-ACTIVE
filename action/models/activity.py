@@ -1,46 +1,9 @@
 from django.contrib import admin
-from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models import Q
 from django.utils import timezone
 
-
-class User(AbstractUser):
-    profile_picture = models.TextField(blank=True)
-    bio = models.TextField(blank=True)
-
-    @property
-    def participated_activity(self):
-        # Filter and return the Activity objects where the user has participated
-        return Activity.objects.filter(
-            activity__participants=self, activity__is_participated=True)
-
-    @property
-    def favorited_activity(self):
-        # Filter and return the Activity objects where the user has favorited
-        return Activity.objects.filter(
-            activity__participants=self, activity__is_favorited=True)
-
-    @property
-    def friends(self):
-        # First case, the friend request receiver is the current user
-        # Second case, the friend request receiver is the current user
-        # then both cases filter for only is_friend
-        friend_objects = User.objects.filter(
-            Q(sender__is_friend=True, sender__receiver=self) |
-            Q(receiver__is_friend=True, receiver__sender=self)
-        )
-        return friend_objects
-
-    def __str__(self):
-        return self.username
-
-
-class Tag(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-
-    def __str__(self):
-        return self.name
+from .user import User
+from .tag import Tag
 
 
 class Activity(models.Model):
@@ -162,36 +125,3 @@ class Activity(models.Model):
         if remaining_space == "No limit":
             return is_within_time_range
         return is_within_time_range and remaining_space > 0
-
-
-class ActivityStatus(models.Model):
-    """
-    Represents a participation for each user.
-    """
-    participants = models.ForeignKey(User, related_name='participants',
-                                     on_delete=models.CASCADE)
-    activity = models.ForeignKey(Activity, related_name='activity',
-                                 on_delete=models.CASCADE)
-
-    participation_date = models.DateTimeField('Participation date',
-                                              default=timezone.now)
-
-    is_participated = models.BooleanField(default=False)
-    is_favorited = models.BooleanField(default=False)
-
-
-class FriendStatus(models.Model):
-    STATUS_CHOICES = (
-        ('Pending', 'Pending'),
-        ('Accepted', 'Accepted'),
-        ('Declined', 'Declined'),
-    )
-
-    sender = models.ForeignKey(User, on_delete=models.CASCADE,
-                               related_name="sender")
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE,
-                                 related_name="receiver")
-
-    request_status = models.CharField(max_length=50, choices=STATUS_CHOICES,
-                                      null=True, default=None)
-    is_friend = models.BooleanField(default=False)
