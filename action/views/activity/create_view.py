@@ -9,7 +9,7 @@ from action.forms import ActivityForm
 
 class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = ActivityForm
-    template_name = 'action/create_activity.html'
+    template_name = 'action/activity/create.html'
 
     def get_initial(self):
         # Set the initial value for the field

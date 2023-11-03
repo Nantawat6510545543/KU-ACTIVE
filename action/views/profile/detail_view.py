@@ -12,7 +12,7 @@ from action import utils
 
 # TODO try get_context_data()?
 class ProfileView(LoginRequiredMixin, generic.ListView):
-    template_name = 'action/profile.html'
+    template_name = 'action/profile/detail.html'
     context_object_name = 'profile'
 
     def get(self, request: HttpRequest, user_id=None):

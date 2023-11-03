@@ -10,7 +10,7 @@ from action.models import Activity
 
 
 class ActivityManageView(LoginRequiredMixin, generic.ListView):
-    template_name = 'action/manage_activity.html'
+    template_name = 'action/activity/manage.html'
     context_object_name = 'activity_manage_list'
 
     def get_queryset(self):
