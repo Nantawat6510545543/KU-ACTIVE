@@ -14,19 +14,19 @@
 
             {% for field in form %}
                 {% if field.name == 'owner' %}
-                <h2><strong>{{ field.label_tag }}</strong> {{ field.as_hidden }} {{ user }}</h2>
+                    <h2><strong>{{ field.label_tag }}</strong> {{ field.as_hidden }} {{ user }}</h2>
                 {% elif field.name == 'picture' or field.name == 'background_picture' %}
                     <div class="heading-detail"><p>{{ field.label_tag }}</p> <input type="file" name="{{ field.name }}"></div>
                 {% elif field.name == 'tags' %}
                     <div><p>{{ field.label_tag }}</p></div>
                     {% for tag in field.field.queryset %}
-                    <div class="tag-name">
+                    <span class="tag-name">
                         <input type="checkbox" name="{{ field.name }}" value="{{ tag.id }}"
                             {% if tag in field.value.all %} checked {% endif %}>
                             <p>{{ tag }}</p>
-                    </div>
+                    </span>
                     {% empty %}
-                        No tag currently available.
+                        <p>No tag currently available.</p>
                     {% endfor %}
                 {% else %}
                     <div class="heading-detail"><p>{{ field.label_tag }}</p>{{ field }}</div>

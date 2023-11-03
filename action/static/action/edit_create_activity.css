@@ -151,6 +151,13 @@ textarea {
     font-size:35px;
 }
 
+@media screen and (max-width: 1430px) {
+    .tag-name {
+        margin-left:1%;
+        width: 45%;
+    }
+}
+
 @media screen and (max-width: 1170px) {
     .edit-inner-detail input {
         width: 100%;
@@ -159,4 +166,9 @@ textarea {
     input[type='checkbox'] {
         width: 10%;
     }
+    .tag-name {
+        margin-left:3%;
+        width: 90%;
+    }
+
 }
