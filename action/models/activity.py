@@ -35,6 +35,7 @@ class Activity(models.Model):
                                            participants__is_participated=True)
         return participants
 
+# TODO delegate some of these to html
     @property
     @admin.display(description='Time remain')
     def time_remain(self):

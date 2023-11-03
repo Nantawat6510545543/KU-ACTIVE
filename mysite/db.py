@@ -2,8 +2,13 @@
 # and specify the project connection settings in your settings.py
 # in the same way as for standalone Postgres.
 import dj_database_url
+import logging
+
 from decouple import config
 from mysite.settings import BASE_DIR
+
+# Configure the root logger (which logs to the console)
+logging.basicConfig(level=logging.DEBUG)
 
 DATABASES = {
     'default': {
@@ -23,6 +28,6 @@ try:
             )
         }
     else:
-        print("DATABASE_URL not found. Auto-migrating on local database.")
+        logging.warning("DATABASE_URL not found. Auto-migrating on local database.")
 except ValueError:
-    print("Invalid DATABASE_URL. Auto-migrating on local database.")
+    logging.warning("Invalid DATABASE_URL. Auto-migrating on local database.")
