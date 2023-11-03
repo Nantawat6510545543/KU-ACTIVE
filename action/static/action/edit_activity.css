@@ -1,0 +1,162 @@
+/*outer box light-green color that contain edit activity title*/
+.edit-outer-detail {
+    background:#79AC78;
+    border-radius:45px;
+    padding: 0% 2% 2% 2%;
+    margin:2% 10% 5% 10%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.edit-outer-detail .title {
+    padding-top:1%;
+    text-align:center;
+}
+
+.edit-outer-detail .title h1 {
+    margin: 1% 5% 0% 5%;
+    color: black;
+    font-size: 50px;
+    font-family: Inter;
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+
+.edit-inner-detail {
+    background:#618264;
+    border-radius:45px;
+    padding: 1% 4% 2% 4%;
+    margin: 0%;
+}
+
+.edit-inner-detail h2{
+    text-align:center;
+    padding:1%;
+    border: none;
+    border-bottom: 5px solid black;
+    text-shadow: 2px 2px 4px #000000;
+
+    margin: 0%;
+    font-size: 30px;
+    font-family: Inter;
+    font-weight: 500;
+    color:white;
+}
+
+.edit-inner-detail p{
+    display:inline-block;
+    width:270px;
+    text-align:center;
+    text-shadow: 1px 1px 4px #000000;
+    padding: 5px 0px 5px 0px;
+    border: none;
+    border-bottom: 3px solid black;
+
+    margin: 0% 5% 0% 0%;
+    font-size: 30px;
+    font-family: Inter;
+    font-weight: 500;
+    color:white;
+}
+
+.edit-inner-detail input {
+    text-align:center;
+    display:inline-block;
+    width: 60%;
+    padding: 15px 20px;
+
+    margin-top:1%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.edit-inner-detail input[type="file"]::file-selector-button {
+    border-radius: 10px;
+    padding: 0 100px;
+    height: 40px;
+    cursor: pointer;
+    background-color: white;
+    box-shadow: 0px 1px 0px rgba(#000, 0.05);
+    margin-right: 16px;
+}
+
+.edit-inner-detail input[type="file"]::file-selector-button:hover {
+    background-color: #f3f4f6;
+}
+
+
+.tag-name {
+    background:red;
+    display:inline-block;
+    text-align: center;
+    list-style-type: none;
+    background-color: #B8B8B8;
+    margin:1% 1% 1% 0%;
+    padding:10px;
+    border-radius:45px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    width:300px;
+}
+
+.tag-name input[type='checkbox'] {
+    display:inline-block;
+    width: 10%;
+    height: 20px;
+    width: 20px;
+    margin:0%;
+    background-color: #eee;
+}
+
+.tag-name p{
+    display:inline-block;
+    font-size:25px;
+    font-weight: 500;
+    border: none;
+    padding: 0%;
+    margin:0%;
+}
+
+.edit-inner-detail input[type='submit']{
+    width:100%;
+
+    background-color: #04AA6D;
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-decoration: none;
+    margin-top: 3%;
+    cursor: pointer;
+
+    font-size:30px;
+    transition: font-size 0.3s;
+}
+
+.edit-inner-detail input[type='submit']:hover{
+    font-size:35px;
+}
+
+@media screen and (max-width: 1170px) {
+    .edit-inner-detail input {
+        width: 100%;
+    }
+
+    input[type='checkbox'] {
+        width: 10%;
+    }
+}
