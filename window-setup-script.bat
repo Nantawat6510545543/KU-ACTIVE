@@ -21,6 +21,16 @@ call .\venv\Scripts\activate
 :: Install requirements
 pip install -r requirements.txt
 
+:: Install Django Debug Toolbar if DEBUG is True in .env
+findstr /R /C:"DEBUG = True" .\.env > nul || findstr /R /C:"DEBUG=True" .\.env > nul || findstr /R /C:"DEBUG =True" .\.env > nul
+
+if %errorlevel%==0 (
+    echo DEBUG is set to True. Installing Django Debug Toolbar...
+    pip install django-debug-toolbar
+) else (
+    echo AAAAAAAAAAAAAAAAAAAAAAAAAAA
+)
+
 :: Create .env file
 copy sample.env .env
 

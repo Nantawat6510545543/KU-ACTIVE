@@ -28,4 +28,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('signup/', views.SignupView.as_view(), name='signup'),
     path('auth/', include('allauth.urls')),
+    path("__debug__/", include("debug_toolbar.urls")),
 ]
