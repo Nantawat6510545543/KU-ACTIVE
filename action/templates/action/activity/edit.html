@@ -1,4 +1,5 @@
 {% extends "action/base.html" %}
+{% load static %}
 
 {% comment %} reuse actiivity-form base/create_activity.html?? {% endcomment %}
 {% block content %}
@@ -15,8 +16,21 @@
             {% for field in form %}
                 {% if field.name == 'owner' %}
                     <h2><strong>{{ field.label_tag }}</strong> {{ field.as_hidden }} {{ user }}</h2>
-                {% elif field.name == 'picture' or field.name == 'background_picture' %}
+
+                {% elif field.name == 'picture' %}
                     <div class="heading-detail"><p>{{ field.label_tag }}</p> <input type="file" name="{{ field.name }}"></div>
+                    <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
+                         {% else %} {% static 'action/images/default-image.png' %}
+                         {% endif %}"
+                    alt="{{ activity.title }}'s Picture" width="240" height="240">
+
+                {% elif field.name == 'background_picture' %}
+                    <div class="heading-detail"><p>{{ field.label_tag }}</p> <input type="file" name="{{ field.name }}"></div>
+                    <img src="{% if activity.background_picture %} data:image/png;base64,{{ activity.background_picture}}
+                         {% else %} {% static 'action/images/default-image.png' %}
+                         {% endif %}"
+                    alt="{{ activity.title }}'s Picture" width="240" height="240">
+
                 {% elif field.name == 'tags' %}
                     <div><p>{{ field.label_tag }}</p></div>
                     {% for tag in field.field.queryset %}
@@ -28,6 +42,7 @@
                     {% empty %}
                         <p>No tag currently available.</p>
                     {% endfor %}
+
                 {% else %}
                     <div class="heading-detail"><p>{{ field.label_tag }}</p>{{ field }}</div>
                 {% endif %}
