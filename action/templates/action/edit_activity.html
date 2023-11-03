@@ -4,30 +4,38 @@
 {% block content %}
 <h3>
 <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.errors }}
-    {% for field in form %}
-        {% if field.name == 'owner' %}
-            {{ field.label_tag }} {{ field.as_hidden }} {{ user }}
-        {% elif field.name == 'picture' or field.name == 'background_picture' %}
-            {{ field.label_tag }} <input type="file" name="{{ field.name }}">
-        {% elif field.name == 'tags' %}
-            {{ field.label_tag }}
-            {% for tag in field.field.queryset %}
-            <label><br>
-                <input type="checkbox" name="{{ field.name }}" value="{{ tag.id }}"
-                    {% if tag in field.value.all %}checked{% endif %}>
-                    {{ tag }}
-            </label>
-            {% empty %}
-                No tag currently available.
+    <div class="edit-outer-detail">
+        <div class="title">
+            <h1> Edit Activity </h1>
+        </div>
+        <div class="edit-inner-detail">
+            {% csrf_token %}
+            {{ form.errors }}
+
+            {% for field in form %}
+                {% if field.name == 'owner' %}
+                <h2><strong>{{ field.label_tag }}</strong> {{ field.as_hidden }} {{ user }}</h2>
+                {% elif field.name == 'picture' or field.name == 'background_picture' %}
+                    <div class="heading-detail"><p>{{ field.label_tag }}</p> <input type="file" name="{{ field.name }}"></div>
+                {% elif field.name == 'tags' %}
+                    <div><p>{{ field.label_tag }}</p></div>
+                    {% for tag in field.field.queryset %}
+                    <div class="tag-name">
+                        <input type="checkbox" name="{{ field.name }}" value="{{ tag.id }}"
+                            {% if tag in field.value.all %} checked {% endif %}>
+                            <p>{{ tag }}</p>
+                    </div>
+                    {% empty %}
+                        No tag currently available.
+                    {% endfor %}
+                {% else %}
+                    <div class="heading-detail"><p>{{ field.label_tag }}</p>{{ field }}</div>
+                {% endif %}
+                <br>
             {% endfor %}
-        {% else %}
-            {{ field.label_tag }} {{ field }}
-        {% endif %}
-        <br>
-    {% endfor %}
-    <input type="submit" value="Edit">
+            <input type="submit" value="Edit">
+        </div>
+    </div>
 </form>
 </h3>
 {% endblock %}
