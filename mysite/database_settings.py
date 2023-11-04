@@ -6,10 +6,9 @@ import logging
 import sys
 
 from decouple import config
-from mysite.settings import BASE_DIR
 
 
-def configure_database_settings():
+def configure_database_settings(BASE_DIR):
     local_database = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -24,7 +23,9 @@ def configure_database_settings():
 
     try:
         database_url = config("DATABASE_URL", default=None)
-        if database_url not in [None, '']:
+        if database_url:
+            print(
+                "Using a valid DATABASE_URL. Connecting to the Neon database.")
             return {
                 'default': dj_database_url.config(
                     default=database_url,
@@ -34,12 +35,9 @@ def configure_database_settings():
             }
         else:
             print(
-                "DATABASE_URL not found. Auto-migrating on the local database.")
+                "DATABASE_URL not found. Falling back to the local database.")
     except ValueError:
         logging.warning(
-            "Invalid DATABASE_URL. Auto-migrating on the local database.")
+            "Invalid DATABASE_URL. Falling back to the local database.")
 
     return local_database
-
-
-DATABASES = configure_database_settings()

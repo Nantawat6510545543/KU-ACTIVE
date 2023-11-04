@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Neon Database
 # https://neon.tech/docs/guides/django
 
-DATABASES = configure_database_settings()
+DATABASES = configure_database_settings(BASE_DIR)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
