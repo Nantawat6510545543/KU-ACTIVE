@@ -10,7 +10,7 @@ from action import utils
 
 class DetailView(generic.DetailView):
     model = Activity
-    template_name = 'action/detail.html'
+    template_name = 'action/activity/detail.html'
 
     def get_queryset(self):
         return Activity.objects.filter(pub_date__lte=timezone.now())

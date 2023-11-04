@@ -53,7 +53,7 @@
             <p><strong>Participant Counts:</strong> {{ activity.participants.count }}</p>
             <p><strong>Background Picture:</strong> 
                 <img src="{% if activity.background_picture %} data:image/png;base64,{{ activity.background_picture }}
-                     {% else %} {% static 'action/images/guest-img.png' %}
+                     {% else %} {% static 'action/images/default-image.png' %}
                      {% endif %}"
                 alt="{{ activity.title }}'s Picture" width="400" height="240">
             </p>

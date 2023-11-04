@@ -10,7 +10,7 @@ from action.models import User
 
 class EditProfileView(LoginRequiredMixin, generic.UpdateView):
     form_class = UserEditForm
-    template_name = 'action/edit_profile.html'
+    template_name = 'action/profile/edit.html'
 
     def get_object(self):
         return User.objects.get(pk=self.request.user.id)

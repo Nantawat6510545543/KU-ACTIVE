@@ -11,6 +11,7 @@ class UserAuthTest(Tester):
 
     def setUp(self):
         super().setUp()
+        self.set_social_app()
         self.username = "testuser"
         self.password = "testpass"
         self.user = self.create_user(self.username, self.password)

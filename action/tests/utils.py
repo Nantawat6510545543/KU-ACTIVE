@@ -16,6 +16,8 @@ class Tester(TestCase):
         Set up the test environment.
         """
         super().setUp()
+
+    def set_social_app(self):
         site, _ = Site.objects.get_or_create(
             id=SITE_ID,
             defaults={
@@ -116,15 +118,14 @@ class Tester(TestCase):
         return activity
 
     @staticmethod
-    def create_activity_status(participants, activity, participated=None,
+    def create_activity_status(participants, activity, participated=True,
                                favorite=None):
         activity_status = ActivityStatus.objects.create(
             participants=participants,
-            activity=activity
+            activity=activity,
+            is_participated=participated
         )
 
-        if participated is not None:
-            activity_status.is_participated = participated
         if favorite is not None:
             activity_status.is_favorited = favorite
 

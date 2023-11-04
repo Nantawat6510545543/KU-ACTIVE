@@ -10,7 +10,7 @@ from action.models import Activity
 
 class ActivityEditView(LoginRequiredMixin, generic.UpdateView):
     form_class = ActivityForm
-    template_name = 'action/edit_activity.html'
+    template_name = 'action/activity/edit.html'
 
     def get_object(self, **kwargs):
         return Activity.objects.get(pk=self.kwargs['activity_id'])
