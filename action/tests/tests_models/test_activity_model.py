@@ -47,9 +47,7 @@ class ActivityModelTest(Tester):
             activity_status.append(
                 self.create_activity_status(user, self.activity))
             self.assertEqual(self.activity.participant_count, i)
-            print(self.activity.participant_count)
 
         for i in range(1, 4):
             activity_status[i - 1].delete()
             self.assertEqual(self.activity.participant_count, 3 - i)
-

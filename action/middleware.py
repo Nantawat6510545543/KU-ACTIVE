@@ -18,7 +18,6 @@ class RemoveWhitespaceMiddleware(BaseMiddleware):
         request.GET['q'] = query or ''
 
         response = self.get_response(request)
-        print(query)
         return response
 
 
