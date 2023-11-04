@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from django.views import generic
 
-from action import utils
+from action.utils.search_utils import ActivityFilterer
 
 TAG_OPTIONS = [
     ('title', 'Title'),
@@ -11,6 +11,9 @@ TAG_OPTIONS = [
     ('start_date', 'Date'),
 ]
 
+# Some tag requires login
+REGISTERED_TAG_LIST = ['registered', 'favorited', 'friend_joined']
+
 
 class IndexView(generic.ListView):
     template_name = 'action/index.html'
@@ -18,21 +21,18 @@ class IndexView(generic.ListView):
 
     # TODO refactor
     def get(self, request, *args, **kwargs):
-        tag_list = request.GET.getlist('tag')
-        # Some tag requires login
-        registered_tag_list = ['registered', 'favorited', 'friend_joined']
+        tag = request.GET.get('tag')
 
-        # Check if tag in register_tag_list
-        tag_in_registered_tag_list = any(each_tag in registered_tag_list for each_tag in tag_list)
-
-        if tag_in_registered_tag_list and not request.user.is_authenticated:
+        # Check if tag in register_tag_list and user is logged in
+        if tag in REGISTERED_TAG_LIST and not request.user.is_authenticated:
             return redirect('login')
 
         # Continue with the regular behavior of the view
         return super(IndexView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        return utils.get_index_queryset(self.request)
+        af = ActivityFilterer(self.request)
+        return af.get_index_queryset()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

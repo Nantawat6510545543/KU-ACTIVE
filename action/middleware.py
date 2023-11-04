@@ -1,9 +1,13 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
 class BaseMiddleware(ABC):
     def __init__(self, get_response):
         self.get_response = get_response
+
+    @abstractmethod
+    def __call__(self, request):
+        pass
 
 
 class RemoveWhitespaceMiddleware(BaseMiddleware):

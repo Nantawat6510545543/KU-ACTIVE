@@ -5,55 +5,53 @@ from django.utils import timezone
 from action.models import Activity, ActivityStatus
 
 
-def get_index_queryset(request: HttpRequest):
-    query = request.GET.get('q')
-    tag = request.GET.getlist('tag')
-    activities = Activity.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
-    filters = Q()  # Create an empty query
+class ActivityFilterer:
+    def __init__(self, request: HttpRequest):
+        # Can't directly call activity__participants_is_participated,
+        # not supported by Django ManyToOneRel. So it's broken into two queries
+        # First call participants_is_participate, then filter by activity
 
-    for each_tag in tag:
-        match each_tag:
-            case 'title':
-                filters |= Q(title__icontains=query)
-            case 'owner':
-                filters |= Q(owner__username__icontains=query)
-            # date currently doesn't work
-            case 'date':
-                filters |= Q(date__icontains=query)
-            case 'tag':
-                filters |= Q(tags__name__icontains=query)
-            case 'place':
-                filters |= Q(place__icontains=query)
+        # Get ActivityStatus objects for your friends and is_participated=True
+        user_activity_status = ActivityStatus.objects.filter(
+            participants__in=request.user.friends, is_participated=True)
 
-            # TODO extract method
-            case 'registered':
-                filters |= Q(id__in=request.user.participated_activity)
+        self.query = request.GET.get('q')
+        self.tag = request.GET.get('tag')
+        self.tag_handler = {
+            'title': Q(title__icontains=self.query),
+            'owner': Q(owner__username__icontains=self.query),
+            'date': Q(date__icontains=self.query),
+            'tag': Q(tags__name__icontains=self.query),
+            'place': Q(place__icontains=self.query),
+            'upcoming': Q(pub_date__range=(timezone.now(), timezone.now() + timezone.timedelta(1))),
+            'popular': Q(),
+            'recent': Q(pub_date__range=(timezone.now() - timezone.timedelta(1), timezone.now()))
+        }
 
-            case 'favorited':
-                filters |= Q(id__in=request.user.favorited_activity)
+        if request.user.is_authenticated:
+            self.tag_handler.update({
+                # Filter 'friend_joined' by related Activity objects
+                'friend_joined': Q(activity__in=user_activity_status),
+                'registered': Q(id__in=request.user.participated_activity),
+                'favorited': Q(id__in=request.user.favorited_activity)
+            })
 
-            case 'friend_joined':
-                # Can't directly call activity__participants_is_participated,
-                # not supported by Django ManyToOneRel. So it's broken into two queries
-                # First call participants_is_participate, then filter by activity
+    def get_index_queryset(self):
+        if self.tag is not None and self.tag not in self.tag_handler:
+            raise ValueError("Invalid Tag")
 
-                # Get ActivityStatus objects for your friends and is_participated=True
-                activity_status = ActivityStatus.objects.filter(participants__in=request.user.friends, is_participated=True)
+        activities = Activity.objects.filter(
+            pub_date__lte=timezone.now()).order_by('-pub_date')
 
-                # Filter by related Activity objects
-                filters |= Q(activity__in=activity_status)
-
-            case 'upcoming':
-                # TODO Default is one day before after activity, consider reassigning it or separating it
-                activities = Activity.objects.order_by('-pub_date')
-                filters |= Q(pub_date__range=(timezone.now(), timezone.now() + timezone.timedelta(1)))
+        match self.tag:
             case 'popular':
                 activities = activities.annotate(temp_participant_count=Count('activity'))
                 activities = activities.order_by('-temp_participant_count')
-            case 'recent':
-                # TODO Default is one day before the activity, consider reassigning it or separate it
+                return activities
+            case 'upcoming' | 'recent':
                 activities = Activity.objects.order_by('-pub_date')
-                filters |= Q(pub_date__range=(timezone.now() - timezone.timedelta(1), timezone.now()))
 
-    activities = activities.filter(filters)
-    return activities
+        if self.tag:
+            filters = self.tag_handler[self.tag]
+            activities = activities.filter(filters)
+        return activities
