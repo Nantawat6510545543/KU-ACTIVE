@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 
-from action.models import ActivityStatus
+from action.models import ActivityStatus, Activity
 from action import utils
 
 
@@ -19,6 +19,26 @@ def participate(request, activity_id: int):
         activity_status.save()
         messages.success(request, "You have successfully participated.")
 
+        activity = get_object_or_404(Activity, pk=activity_id)
+
+        data = {
+            'summary': activity.title,
+            'location': activity.place,
+            'description': activity.description,
+            'start': {
+                'dateTime': activity.start_date.strftime('%Y-%m-%dT%H:%M:%S'),
+                'timeZone': "Asia/Bangkok",
+            },
+            'end': {
+                'dateTime': activity.last_date.strftime('%Y-%m-%dT%H:%M:%S'),
+                'timeZone': "Asia/Bangkok",
+            },
+            'id': '0000' + str(activity_id)
+        }
+
+        # TODO: Solve event id problem first
+        # utils.create_event(request, **data)
+
     return redirect(reverse("action:detail", args=(activity_id,)))
 
 
@@ -31,6 +51,10 @@ def leave(request, activity_id: int):
         activity_status.is_participated = False
         activity_status.save()
         messages.success(request, "You have left this activity.")
+
+        # TODO: Solve event id problem first
+        # utils.remove_event(request, '0000' + str(activity_id))
+
     else:
         messages.info(request,
                       "You are not currently participating in this activity.")
