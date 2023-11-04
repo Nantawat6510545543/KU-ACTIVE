@@ -116,15 +116,14 @@ class Tester(TestCase):
         return activity
 
     @staticmethod
-    def create_activity_status(participants, activity, participated=None,
+    def create_activity_status(participants, activity, participated=True,
                                favorite=None):
         activity_status = ActivityStatus.objects.create(
             participants=participants,
-            activity=activity
+            activity=activity,
+            is_participated=participated
         )
 
-        if participated is not None:
-            activity_status.is_participated = participated
         if favorite is not None:
             activity_status.is_favorited = favorite
 

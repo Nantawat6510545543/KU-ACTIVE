@@ -8,6 +8,7 @@ class ActivityModelTest(Tester):
         super().setUp()
         self.user1 = self.create_user('tester1')
         self.user2 = self.create_user('tester2')
+        self.user3 = self.create_user('tester3')
         self.tag1 = self.create_tag(name="Tag1")
         self.tag2 = self.create_tag(name="Tag2")
 
@@ -36,3 +37,19 @@ class ActivityModelTest(Tester):
         self.assertEqual(activity.end_date, data['end_date'])
         self.assertEqual(activity.participant_limit, data['participant_limit'])
         self.assertCountEqual(data['tags'], activity.tags.all())
+
+    def test_participant_count(self):
+        self.assertEqual(self.activity.participant_count, 0)
+
+        activity_status = []
+        for i in range(1, 4):
+            user = getattr(self, f'user{i}')
+            activity_status.append(
+                self.create_activity_status(user, self.activity))
+            self.assertEqual(self.activity.participant_count, i)
+            print(self.activity.participant_count)
+
+        for i in range(1, 4):
+            activity_status[i - 1].delete()
+            self.assertEqual(self.activity.participant_count, 3 - i)
+
