@@ -14,5 +14,5 @@ class ActivityStatusTestCase(Tester):
 
         self.assertEqual(activity_status.participants,
                          activity_status.activity.owner)
-        self.assertFalse(activity_status.is_participated)
+        self.assertTrue(activity_status.is_participated)
         self.assertFalse(activity_status.is_favorited)

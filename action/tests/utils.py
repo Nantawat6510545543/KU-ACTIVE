@@ -16,6 +16,8 @@ class Tester(TestCase):
         Set up the test environment.
         """
         super().setUp()
+
+    def set_social_app(self):
         site, _ = Site.objects.get_or_create(
             id=SITE_ID,
             defaults={
