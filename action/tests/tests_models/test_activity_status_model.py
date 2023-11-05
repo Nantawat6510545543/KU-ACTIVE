@@ -1,12 +1,12 @@
-from action.tests.utils import Tester
+from django.test import TestCase
+from action.tests import utils
 
 
-class ActivityStatusTestCase(Tester):
+class ActivityStatusTestCase(TestCase):
     def setUp(self):
-        super().setUp()
-        user = self.create_user()
-        activity = self.create_activity(owner=user)
-        self.activity_status = self.create_activity_status(participants=user,
+        user = utils.create_user()
+        activity = utils.create_activity(owner=user)
+        self.activity_status = utils.create_activity_status(participants=user,
                                                            activity=activity)
 
     def test_activity_status_attributes(self):

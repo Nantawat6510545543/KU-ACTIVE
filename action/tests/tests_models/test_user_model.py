@@ -1,7 +1,8 @@
-from action.tests.utils import Tester
+from django.test import TestCase
+from action.tests import utils
 
 
-class UserModelTest(Tester):
+class UserModelTest(TestCase):
     def setUp(self):
         self.user_data = {
             'username': 'testuser',
@@ -11,7 +12,7 @@ class UserModelTest(Tester):
             'last_name': 'Doe',
             'active': True,
         }
-        self.user = self.create_user(**self.user_data)
+        self.user = utils.create_user(**self.user_data)
 
     def test_user_attributes(self):
         user = self.user  # shorter reference

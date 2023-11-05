@@ -1,12 +1,13 @@
-from action.tests.utils import Tester
+from django.test import TestCase
+from action.tests import utils
 
 
-class FriendStatusTestCase(Tester):
+class FriendStatusTestCase(TestCase):
     def setUp(self):
-        self.sender = self.create_user(username="sender")
-        self.receiver = self.create_user(username="receiver")
-        self.friend_status = self.create_friend_status(sender=self.sender,
-                                                       receiver=self.receiver)
+        self.sender = utils.create_user(username="sender")
+        self.receiver = utils.create_user(username="receiver")
+        self.friend_status = utils.create_friend_status(sender=self.sender,
+                                                        receiver=self.receiver)
 
     def test_friend_status_attributes(self):
         friend_status = self.friend_status

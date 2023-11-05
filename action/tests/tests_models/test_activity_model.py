@@ -1,13 +1,13 @@
-from action.tests.utils import Tester
+from django.test import TestCase
+from action.tests import utils
 from django.utils import timezone
 
 
-class ActivityModelTest(Tester):
+class ActivityModelTest(TestCase):
 
     def setUp(self):
-        super().setUp()
-        self.user_list = [self.create_user(f'tester{i}') for i in range(1, 4)]
-        self.tag_list = [self.create_tag(name=f'Tag{i}') for i in range(1, 3)]
+        self.user_list = [utils.create_user(f'tester{i}') for i in range(1, 4)]
+        self.tag_list = [utils.create_tag(name=f'Tag{i}') for i in range(1, 3)]
 
         time = timezone.now()
 
@@ -21,7 +21,7 @@ class ActivityModelTest(Tester):
             'tags': self.tag_list
         }
 
-        self.activity = self.create_activity(**self.activity_data)
+        self.activity = utils.create_activity(**self.activity_data)
 
     def test_activity_attributes(self):
         activity = self.activity
@@ -41,7 +41,7 @@ class ActivityModelTest(Tester):
         activity_status = []
         for i in range(3):
             activity_status.append(
-                self.create_activity_status(self.user_list[i], self.activity))
+                utils.create_activity_status(self.user_list[i], self.activity))
             self.assertEqual(self.activity.participant_count, i + 1)
 
         count = self.activity.participant_count - 1
