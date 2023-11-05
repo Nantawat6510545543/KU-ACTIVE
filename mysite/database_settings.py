@@ -9,6 +9,24 @@ from decouple import config
 
 
 def configure_database_settings(BASE_DIR):
+    """
+    Configure database settings for a Django application based on the provided BASE_DIR.
+
+    Args:
+        BASE_DIR (Path): The base directory of the Django project.
+
+    Returns:
+        dict: A dictionary containing the database settings, including the ENGINE and NAME.
+              The specific database settings are determined based on the current environment.
+
+    Note:
+        - If running tests (identified by the 'test' argument in sys.argv), the function returns
+          settings for the local SQLite database.
+        - If a valid DATABASE_URL environment variable is found, it configures the database
+          using the settings from the DATABASE_URL.
+        - If DATABASE_URL is not found or invalid, it falls back to the local SQLite database.
+
+    """
     local_database = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
