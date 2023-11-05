@@ -8,4 +8,4 @@ class CalendarView(generic.ListView):
     context_object_name = 'activity_list'
 
     def get_queryset(self):
-        return utils.get_index_queryset(self.request)
+        return utils.ActivityFilterer(self.request).get_index_queryset()

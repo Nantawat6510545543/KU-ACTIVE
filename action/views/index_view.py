@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from django.views import generic
 
-from action.utils.search_utils import ActivityFilterer
+from action.utils import ActivityFilterer
 
 TAG_OPTIONS = [
     ('title', 'Title'),
