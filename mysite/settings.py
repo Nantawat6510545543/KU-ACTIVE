@@ -125,10 +125,12 @@ LOGOUT_REDIRECT_URL = 'login'
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
+SOCIALACCOUNT_STORE_TOKENS = True
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': ['profile', 'email', 'https://www.googleapis.com/auth/calendar'],
-        'AUTH_PARAMS': {'access_type': 'online'},
+        'AUTH_PARAMS': {'access_type': 'offline'},
     }
 }
 
@@ -162,7 +164,7 @@ INTERNAL_IPS = [
 
 # For docker, future use uncomment this
 
-# if DEBUG:
-#     import socket  # only if you haven't already imported this
-#     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-#     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
+if DEBUG:
+    import socket  # only if you haven't already imported this
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]

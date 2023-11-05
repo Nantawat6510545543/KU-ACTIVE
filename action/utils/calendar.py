@@ -23,40 +23,46 @@ def build_service(request):
 
 
 def generate_random_id():
-    charset = "0123456789ABCDEFGHIJKLMNOPQRSTUV"
-    random_indices = [secrets.randbelow(32) for _ in range(7)]
+    charset = "0123456789abcdefghijklmnopqrstuv"
+    random_indices = [secrets.randbelow(32) for _ in range(100)]
     random_string = ''.join([charset[i] for i in random_indices])
+    print(random_string)
     return random_string
 
 
-def create_event(request, **kwargs):
-    try:
-        service = build_service(request)
-        event = {
-            'summary': "event_name",
-            'location': "Unknown location.",
-            'description': "No description.",
-            'start': {
-                'dateTime': (datetime.datetime.now()).strftime('%Y-%m-%dT%H:%M:%S'),
-                'timeZone': "Asia/Bangkok",
-            },
-            'end': {
-                'dateTime': (datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y-%m-%dT%H:%M:%S'),
-                'timeZone': "Asia/Bangkok",
-            },
-            'id': generate_random_id()
-        }
-        event.update(kwargs)
-        service.events().insert(calendarId='primary', body=event).execute()
-
-    except HttpError:
-        pass
+def create_event(request, activity_id, **kwargs):
+    service = build_service(request)
+    new_event_code = generate_random_id()
+    event = {
+        'summary': "event_name",
+        'location': "Unknown location.",
+        'description': "No description.",
+        'start': {
+            'dateTime': (datetime.datetime.now()).strftime('%Y-%m-%dT%H:%M:%S'),
+            'timeZone': "Asia/Bangkok",
+        },
+        'end': {
+            'dateTime': (datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y-%m-%dT%H:%M:%S'),
+            'timeZone': "Asia/Bangkok",
+        },
+        'id': new_event_code
+    }
+    request.user.event_encoder[str(activity_id)] = new_event_code
+    request.user.save()
+    event.update(kwargs)
+    service.events().insert(calendarId='primary', body=event).execute()
 
 
 def remove_event(request, activity_id):
     try:
-        service = build_service(request)
-        service.events().delete(calendarId='primary', eventId=activity_id).execute()
+        if str(activity_id) in request.user.event_encoder:
+            service = build_service(request)
+            encoded_event = request.user.event_encoder[str(activity_id)]
+            service.events().delete(calendarId='primary', eventId=encoded_event).execute()
+            request.user.event_encoder[str(activity_id)] = generate_random_id()
+            request.user.save()
+        else:
+            pass
 
     except HttpError:
         pass

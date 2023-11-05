@@ -6,6 +6,8 @@ from django.db.models import Q
 class User(AbstractUser):
     profile_picture = models.TextField(blank=True)
     bio = models.TextField(blank=True)
+    event_encoder = models.JSONField(blank=True)
+
 
     @property
     def participated_activity(self):
@@ -31,6 +33,7 @@ class User(AbstractUser):
             Q(receiver__is_friend=True, receiver__sender=self)
         )
         return friend_objects
+
 
     def __str__(self):
         return self.username
