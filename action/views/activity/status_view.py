@@ -32,12 +32,10 @@ def participate(request, activity_id: int):
             'end': {
                 'dateTime': activity.last_date.strftime('%Y-%m-%dT%H:%M:%S'),
                 'timeZone': "Asia/Bangkok",
-            },
-            'id': '0000' + str(activity_id)
+            }
         }
 
-        # TODO: Solve event id problem first
-        # utils.create_event(request, **data)
+        utils.create_event(request, activity_id, **data)
 
     return redirect(reverse("action:detail", args=(activity_id,)))
 
@@ -52,8 +50,7 @@ def leave(request, activity_id: int):
         activity_status.save()
         messages.success(request, "You have left this activity.")
 
-        # TODO: Solve event id problem first
-        # utils.remove_event(request, '0000' + str(activity_id))
+        utils.remove_event(request, activity_id)
 
     else:
         messages.info(request,

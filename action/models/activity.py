@@ -35,7 +35,7 @@ class Activity(models.Model):
                                            participants__is_participated=True)
         return participants
 
-# TODO delegate some of these to html
+    # TODO delegate some of these to html
     @property
     @admin.display(description='Time remain')
     def time_remain(self):
@@ -87,8 +87,8 @@ class Activity(models.Model):
         """
         return self.title
 
-    @admin.display(boolean=True, description='Published recently?', )
-    def was_published_recently(self):
+    @admin.display(boolean=True, description='Published recently?')
+    def was_published_recently(self) -> bool:
         """
         Checks if the activity was published recently.
 
@@ -99,8 +99,8 @@ class Activity(models.Model):
         now = timezone.now()
         return now - timezone.timedelta(days=1) <= self.pub_date <= now
 
-    @admin.display(boolean=True, description='Is published?', )
-    def is_published(self):
+    @admin.display(boolean=True, description='Is published?')
+    def is_published(self) -> bool:
         """
         Checks if the activity is published.
 
@@ -111,7 +111,7 @@ class Activity(models.Model):
         now = timezone.now()
         return now >= self.pub_date
 
-    @admin.display(boolean=True, description='Can participate?', )
+    @admin.display(boolean=True, description='Can participate?')
     def can_participate(self):
         """
         checks if participation is allowed for this activity.
