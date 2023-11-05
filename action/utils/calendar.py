@@ -26,7 +26,6 @@ def generate_random_id():
     charset = "0123456789abcdefghijklmnopqrstuv"
     random_indices = [secrets.randbelow(32) for _ in range(100)]
     random_string = ''.join([charset[i] for i in random_indices])
-    print(random_string)
     return random_string
 
 
