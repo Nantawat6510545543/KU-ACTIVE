@@ -7,14 +7,13 @@ from action.models import Activity, ActivityStatus
 
 class ActivityFilterer:
     def __init__(self, request: HttpRequest):
-        # Can't directly call activity__participants_is_participated,
-        # not supported by Django ManyToOneRel. So it's broken into two queries
-        # First call participants_is_participate, then filter by activity
+        now = timezone.now()
+        delay = timezone.timedelta(1)
 
         self.query = request.GET.get('q')
         self.tag = request.GET.get('tag')
-        now = timezone.now()
-        delay = timezone.timedelta(1)
+        user = request.user
+
         self.tag_handler = {
             'title': Q(title__icontains=self.query),
             'owner': Q(owner__username__icontains=self.query),
@@ -26,11 +25,15 @@ class ActivityFilterer:
             'recent': Q(pub_date__range=(now - delay, now))
         }
 
-        user = request.user
         if user.is_authenticated:
+            # Can't directly call activity__participants_is_participated,
+            # not supported by Django ManyToOneRel. So it's broken into two queries
+            # First call participants_is_participate, then filter by activity
+
             # Get ActivityStatus objects for your friends and is_participated=True
             user_activity_status = ActivityStatus.objects.filter(
                 participants__in=user.friends, is_participated=True)
+
             self.tag_handler.update({
                 # Filter 'friend_joined' by related Activity objects
                 'friend_joined': Q(activity__in=user_activity_status),
