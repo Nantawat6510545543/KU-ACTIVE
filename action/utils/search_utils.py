@@ -11,9 +11,6 @@ class ActivityFilterer:
         # not supported by Django ManyToOneRel. So it's broken into two queries
         # First call participants_is_participate, then filter by activity
 
-        # Get ActivityStatus objects for your friends and is_participated=True
-        user_activity_status = ActivityStatus.objects.filter(
-            participants__in=request.user.friends, is_participated=True)
 
         self.query = request.GET.get('q')
         self.tag = request.GET.get('tag')
@@ -29,6 +26,9 @@ class ActivityFilterer:
         }
 
         if request.user.is_authenticated:
+            # Get ActivityStatus objects for your friends and is_participated=True
+            user_activity_status = ActivityStatus.objects.filter(
+                participants__in=request.user.friends, is_participated=True)
             self.tag_handler.update({
                 # Filter 'friend_joined' by related Activity objects
                 'friend_joined': Q(activity__in=user_activity_status),
