@@ -9,17 +9,19 @@ import secrets
 
 
 def build_service(request):
-    app = SocialApp.objects.get(provider="google")
-    token = SocialToken.objects.get(app=app, account__user=request.user)
-    refresh_token = token.token_secret
-    scope = ['https://www.googleapis.com/auth/calendar']
-    user_info = {
-        "client_id": config('GOOGLE_OAUTH_CLIENT_ID', str),
-        "client_secret": config('GOOGLE_OAUTH_SECRET_KEY', str),
-        "refresh_token": str(refresh_token),
-    }
-    creds = Credentials.from_authorized_user_info(info=user_info, scopes=scope)
-    return build('calendar', 'v3', credentials=creds)
+    if request.user.email:
+        app = SocialApp.objects.get(provider="google")
+        token = SocialToken.objects.get(app=app, account__user=request.user)
+        refresh_token = token.token_secret
+        scope = ['https://www.googleapis.com/auth/calendar']
+        user_info = {
+            "client_id": config('GOOGLE_OAUTH_CLIENT_ID', str),
+            "client_secret": config('GOOGLE_OAUTH_SECRET_KEY', str),
+            "refresh_token": str(refresh_token),
+        }
+        creds = Credentials.from_authorized_user_info(info=user_info, scopes=scope)
+
+        return build('calendar', 'v3', credentials=creds)
 
 
 def generate_random_id():
@@ -31,35 +33,37 @@ def generate_random_id():
 
 def create_event(request, activity_id, **kwargs):
     service = build_service(request)
-    new_event_code = generate_random_id()
-    event = {
-        'summary': "event_name",
-        'location': "Unknown location.",
-        'description': "No description.",
-        'start': {
-            'dateTime': (datetime.datetime.now()).strftime('%Y-%m-%dT%H:%M:%S'),
-            'timeZone': "Asia/Bangkok",
-        },
-        'end': {
-            'dateTime': (datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y-%m-%dT%H:%M:%S'),
-            'timeZone': "Asia/Bangkok",
-        },
-        'id': new_event_code
-    }
-    request.user.event_encoder[str(activity_id)] = new_event_code
-    request.user.save()
-    event.update(kwargs)
-    service.events().insert(calendarId='primary', body=event).execute()
+    if service is not None:
+        new_event_code = generate_random_id()
+        event = {
+            'summary': "event_name",
+            'location': "Unknown location.",
+            'description': "No description.",
+            'start': {
+                'dateTime': (datetime.datetime.now()).strftime('%Y-%m-%dT%H:%M:%S'),
+                'timeZone': "Asia/Bangkok",
+            },
+            'end': {
+                'dateTime': (datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y-%m-%dT%H:%M:%S'),
+                'timeZone': "Asia/Bangkok",
+            },
+            'id': new_event_code
+        }
+        request.user.event_encoder[str(activity_id)] = new_event_code
+        request.user.save()
+        event.update(kwargs)
+        service.events().insert(calendarId='primary', body=event).execute()
 
 
 def remove_event(request, activity_id):
     try:
         if str(activity_id) in request.user.event_encoder:
             service = build_service(request)
-            encoded_event = request.user.event_encoder[str(activity_id)]
-            service.events().delete(calendarId='primary', eventId=encoded_event).execute()
-            request.user.event_encoder[str(activity_id)] = generate_random_id()
-            request.user.save()
+            if service is not None:
+                encoded_event = request.user.event_encoder[str(activity_id)]
+                service.events().delete(calendarId='primary', eventId=encoded_event).execute()
+                request.user.event_encoder[str(activity_id)] = generate_random_id()
+                request.user.save()
         else:
             pass
 
