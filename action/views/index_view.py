@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from django.views import generic
 
-from action.utils.search_utils import ActivityFilterer
+from action.utils import search_utils
 
 TAG_OPTIONS = [
     ('title', 'Title'),
@@ -31,8 +31,7 @@ class IndexView(generic.ListView):
         return super(IndexView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        af = ActivityFilterer(self.request)
-        return af.get_index_queryset()
+        return search_utils.get_index_queryset(self.request)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
