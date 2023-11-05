@@ -87,7 +87,7 @@ table.style1 a {
 
 .activity-pic {
     width: 100%;
-    height: 250px;
+    height: 48%;
 }
 
 .activity-title {
@@ -108,7 +108,7 @@ table.style1 a {
 
 .activity-information {
     width: 100%;
-    height: 192px;
+    height: 37%;
     overflow: hidden;
     text-align: right;
 }
