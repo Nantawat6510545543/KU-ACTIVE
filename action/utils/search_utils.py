@@ -11,29 +11,31 @@ class ActivityFilterer:
         # not supported by Django ManyToOneRel. So it's broken into two queries
         # First call participants_is_participate, then filter by activity
 
-
         self.query = request.GET.get('q')
         self.tag = request.GET.get('tag')
+        now = timezone.now()
+        delay = timezone.timedelta(1)
         self.tag_handler = {
             'title': Q(title__icontains=self.query),
             'owner': Q(owner__username__icontains=self.query),
             'date': Q(date__icontains=self.query),
             'tag': Q(tags__name__icontains=self.query),
             'place': Q(place__icontains=self.query),
-            'upcoming': Q(pub_date__range=(timezone.now(), timezone.now() + timezone.timedelta(1))),
+            'upcoming': Q(pub_date__range=(now, now + delay)),
             'popular': Q(),
-            'recent': Q(pub_date__range=(timezone.now() - timezone.timedelta(1), timezone.now()))
+            'recent': Q(pub_date__range=(now - delay, now))
         }
 
-        if request.user.is_authenticated:
+        user = request.user
+        if user.is_authenticated:
             # Get ActivityStatus objects for your friends and is_participated=True
             user_activity_status = ActivityStatus.objects.filter(
-                participants__in=request.user.friends, is_participated=True)
+                participants__in=user.friends, is_participated=True)
             self.tag_handler.update({
                 # Filter 'friend_joined' by related Activity objects
                 'friend_joined': Q(activity__in=user_activity_status),
-                'registered': Q(id__in=request.user.participated_activity),
-                'favorited': Q(id__in=request.user.favorited_activity)
+                'registered': Q(id__in=user.participated_activity),
+                'favorited': Q(id__in=user.favorited_activity)
             })
 
     def get_index_queryset(self):
@@ -45,7 +47,8 @@ class ActivityFilterer:
 
         match self.tag:
             case 'popular':
-                activities = activities.annotate(temp_participant_count=Count('activity'))
+                activities = activities.annotate(
+                    temp_participant_count=Count('activity'))
                 activities = activities.order_by('-temp_participant_count')
                 return activities
             case 'upcoming' | 'recent':
