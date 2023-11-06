@@ -51,11 +51,16 @@
             <p><strong>Place:</strong> {{ activity.place }}</p>
             <p><strong>Participants:</strong> {{ activity.participants }}</p>
             <p><strong>Participant Counts:</strong> {{ activity.participants.count }}</p>
-            <p><strong>Background Picture:</strong> 
-                <img src="{% if activity.background_picture %} data:image/png;base64,{{ activity.background_picture }}
-                     {% else %} {% static 'action/images/default-image.png' %}
-                     {% endif %}"
-                alt="{{ activity.title }}'s Picture" width="400" height="240">
+            <p><strong>Background Picture:</strong>
+                {% if activity.background_picture %}
+                    {% for value in activity.background_picture.values %}
+                        <img src="data:image/png;base64,{{ value }}"
+                        ALT="{{ activity.title }}'s Picture" width="400" height="240" >
+                    {% endfor %}
+                {% else %}
+                    <img src=" {% static 'action/images/default-image.png' %}"
+                    ALT="{{ activity.title }}'s Picture" width="400" height="240" >
+                {% endif %}
             </p>
 
             <p><strong>Participant Limit:</strong>

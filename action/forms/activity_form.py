@@ -5,6 +5,24 @@ from ..models import Activity
 from . import utils
 
 
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = single_file_clean(data, initial)
+        return result
+
+
 class ActivityForm(forms.ModelForm):
     date_fields = {
         'pub_date': 'Publication Date',
@@ -21,7 +39,7 @@ class ActivityForm(forms.ModelForm):
         )
 
     picture = forms.ImageField(required=False)
-    background_picture = forms.ImageField(required=False)
+    background_picture = MultipleFileField()
 
     class Meta:
         model = Activity
@@ -62,7 +80,10 @@ class ActivityForm(forms.ModelForm):
 
         # # Set the activity's background picture attribute
         image_file = self.cleaned_data.get('background_picture')
-        cleaned_data['background_picture'] = utils.image_to_base64(
-            image_file)
+        json = {}
+        for num, image in enumerate(image_file):
+            json[f"background{num}"] = utils.image_to_base64(image)
+
+        cleaned_data['background_picture'] = json
 
         return cleaned_data

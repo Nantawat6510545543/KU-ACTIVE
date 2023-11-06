@@ -27,7 +27,7 @@ class Activity(models.Model):
     place = models.CharField('Place', max_length=200, blank=True)
     full_description = models.TextField('Full Description', blank=True)
     picture = models.TextField(blank=True, default='')
-    background_picture = models.JSONField(blank=True, default='')
+    background_picture = models.JSONField(blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
 
     @property
