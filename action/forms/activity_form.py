@@ -79,11 +79,15 @@ class ActivityForm(forms.ModelForm):
         cleaned_data['picture'] = utils.image_to_base64(image_file)
 
         # # Set the activity's background picture attribute
-        image_file = self.cleaned_data.get('background_picture')
-        json = {}
-        for num, image in enumerate(image_file):
-            json[f"background{num}"] = utils.image_to_base64(image)
+        image_files = self.cleaned_data.get('background_picture')
+        image_data = {}
+        for num, image in enumerate(image_files):
+            try:
+                image_key = f'background {num + 1}'
+                image_data[image_key] = utils.image_to_base64(image)
+            except Exception as e:
+                pass
 
-        cleaned_data['background_picture'] = json
+        self.cleaned_data['background_picture'] = image_data
 
         return cleaned_data

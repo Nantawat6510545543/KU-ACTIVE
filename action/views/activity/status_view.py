@@ -19,10 +19,6 @@ def participate(request, activity_id: int):
     elif activity_status.is_participated:
         messages.info(request, "You are already participating.")
     else:
-        activity_status.is_participated = True
-        activity_status.save()
-        messages.success(request, "You have successfully participated.")
-
         data = {
             'summary': activity.title,
             'location': activity.place,
@@ -38,6 +34,10 @@ def participate(request, activity_id: int):
         }
 
         utils.create_event(request, activity_id, **data)
+
+        activity_status.is_participated = True
+        activity_status.save()
+        messages.success(request, "You have successfully participated.")
 
     return redirect(reverse("action:detail", args=(activity_id,)))
 

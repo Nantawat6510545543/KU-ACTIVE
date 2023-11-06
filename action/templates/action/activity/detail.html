@@ -49,17 +49,25 @@
             <p><strong>Last date of activity:</strong> {{ activity.last_date }}</p>
             <p><strong>Description:</strong> {{ activity.description }}</p>
             <p><strong>Place:</strong> {{ activity.place }}</p>
-            <p><strong>Participants:</strong> {{ activity.participants }}</p>
+            <p><strong>Participants:</strong>
+                {% for participants in activity.participants %}
+                    {{ participants }} ,
+                {% endfor %}
+            </p>
             <p><strong>Participant Counts:</strong> {{ activity.participants.count }}</p>
             <p><strong>Background Picture:</strong>
                 {% if activity.background_picture %}
+                    <p>
                     {% for value in activity.background_picture.values %}
                         <img src="data:image/png;base64,{{ value }}"
                         ALT="{{ activity.title }}'s Picture" width="400" height="240" >
                     {% endfor %}
+                    </p>
                 {% else %}
+                    <p>
                     <img src=" {% static 'action/images/default-image.png' %}"
                     ALT="{{ activity.title }}'s Picture" width="400" height="240" >
+                    </p>
                 {% endif %}
             </p>
 
