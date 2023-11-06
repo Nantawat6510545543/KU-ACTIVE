@@ -1,21 +1,23 @@
 from abc import ABC, abstractmethod
 
+from django.http import HttpRequest
+
 
 class BaseMiddleware(ABC):
     def __init__(self, get_response):
         self.get_response = get_response
 
     @abstractmethod
-    def __call__(self, request):
+    def __call__(self, request: HttpRequest):
         pass
 
 
 class RemoveWhitespaceMiddleware(BaseMiddleware):
-    def __call__(self, request):
+    def __call__(self, request: HttpRequest):
         # Get the query parameters from the request
         query = request.GET.get('q')
         if query:
-            query = query.strip()
+            query = " ".join(query.split())
 
         # Update the query parameters in the request
         request.GET = request.GET.copy()
@@ -26,7 +28,7 @@ class RemoveWhitespaceMiddleware(BaseMiddleware):
 
 
 class UpdateSessionMiddleware(BaseMiddleware):
-    def __call__(self, request):
+    def __call__(self, request: HttpRequest):
         query = request.GET.get('q')
         tag = request.GET.get('tag')
 
