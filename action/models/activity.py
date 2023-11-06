@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.db import models
+from django.db.models import QuerySet
 from django.utils import timezone
 
 from .user import User
@@ -30,7 +31,7 @@ class Activity(models.Model):
     tags = models.ManyToManyField(Tag, blank=True)
 
     @property
-    def participants(self):
+    def participants(self) -> QuerySet[User]:
         participants = User.objects.filter(participants__activity=self,
                                            participants__is_participated=True)
         return participants
@@ -38,7 +39,7 @@ class Activity(models.Model):
     # TODO delegate some of these to html
     @property
     @admin.display(description='Time remain')
-    def time_remain(self):
+    def time_remain(self) -> str:
         """
         Return the time remaining until registration close.
 
@@ -57,7 +58,7 @@ class Activity(models.Model):
 
     @property
     @admin.display(description='Count')
-    def participant_count(self):
+    def participant_count(self) -> int:
         """
         Get the count of participants for this activity.
 
@@ -68,18 +69,17 @@ class Activity(models.Model):
 
     @property
     @admin.display(description='Remaining')
-    def remaining_space(self):
+    def remaining_space(self) -> int:
         """
        Calculate the number of remaining participant spaces in the activity.
 
        Returns:
-           int/str: The number of remaining spaces if there is a limit,
-                    or "No limit" if there's no limit.
+           int: The number of remaining spaces if there is a limit,
+                    or -1 if there's no limit.
        """
-        limit = self.participant_limit
-        if limit is None or limit == 0:
-            return "No limit"
-        return max(0, limit - self.participant_count)
+        if self.participant_limit and self.participant_limit > 0:
+            return self.participant_limit - self.participant_count
+        return -1
 
     def __str__(self):
         """
@@ -112,7 +112,7 @@ class Activity(models.Model):
         return now >= self.pub_date
 
     @admin.display(boolean=True, description='Can participate?')
-    def can_participate(self):
+    def can_participate(self) -> bool:
         """
         checks if participation is allowed for this activity.
 
@@ -123,6 +123,6 @@ class Activity(models.Model):
         now = timezone.now()
         is_within_time_range = self.pub_date <= now <= self.end_date
         remaining_space = self.remaining_space
-        if remaining_space == "No limit":
+        if remaining_space == -1:
             return is_within_time_range
         return is_within_time_range and remaining_space > 0
