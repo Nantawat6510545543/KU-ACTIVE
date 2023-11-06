@@ -20,13 +20,15 @@
 </div>
 
 {% if activity_list %}
+<div class="activity-list">
     {% for activity in activity_list %}
         <div class="activity">
-            <div class="activity-pics">
-                <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
-                            {% else %} {% static 'action/images/background.png' %}
+            <div class="activity-pic">
+                <img src="{% if activity.picture %}data:image/png;base64,{{ activity.picture }}
+                            {% else %}
+                            {% static 'action/images/background.png' %}
                             {% endif %}"
-                    alt="{{ activity.title }}'s Picture" width="400" height="240">
+                    alt="{{ activity.title }}'s Picture" width="100%" height="250">
             </div>
             <div class="activity-title">
                 <a>{{ activity.title }}</a>
@@ -35,10 +37,16 @@
                 <div class="brief-detail">
                     {{ activity.description }}
                 </div>
+                <div class="second-line">
+                    <div class="date-owner">
+                        <p>Owner : {{ activity.owner.username }}</p>
+                    </div>
+                    <a class="detail-button" href="{% url 'action:detail' activity.id %}">Detail</a>
+                </div>
             </div>
-            <a class="detail-button" href="{% url 'action:detail' activity.id %}">Detail</a>
         </div>
     {% endfor %}
+</div>
 {% else %}
     <h1>No activity found.</h1>
 {% endif %}
