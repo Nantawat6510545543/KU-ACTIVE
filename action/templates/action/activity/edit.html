@@ -1,5 +1,7 @@
 {% extends "action/base.html" %}
+{% load static %}
 
+{% comment %} reuse actiivity-form base/create_activity.html?? {% endcomment %}
 {% block content %}
 <h3>
 <form method="post" enctype="multipart/form-data">
@@ -16,8 +18,8 @@
                     <h2><strong>{{ field.label_tag }}</strong> {{ field.as_hidden }} {{ user }}</h2>
 
                 {% elif field.name == 'picture' %}
-                    <div class="heading-detail"><p>{{ field.label_tag }}</p> <input type="file" name="{{ field.name }}"></div>
-                    <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
+                    <div class="heading-detail"><p>{{ field.label_tag }}</p> <input id="imageInput" type="file" name="{{ field.name }}" onchange="displayImage()"></div>
+                    <img id="uploadedImage" src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
                          {% else %} {% static 'action/images/default-image.png' %}
                          {% endif %}"
                     alt="{{ activity.title }}'s Picture" width="240" height="240">
