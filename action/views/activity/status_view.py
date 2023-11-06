@@ -9,17 +9,19 @@ from action import utils
 
 @login_required
 def participate(request, activity_id: int):
+    activity = get_object_or_404(Activity, pk=activity_id)
     activity_status: ActivityStatus = utils.fetch_activity_status(request,
                                                                   activity_id)
 
-    if activity_status.is_participated:
+    if not activity.can_participate():
+        messages.info(request,
+                      "This activity can no longer be participated in.")
+    elif activity_status.is_participated:
         messages.info(request, "You are already participating.")
     else:
         activity_status.is_participated = True
         activity_status.save()
         messages.success(request, "You have successfully participated.")
-
-        activity = get_object_or_404(Activity, pk=activity_id)
 
         data = {
             'summary': activity.title,
