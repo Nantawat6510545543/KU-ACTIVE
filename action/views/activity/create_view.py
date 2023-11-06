@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
@@ -16,6 +18,9 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
         initial = super().get_initial()
         initial['owner'] = self.request.user
         initial['pub_date'] = timezone.now()
+        initial['end_date'] = timezone.now() + timedelta(days=1)
+        initial['start_date'] = timezone.now() + timedelta(days=2)
+        initial['last_date'] = timezone.now() + timedelta(days=3)
         return initial
 
     def form_valid(self, form):
