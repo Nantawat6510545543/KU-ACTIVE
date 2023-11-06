@@ -19,7 +19,8 @@ def build_service(request):
             "client_secret": config('GOOGLE_OAUTH_SECRET_KEY', str),
             "refresh_token": str(refresh_token),
         }
-        creds = Credentials.from_authorized_user_info(info=user_info, scopes=scope)
+        creds = Credentials.from_authorized_user_info(info=user_info,
+                                                      scopes=scope)
 
         return build('calendar', 'v3', credentials=creds)
 
@@ -35,35 +36,24 @@ def create_event(request, activity_id, **kwargs):
     service = build_service(request)
     if service is not None:
         new_event_code = generate_random_id()
-        event = {
-            'summary': "event_name",
-            'location': "Unknown location.",
-            'description': "No description.",
-            'start': {
-                'dateTime': (datetime.datetime.now()).strftime('%Y-%m-%dT%H:%M:%S'),
-                'timeZone': "Asia/Bangkok",
-            },
-            'end': {
-                'dateTime': (datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y-%m-%dT%H:%M:%S'),
-                'timeZone': "Asia/Bangkok",
-            },
-            'id': new_event_code
-        }
+        kwargs['id'] = new_event_code
         request.user.event_encoder[str(activity_id)] = new_event_code
         request.user.save()
-        event.update(kwargs)
-        service.events().insert(calendarId='primary', body=event).execute()
+        service.events().insert(calendarId='primary', body=kwargs).execute()
 
 
 def remove_event(request, activity_id):
     try:
-        if str(activity_id) in request.user.event_encoder:
+        event_id = str(activity_id)
+        user = request.user
+        if event_id in user.event_encoder:
             service = build_service(request)
             if service is not None:
-                encoded_event = request.user.event_encoder[str(activity_id)]
-                service.events().delete(calendarId='primary', eventId=encoded_event).execute()
-                request.user.event_encoder[str(activity_id)] = generate_random_id()
-                request.user.save()
+                encoded_event = user.event_encoder[event_id]
+                service.events().delete(calendarId='primary',
+                                        eventId=encoded_event).execute()
+                user.event_encoder[event_id] = generate_random_id()
+                user.save()
         else:
             pass
 
