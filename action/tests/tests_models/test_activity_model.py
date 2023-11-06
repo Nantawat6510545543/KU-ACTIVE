@@ -62,8 +62,8 @@ class ActivityModelTest(TestCase):
         self.assertEqual(self.activity.time_remain, "Registration closed")
 
     def test_remaining_space(self):
-        self.activity.participant_limit = None
-        self.assertEqual(self.activity.remaining_space, "No limit")
+        self.activity.participant_limit = -1
+        self.assertEqual(self.activity.remaining_space, None)
 
         self.activity.participant_limit = 5
         self.assertEqual(self.activity.remaining_space, 5)

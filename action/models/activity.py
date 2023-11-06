@@ -69,7 +69,7 @@ class Activity(models.Model):
 
     @property
     @admin.display(description='Remaining')
-    def remaining_space(self) -> int:
+    def remaining_space(self) -> int | None:
         """
        Calculate the number of remaining participant spaces in the activity.
 
@@ -79,7 +79,7 @@ class Activity(models.Model):
        """
         if self.participant_limit and self.participant_limit > 0:
             return self.participant_limit - self.participant_count
-        return -1
+        return None
 
     def __str__(self):
         """
@@ -123,6 +123,6 @@ class Activity(models.Model):
         now = timezone.now()
         is_within_time_range = self.pub_date <= now <= self.end_date
         remaining_space = self.remaining_space
-        if remaining_space == -1:
+        if remaining_space is None:
             return is_within_time_range
         return is_within_time_range and remaining_space > 0
