@@ -52,12 +52,14 @@ def get_index_queryset(request: HttpRequest):
         pub_date__lte=timezone.now()).order_by('-pub_date')
 
     match tag:
-        case 'popular':
+        case 'popular':        
+            activities = activities.filter(activity__is_participated=True)
             # Add a temporary column and filter by it (temp_participant_count), descending
             activities = activities.annotate(
-                temp_participant_count=Count('activity'))
+                temp_participant_count=Count('activity__participants'))
             activities = activities.order_by('-temp_participant_count')
             return activities
+
         case 'upcoming' | 'recent':
             activities = Activity.objects.order_by('-pub_date')
 
