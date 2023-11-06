@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
+from googleapiclient.errors import HttpError
 
 from action.models import ActivityStatus, Activity
 from action import utils
@@ -36,8 +37,12 @@ def participate(request, activity_id: int):
                 'timeZone': "Asia/Bangkok",
             }
         }
+        try:
+            utils.create_event(request, activity_id, **data)
+        except HttpError:
+            messages.info(request,
+                          "Calendar is not working, please Login again.")
 
-        utils.create_event(request, activity_id, **data)
 
     return redirect(reverse("action:detail", args=(activity_id,)))
 
@@ -51,8 +56,11 @@ def leave(request, activity_id: int):
         activity_status.is_participated = False
         activity_status.save()
         messages.success(request, "You have left this activity.")
-
-        utils.remove_event(request, activity_id)
+        try:
+            utils.remove_event(request, activity_id)
+        except HttpError:
+            messages.info(request,
+                          "Calendar is not working, please Login again.")
 
     else:
         messages.info(request,
