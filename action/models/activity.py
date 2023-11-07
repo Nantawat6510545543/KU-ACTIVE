@@ -36,26 +36,6 @@ class Activity(models.Model):
                                            participants__is_participated=True)
         return participants
 
-    # TODO delegate some of these to html
-    @property
-    @admin.display(description='Time remain')
-    def time_remain(self) -> str:
-        """
-        Return the time remaining until registration close.
-
-        Returns:
-            str: A string representing the time remaining.
-                 If the remaining time is zero or negative,
-                 it returns "Registration closed"
-        """
-        now = timezone.now()
-        time_difference = self.end_date - now
-        if time_difference.total_seconds() > 0:
-            days = time_difference.days
-            hours, seconds = divmod(time_difference.seconds, 3600)
-            return f"{days} days, {hours} hours"
-        return "Registration closed"
-
     @property
     @admin.display(description='Count')
     def participant_count(self) -> int:
@@ -68,6 +48,21 @@ class Activity(models.Model):
         return self.participants.count()
 
     @property
+    @admin.display(description='Time remain')
+    def time_remain(self) -> int:
+        """
+        Return the time remaining until registration close.
+
+        Returns:
+            str: A string representing the time remaining.
+                 If the remaining time is zero or negative,
+                 it returns "0" second difference
+        """
+        time_diff = self.end_date - timezone.now()
+        zero_diff = timezone.timedelta(seconds=0)
+        return max(zero_diff, time_diff)
+
+    @property
     @admin.display(description='Remaining')
     def remaining_space(self) -> int | None:
         """
@@ -75,11 +70,11 @@ class Activity(models.Model):
 
        Returns:
            int: The number of remaining spaces if there is a limit,
-                    or -1 if there's no limit.
+                    or None if there's no limit.
        """
-        if self.participant_limit and self.participant_limit > 0:
-            return self.participant_limit - self.participant_count
-        return None
+        if self.participant_limit:
+            return self.participant_limit - self.participant_count  # Normal case
+        return None  # If no limit is set
 
     def __str__(self):
         """
@@ -120,9 +115,6 @@ class Activity(models.Model):
             bool: True if the current date are within the activity's time range
             and there are remaining participant spaces available.
         """
-        now = timezone.now()
-        is_within_time_range = self.pub_date <= now <= self.end_date
-        remaining_space = self.remaining_space
-        if remaining_space is None:
-            return is_within_time_range
-        return is_within_time_range and remaining_space > 0
+        if self.remaining_space == 0:
+            return False
+        return self.pub_date <= timezone.now() <= self.end_date
