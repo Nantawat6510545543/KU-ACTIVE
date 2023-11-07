@@ -8,21 +8,17 @@ from . import utils
 
 class ActivityForm(forms.ModelForm):
     date_fields = {
-        'pub_date': ['Publication Date', 0],
-        'end_date': ['Application Deadline', 1],
-        'start_date': ['Date of Activity', 2],
-        'last_date': ['Last date of activity', 3]
+        'pub_date': 'Publication Date',
+        'end_date': 'Application Deadline',
+        'start_date': 'Date of Activity',
+        'last_date': 'Last date of activity'
     }
 
-    for field_name, (field_label, days_to_add) in date_fields.items():
-        time = timezone.now() + timedelta(days=days_to_add)
-        default_value = time.strftime('%Y-%m-%dT%H:%M')
-
+    for field_name, field_label in date_fields.items():
         locals()[field_name] = forms.DateTimeField(
             label=field_label,
             widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
-            input_formats=['%Y-%m-%dT%H:%M'],
-            initial=default_value
+            input_formats=['%Y-%m-%dT%H:%M']
         )
     picture = background_picture = forms.ImageField(required=False)
 
