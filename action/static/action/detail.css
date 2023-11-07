@@ -156,3 +156,12 @@
     margin-left:2%;
     font-size: 25px;
 }
+
+/*Add this style*/
+.image-Slides {
+    display:none;
+}
+
+.image-Slides:nth-of-type(1) {
+    display:block;
+}

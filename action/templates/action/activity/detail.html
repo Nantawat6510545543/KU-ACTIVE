@@ -55,21 +55,23 @@
                 {% endfor %}
             </p>
             <p><strong>Participant Counts:</strong> {{ activity.participants.count }}</p>
-            <p><strong>Background Picture:</strong>
+<!--Replace this into iteration5 -->
+            <p><strong>Background Picture:</strong></p>
+
+            <div class="Background-slide" style="max-width:800px">
                 {% if activity.background_picture %}
-                    <p>
                     {% for value in activity.background_picture.values %}
-                        <img src="data:image/png;base64,{{ value }}"
-                        ALT="{{ activity.title }}'s Picture" width="400" height="240" >
+                        <img class="image-Slides" src="data:image/png;base64,{{ value }}"
+                        ALT="{{ activity.title }}'s Picture">
                     {% endfor %}
-                    </p>
+                        <div class="left-hover-text" onclick="plusDivs(-1)">&#10094;</div>
+                        <div class="right-hover-text" onclick="plusDivs(1)">&#10095;</div>
                 {% else %}
-                    <p>
                     <img src=" {% static 'action/images/default-image.png' %}"
-                    ALT="{{ activity.title }}'s Picture" width="400" height="240" >
-                    </p>
+                    ALT="{{ activity.title }}'s Picture">
                 {% endif %}
-            </p>
+            </div>
+<!--                    -->
 
             <p><strong>Participant Limit:</strong>
             {% if activity.participant_limit %}
