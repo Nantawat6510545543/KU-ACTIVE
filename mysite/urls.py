@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
 from . import views
+from settings import DEBUG
 
 admin.site.site_header = "Action Administration"
 urlpatterns = [
@@ -28,5 +29,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('signup/', views.SignupView.as_view(), name='signup'),
     path('auth/', include('allauth.urls')),
-    path("__debug__/", include("debug_toolbar.urls")),
 ]
+
+if DEBUG:
+    urlpatterns.append(path("__debug__/", include("debug_toolbar.urls")))

@@ -1,5 +1,4 @@
 #!/bin/bash
-echo "Setting up the project environment..."
 
 # Check if py is available, if not, check if python3 is available,
 # if not, fall back to python
@@ -11,11 +10,11 @@ else
     PYTHON_CMD="python"
 fi
 
-# Create and activate virtual environment
+echo "Setting up the project environment..."
 $PYTHON_CMD -m venv venv
 source ./venv/bin/activate
 
-# Install requirements
+echo "Install requirements.."
 pip install -r requirements.txt
 
 # Create .env file
@@ -27,13 +26,13 @@ if [ "$(grep -E '^\s*DEBUG\s*=\s*True' .env)" ]; then
     pip install django-debug-toolbar
 fi
 
-# Run migrations
+echo "Run migrations..."
 $PYTHON_CMD manage.py migrate
 
-# Run setup oauth
+echo "Run setup oauth..."
 $PYTHON_CMD manage.py setup_oauth
 
-# Run tests
+echo "Run tests..."
 $PYTHON_CMD manage.py test
 
 # Start the server

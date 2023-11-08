@@ -1,5 +1,4 @@
 @echo off
-echo Setting up the project environment...
 
 :: Check if py is available, if not, check if python3 is available, if not, fall back to python
 where py > nul 2>&1
@@ -14,11 +13,11 @@ if %errorlevel%==0 (
     )
 )
 
-:: Create and activate virtual environment
+echo Setting up the project environment...
 %PYTHON_CMD% -m venv venv
 call .\venv\Scripts\activate
 
-echo Install requirements
+echo Install requirements..
 pip install -r requirements.txt
 
 :: Install Django Debug Toolbar if DEBUG is True in .env
