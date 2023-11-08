@@ -2,9 +2,11 @@ from allauth.socialaccount.models import SocialApp, SocialToken
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from decouple import config
+from django.contrib.auth.decorators import login_required
 import secrets
 
 
+@login_required
 def build_service(request):
     if request.user.email:
         app = SocialApp.objects.get(provider="google")
@@ -29,6 +31,7 @@ def generate_random_id():
     return random_string
 
 
+@login_required
 def create_event(request, activity_id, **kwargs):
     service = build_service(request)
     if service is not None:
@@ -39,6 +42,7 @@ def create_event(request, activity_id, **kwargs):
         service.events().insert(calendarId='primary', body=kwargs).execute()
 
 
+@login_required
 def remove_event(request, activity_id):
     event_id = str(activity_id)
     user = request.user
