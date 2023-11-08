@@ -18,7 +18,7 @@ if %errorlevel%==0 (
 %PYTHON_CMD% -m venv venv
 call .\venv\Scripts\activate
 
-:: Install requirements
+echo Install requirements
 pip install -r requirements.txt
 
 :: Install Django Debug Toolbar if DEBUG is True in .env
@@ -27,22 +27,19 @@ findstr /R /C:"DEBUG = True" .\.env > nul || findstr /R /C:"DEBUG=True" .\.env >
 if %errorlevel%==0 (
     echo DEBUG is set to True. Installing Django Debug Toolbar...
     pip install django-debug-toolbar
-) else (
-    echo AAAAAAAAAAAAAAAAAAAAAAAAAAA
 )
 
-:: Create .env file
+echo Create .env file...
 copy sample.env .env
 
-:: Run migrations
+echo Run migrations...
 %PYTHON_CMD% manage.py migrate
 
-:: Run setup oauth
+echo Run setup oauth...
 %PYTHON_CMD% manage.py setup_oauth
 
-:: Run tests
+echo Run tests...
 %PYTHON_CMD% manage.py test
 
-:: Start the server
 echo Starting the server...
 %PYTHON_CMD% manage.py runserver --insecure
