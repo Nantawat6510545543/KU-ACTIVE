@@ -1,8 +1,8 @@
 from django import forms
 from django.utils import timezone
 
-from ..models import Activity
-from . import utils
+from action.models import Activity
+from action import utils
 
 
 class MultipleFileInput(forms.ClearableFileInput):
