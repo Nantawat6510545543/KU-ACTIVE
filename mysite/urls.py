@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
 from . import views
-from settings import DEBUG
+from mysite.settings import DEBUG
 
 admin.site.site_header = "Action Administration"
 urlpatterns = [
