@@ -36,23 +36,23 @@ def configure_database_settings(BASE_DIR):
 
     testing = sys.argv[1:2] == ['test']
     if testing:
-        print('Running tests on the local database.')
+        logging.info('Running tests on the local database.')
         return local_database
 
     try:
         database_url = config("DATABASE_URL", default=None)
         if database_url:
-            print(
-                "Using a valid DATABASE_URL. Connecting to the Neon database.")
-            return {
+            cloud_database = {
                 'default': dj_database_url.config(
                     default=database_url,
                     conn_max_age=600,
                     conn_health_checks=True
                 )
             }
+            logging.info("Using a valid DATABASE_URL. Connecting to the Neon.")
+            return cloud_database
         else:
-            print(
+            logging.info(
                 "DATABASE_URL not found. Falling back to the local database.")
     except ValueError:
         logging.warning(
