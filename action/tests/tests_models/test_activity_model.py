@@ -52,9 +52,11 @@ class ActivityModelTest(TestCase):
 
     def test_time_remain_registration(self):
         # open
-        future_time = timezone.now() + timezone.timedelta(days=1) + timezone.timedelta(hours=1)
+        delay = timezone.timedelta(days=1) + timezone.timedelta(hours=1)
+        future_time = timezone.now() + delay
         self.activity.end_date = future_time
-        self.assertAlmostEqual(self.activity.time_remain, timezone.timedelta(days=1) + timezone.timedelta(hours=1))
+        time_dif = abs(self.activity.time_remain - delay)
+        self.assertLessEqual(time_dif, timezone.timedelta(seconds=1))
 
         # closed
         past_time = timezone.now() - timezone.timedelta(days=1)
