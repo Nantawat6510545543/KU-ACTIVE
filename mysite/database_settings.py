@@ -36,7 +36,7 @@ def configure_database_settings(BASE_DIR):
 
     testing = sys.argv[1:2] == ['test']
     if testing:
-        logging.info('Running tests on the local database.')
+        logging.debug('Running tests on the local database.')
         return local_database
 
     try:
