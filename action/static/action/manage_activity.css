@@ -42,14 +42,14 @@
 
 
 .inner-box-detail new-activity:hover{
-    font-size:24px
+    font-size: 24px;
     color:white;
 }
 
 
 .inner-box-detail .activity-container{
     background:black;
-    margin:0%
+    margin: 0%;
     padding-top:10px;
     overflow: scroll;
     height:500px;
@@ -57,7 +57,7 @@
 }
 
 .inner-box-detail li {
-    margin:2%;
+    margin: 2%;
     padding: 2%;
     list-style: none;
     background:white;
@@ -113,14 +113,14 @@
     text-shadow: 1px 1px black;
 
     background: gray;
-    padding:1% 5%;
-    border-radius:15px;
+    padding: 1% 5%;
+    border-radius: 15px;
     box-shadow: 0px 1px black;
     transition: font-size 0.5s ,color 0.3s;
 }
 
 .activity-container .activity-delete:hover{
-    font-size:30px;
+    font-size: 30px;
     color: red;
 }
 
