@@ -18,14 +18,18 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
 from . import views
+from mysite.settings import DEBUG
 
 admin.site.site_header = "Action Administration"
 urlpatterns = [
     path('', RedirectView.as_view(pattern_name='action:index',
                                   permanent=False)),
-    path('action/', include('action.urls')),
+    path('action/', include('action.urls.base_urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
     path('signup/', views.SignupView.as_view(), name='signup'),
     path('auth/', include('allauth.urls')),
 ]
+
+if DEBUG:
+    urlpatterns.append(path("__debug__/", include("debug_toolbar.urls")))

@@ -1,20 +1,21 @@
 """Tests of authentication."""
 from django.urls import reverse
+from django.test import TestCase
 from mysite import settings
-from .utils import Tester
+from action.tests import utils
 
 
-class UserAuthTest(Tester):
+class UserAuthTest(TestCase):
     """
     Tests user authentication.
     """
 
     def setUp(self):
-        super().setUp()
+        self.social_app = utils.create_social_app()
         self.username = "testuser"
         self.password = "testpass"
-        self.user = self.create_user(self.username, self.password)
-        self.activity = self.create_activity(self.user)
+        self.user = utils.create_user(self.username, self.password)
+        self.activity = utils.create_activity(self.user)
 
     def test_logout(self):
         """A user can log out using the logout url.

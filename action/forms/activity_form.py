@@ -1,9 +1,26 @@
 from django import forms
-from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-from ..models import Activity
-from . import utils
+from action.models import Activity
+from action import utils
+
+
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = single_file_clean(data, initial)
+        return result
 
 
 class ActivityForm(forms.ModelForm):
@@ -20,7 +37,9 @@ class ActivityForm(forms.ModelForm):
             widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             input_formats=['%Y-%m-%dT%H:%M']
         )
-    picture = background_picture = forms.ImageField(required=False)
+
+    picture = forms.ImageField(required=False)
+    background_picture = MultipleFileField()
 
     class Meta:
         model = Activity
@@ -34,9 +53,12 @@ class ActivityForm(forms.ModelForm):
         start_date = cleaned_data.get('start_date')
         last_date = cleaned_data.get('last_date')
 
-        if pub_date.date() < timezone.now().date():
-            self.add_error('pub_date',
-                           "Publication Date must be at least today.")
+        activity_is_created = Activity.objects.filter(id=self.instance.id)
+
+        if not activity_is_created:
+            if pub_date.date() < timezone.now().date():
+                self.add_error('pub_date',
+                               "Publication Date must be at least today.")
 
         time_difference = end_date - pub_date
         if time_difference.total_seconds() < 3600:
@@ -57,8 +79,15 @@ class ActivityForm(forms.ModelForm):
         cleaned_data['picture'] = utils.image_to_base64(image_file)
 
         # # Set the activity's background picture attribute
-        image_file = self.cleaned_data.get('background_picture')
-        cleaned_data['background_picture'] = utils.image_to_base64(
-            image_file)
+        image_files = self.cleaned_data.get('background_picture')
+        image_data = {}
+        for num, image in enumerate(image_files):
+            try:
+                image_key = f'background {num + 1}'
+                image_data[image_key] = utils.image_to_base64(image)
+            except Exception as e:
+                pass
+
+        self.cleaned_data['background_picture'] = image_data
 
         return cleaned_data

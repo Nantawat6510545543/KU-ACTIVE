@@ -1,0 +1,22 @@
+{% extends "action/base.html" %}
+
+{% block content %}
+<div class="outer-box-detail">
+    <h1 class="title">Manage Activity</h1>
+    <div class="inner-box-detail">
+        <div class="new-activity">
+            <a href="{% url 'action:create' %}"><i class="fa fa-plus"></i> Create New Activity</a>
+        </div>
+        <div class="activity-container">
+            {% for each_activity in activity_manage_list %}
+            <li>
+                <a class="activity-name" href="{% url 'action:detail' each_activity.id %}">{{ each_activity }}</a>
+                <p><strong>Description:</strong> {{ each_activity.description }}</p>
+                <a class="activity-edit" href="{% url 'action:edit' each_activity.id %}">Edit</a>
+                <a class="activity-delete" href="{% url 'action:delete_activity' each_activity.id %}">Delete</a>
+            </li>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -13,6 +13,8 @@ import os
 from pathlib import Path
 from decouple import config, Csv
 
+from mysite.database_settings import configure_database_settings
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,8 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='fake-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = config('DEBUG', default=False, cast=bool)
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
@@ -38,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'django.contrib.sites',
 
     'allauth',
@@ -55,7 +55,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "allauth.account.middleware.AccountMiddleware",
+    'allauth.account.middleware.AccountMiddleware',
+    'action.middleware.RemoveWhitespaceMiddleware',
+    'action.middleware.UpdateSessionMiddleware'
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -81,7 +83,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Neon Database
 # https://neon.tech/docs/guides/django
 
-from .db import *
+DATABASES = configure_database_settings(BASE_DIR)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -119,10 +121,13 @@ LOGOUT_REDIRECT_URL = 'login'
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
+SOCIALACCOUNT_STORE_TOKENS = True
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {'access_type': 'online'},
+        'SCOPE': ['profile', 'email',
+                  'https://www.googleapis.com/auth/calendar'],
+        'AUTH_PARAMS': {'access_type': 'offline'},
     }
 }
 
@@ -149,3 +154,18 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'action.User'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+# For docker, future use uncomment this
+
+if DEBUG:
+    INSTALLED_APPS.append('debug_toolbar')
+    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+#     import socket  # only if you haven't already imported this
+#
+#     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+#     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1",
+#                                                                  "10.0.2.2"]

@@ -1,0 +1,99 @@
+{% extends "action/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="outer-details">
+    <div class="top-details">
+        <a class="back" href="{% url 'action:index' %}">Back</a>
+        <strong>{{ activity.title }}</strong>
+        {% if user.is_authenticated %}
+
+            {% if activity_status.is_favorited %}
+                <form action="{% url 'action:unfavorite' activity.id %}" class="Favorite">
+                    <button type="submit" class="Favorite-btn">Un-favorite</button>
+                </form>
+            {% else %}
+                <form action="{% url 'action:favorite' activity.id %}" class="Favorite">
+                    <button type="submit" class="Favorite-btn">Favorite</button>
+                </form>
+            {% endif %}
+
+            {% if activity_status.is_participated %}
+                <form action="{% url 'action:leave' activity.id %}" class="Participate">
+                    <button type="submit" class="Participate-btn">Leave</button>
+                </form>
+            {% else %}
+                <form action="{% url 'action:participate' activity.id %}" class="Participate">
+                    <button type="submit" class="Participate-btn">Participate</button>
+                </form>
+            {% endif %}
+
+        {% else %}
+            <p>Login to participate in this activity.</p>
+        {% endif %}
+    </div>
+
+    <div class="activity-owner"> 
+        <p class="top-owner">Owner: {{ activity.owner.username.title }}</p>
+        <div class="big_image">
+            <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
+                     {% else %} {% static 'action/images/background.png' %}
+                     {% endif %}"
+                alt="{{ activity.title }}'s Picture">
+        </div>
+        <div class="activity-details">
+            <div class="Description">
+                <p>Description:</p>
+                <p class="full-detail">{{ activity.full_description }}</p>
+            </div> 
+          
+            <p><strong>Date Published:</strong> {{ activity.pub_date }}</p>
+            <p><strong>Application Deadline:</strong> {{ activity.end_date }}</p>
+            <p><strong>Date of Activity:</strong> {{ activity.start_date }}</p>
+            <p><strong>Last date of activity:</strong> {{ activity.last_date }}</p>
+            <p><strong>Description:</strong> {{ activity.description }}</p>
+            <p><strong>Place:</strong> {{ activity.place }}</p>
+            <p><strong>Participants:</strong>
+                {% for participants in activity.participants %}
+                    {{ participants }} ,
+                {% endfor %}
+            </p>
+            <p><strong>Participant Counts:</strong> {{ activity.participants.count }}</p>
+            <p><strong>Background Picture:</strong>
+            <a class="left-hover-text" onclick="plusDivs(-1)">&#10094;</a>
+            <a class="right-hover-text" onclick="plusDivs(1)">&#10095;</a>
+            <div class="Background-slide" style="max-width:800px">
+                {% if activity.background_picture %}
+                    {% for value in activity.background_picture.values %}
+                        <img class="image-Slides" src="data:image/png;base64,{{ value }}"
+                        ALT="{{ activity.title }}'s Picture" width="400" height="240">
+                    {% endfor %}
+
+                {% else %}
+                    <img src=" {% static 'action/images/default-image.png' %}"
+                    ALT="{{ activity.title }}'s Picture">
+                {% endif %}
+            </div> 
+
+                <p><strong>Participant Limit:</strong>
+                    {% if activity.participant_limit %}
+                        {{ activity.participant_limit }}
+                    {% else %}
+                        None.
+                    {% endif %}
+                </p>
+
+                <p><strong>Tags:</strong></p>
+                <ul>
+                    {% for tag in activity.tags.all %}
+                        <li>{{ tag.name }}</li>
+                    {% empty %}
+                        <li>No tags available for this activity.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

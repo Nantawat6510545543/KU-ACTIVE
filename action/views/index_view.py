@@ -1,15 +1,18 @@
 from django.shortcuts import redirect
 from django.views import generic
 
-from .. import utils
+from action.utils import search_utils
 
 TAG_OPTIONS = [
     ('title', 'Title'),
     ('owner', 'Owner'),
     ('tag', 'Tag'),
     ('place', 'Place'),
-    ('date', 'Date'),
+    ('start_date', 'Date'),
 ]
+
+# Some tag requires login
+REGISTERED_TAG_LIST = ['registered', 'favorited', 'friend_joined']
 
 
 class IndexView(generic.ListView):
@@ -18,26 +21,21 @@ class IndexView(generic.ListView):
 
     # TODO refactor
     def get(self, request, *args, **kwargs):
-        tag_list = request.GET.getlist('tag')
-        # Some tag requires login
-        registered_tag_list = ['registered', 'favorited', 'friend_joined']
+        tag = request.GET.get('tag')
 
-        # Check if tag in register_tag_list
-        tag_in_registered_tag_list = any(each_tag in registered_tag_list for each_tag in tag_list)
-
-        if tag_in_registered_tag_list and not request.user.is_authenticated:
+        # Check if tag in register_tag_list and user is logged in
+        if tag in REGISTERED_TAG_LIST and not request.user.is_authenticated:
             return redirect('login')
 
         # Continue with the regular behavior of the view
         return super(IndexView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        return utils.get_index_queryset(self.request)
+        return search_utils.get_index_queryset(self.request)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         # Add the tag options to the context
         context['tags'] = TAG_OPTIONS
-        utils.update_sessions(self.request)
         return context

@@ -1,5 +1,4 @@
 @echo off
-echo Setting up the project environment...
 
 :: Check if py is available, if not, check if python3 is available, if not, fall back to python
 where py > nul 2>&1
@@ -14,25 +13,32 @@ if %errorlevel%==0 (
     )
 )
 
-:: Create and activate virtual environment
+echo Setting up the project environment...
 %PYTHON_CMD% -m venv venv
 call .\venv\Scripts\activate
 
-:: Install requirements
+echo Install requirements..
 pip install -r requirements.txt
 
-:: Create .env file
+:: Install Django Debug Toolbar if DEBUG is True in .env
+findstr /R /C:"DEBUG = True" .\.env > nul || findstr /R /C:"DEBUG=True" .\.env > nul || findstr /R /C:"DEBUG =True" .\.env > nul
+
+if %errorlevel%==0 (
+    echo DEBUG is set to True. Installing Django Debug Toolbar...
+    pip install django-debug-toolbar
+)
+
+echo Create .env file...
 copy sample.env .env
 
-:: Run migrations
+echo Run migrations...
 %PYTHON_CMD% manage.py migrate
 
-:: Run setup oauth
+echo Run setup oauth...
 %PYTHON_CMD% manage.py setup_oauth
 
-:: Run tests
+echo Run tests...
 %PYTHON_CMD% manage.py test
 
-:: Start the server
 echo Starting the server...
 %PYTHON_CMD% manage.py runserver --insecure

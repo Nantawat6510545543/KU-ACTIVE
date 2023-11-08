@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
-from ..models import FriendStatus, User
+from action.models import FriendStatus, User
 
 
 @login_required

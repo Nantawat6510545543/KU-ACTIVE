@@ -1,6 +1,6 @@
 from django.views import generic
 
-from .. import utils
+from action.utils import search_utils
 
 
 class CalendarView(generic.ListView):
@@ -8,4 +8,4 @@ class CalendarView(generic.ListView):
     context_object_name = 'activity_list'
 
     def get_queryset(self):
-        return utils.get_index_queryset(self.request)
+        return search_utils.get_index_queryset(self.request)

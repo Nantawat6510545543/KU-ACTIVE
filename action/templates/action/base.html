@@ -6,17 +6,19 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css">
     <link rel="stylesheet" href="{% static 'action/base.css'%}">
     <link rel="stylesheet" href="{% static 'action/detail.css' %}">
     <link rel="stylesheet" href="{% static 'action/friends.css'%}">
-    <link rel="stylesheet" href="{% static 'action/friends_add.css' %}">
-    <link rel="stylesheet" href="{% static 'action/friends_request.css'%}">
     <link rel="stylesheet" href="{% static 'action/index.css' %}">
     <link rel="stylesheet" href="{% static 'action/profile.css'%}">
+    <link rel="stylesheet" href="{% static 'action/calendar.css'%}">
     <link rel="stylesheet" href="{% static 'action/style.css'%}">
-    <link rel="stylesheet" href="{% static 'action/style.css'%}">
+    <link rel="stylesheet" href="{% static 'action/manage_activity.css'%}">
+    <link rel="stylesheet" href="{% static 'action/edit_create_activity.css'%}">
+    <link rel="stylesheet" href="{% static 'action/error.css'%}">
     <script src="{% static 'action/base.js' %}"></script>
+    <script src="{% static 'action/edit.js' %}"></script>
+    <script src="{% static 'action/detail.js' %}"></script>
     <title>
     {% block title %}
     {% endblock %}
@@ -36,12 +38,13 @@
             <a class="logout" href="{% url 'logout' %}"> Logout </a>
             <div class="user-box">
                 <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
-                <img class="img" src="{% if user.profile_picture %} data:image/png;base64, {{ user.profile_picture }}
+                <img class="img" src="{% if user.profile_picture %} data:image/png;base64,{{ user.profile_picture }}
                      {% else %} {% static 'action/images/guest-img.png' %}
                      {% endif %}">
             </div>
             <a class="friends" href="{% url 'action:friends' %}">Friends</a>
             <a class="new-activity" href="{% url 'action:manage' %}">Manage Your Activity!</a>
+            <a class="calendar" href="{% url 'action:calendar' %}">Calendar</a>
             {% if user.is_superuser %}
                 <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
             {% endif %}
@@ -58,14 +61,12 @@
         <div id="Dropdown" class="dropbox">
             {% if user.is_superuser %}
                 <li><a class="drop-item" href="{% url 'admin:index' %}">Admin Interface</a></li>
-            {% endif%}
-
-            <li><a class="drop-item" href="{% url 'action:create' %}">Create New Activity!</a></li>
+            {% endif %}
+            <li><a class="drop-item" href="{% url 'action:manage' %}">Manage Your Activity!</a></li>
             <li><a class="drop-item" href="{% url 'action:friends' %}">Friends</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}">Registered Activity</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Favorited Activity</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}">Interested Activity</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}">Your Friends Join!</a></li>
-
             <li><a class="drop-item" href="{% url 'action:index' %}">Upcoming</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}">Popular</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}">Recent</a></li>
@@ -74,7 +75,7 @@
 
         <div class="secnav">
             <li><a class="title" href="{% url 'action:index' %}?tag=registered">Registered Activity</a></li>
-            <li><a class="title" href="{% url 'action:index' %}?tag=favorited">Favorited Activity</a></li>
+            <li><a class="title" href="{% url 'action:index' %}?tag=favorited">Interested Activity</a></li>
             <li><a class="title" href="{% url 'action:index' %}?tag=friend_joined">Your Friends Join!</a></li>
             <li><a class="title" href="{% url 'action:index' %}?tag=upcoming">Upcoming</a></li>
             <li><a class="title" href="{% url 'action:index' %}?tag=popular">Popular</a></li>

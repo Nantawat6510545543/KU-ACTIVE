@@ -1,5 +1,5 @@
 from django import forms
-from ..models import Activity, Tag
+from action.models import Activity, Tag
 
 
 class ActivityAdminForm(forms.ModelForm):

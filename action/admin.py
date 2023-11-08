@@ -8,24 +8,17 @@ class ActivityAdmin(admin.ModelAdmin):
     form = ActivityAdminForm
     fieldsets = [
         ('Required', {
-            'fields': [
-                'title', 'owner', 'description', 'place', 'picture'
-            ]
+            'fields': ['title', 'owner', 'description']
         }),
 
         ('Date information', {
-            'fields': [
-                'pub_date', 'end_date', 'date'
-            ],
-            'classes': [
-                'collapse'
-            ]
+            'fields': ['pub_date', 'end_date', 'start_date', 'last_date'],
+            'classes': ['collapse']
         }),
 
         ('Optional', {
-            'fields': [
-                'participant_limit', 'full_description', 'background_picture'
-            ],
+            'fields': ['place', 'picture', 'participant_limit',
+                       'full_description', 'background_picture'],
             'classes': ['wide']
         }),
 
@@ -36,21 +29,24 @@ class ActivityAdmin(admin.ModelAdmin):
     ]
 
     list_display = (
-        'id', 'owner', 'title', 'pub_date', 'end_date',
-        'is_published', 'was_published_recently', 'can_participate')
+        'title', 'id', 'owner', 'participant_count', 'remaining_space',
+        'time_remain', 'is_published', 'was_published_recently',
+        'can_participate')
 
-    list_filter = ['owner', 'end_date']
+    list_filter = ['owner']
     search_fields = ['title']
-    ordering = ('id',)
+    ordering = ('title',)
     filter_horizontal = ('tags',)
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'bio']
+    list_display = ['username', 'email', 'bio']
+    ordering = ['username']
 
 
 class FriendStatusAdmin(admin.ModelAdmin):
     list_display = ['sender', 'receiver', 'request_status', 'is_friend']
+    ordering = ['sender', 'receiver']
 
     def save_model(self, request, obj, form, change):
         if obj.request_status == "Accepted":
@@ -65,10 +61,12 @@ class ActivityStatusAdmin(admin.ModelAdmin):
         'participants', 'activity', 'is_participated',
         'is_favorited', 'participation_date'
     ]
+    ordering = ['participants', 'activity']
 
 
 class TagAdmin(admin.ModelAdmin):
     list_display = ['name']
+    ordering = ('id',)
 
 
 admin.site.register(Activity, ActivityAdmin)

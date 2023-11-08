@@ -14,33 +14,42 @@
         </select>
         <input type="search" class="search-bar" name="q" 
             placeholder=" {% if not request.session.query %}Search :{% endif %}"
-            value="{% if request.session.query %} {{ request.session.query }} {% endif %}">
+            value="{% if request.session.query %}{{ request.session.query }}{% endif %}">
         <button type="submit" class="search-button">Search</button>
     </form>
 </div>
 
 {% if activity_list %}
-    {% for activity in activity_list %}
-        <div class="activity">
-            <div class="activity-pics">
-                <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
-                            {% else %} {% static 'action/images/background.png' %}
-                            {% endif %}"
-                    alt="{{ activity.title }}'s Picture" width="400" height="240">
-            </div>
-            <div class="activity-title">
-                <a>{{ activity.title }}</a>
-            </div>
-            <div class="activity-information">
+    <div class="gird-box">
+        {% for activity in activity_list %}
+            <div class="activity">
+                <div class="activity-pics">
+                    <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
+                                {% else %} {% static 'action/images/background.png' %}
+                                {% endif %}"
+                        alt="{{ activity.title }}'s Picture">
+                </div>
+                <div class="activity-title">
+                    <p>{{ activity.title }}</p>
+                </div>
                 <div class="brief-detail">
                     {{ activity.description }}
                 </div>
+                <div class="Participant">
+                    <span><strong>Participant Limit:</strong> {{ activity.participant_limit }}</span>
+                    <span><strong>Participant Count:</strong> {{ activity.participants.count }}</span>
+                </div>
+                <div class="shot-detail">
+                    <span><strong>Owner:</strong> {{ activity.owner.username }}</span>
+                    <span><i class="fas fa-calendar"></i> {{ activity.start_date }}</span>
+                </div>
+                <div class="detail-button">
+                    <a href="{% url 'action:detail' activity.id %}">Detail</a>
+                </div>
             </div>
-            <a class="detail-button" href="{% url 'action:detail' activity.id %}">Detail</a>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 {% else %}
     <h1>No activity found.</h1>
 {% endif %}
-
 {% endblock %}
