@@ -36,7 +36,7 @@
                     {% for tag in field.field.queryset %}
                     <span class="tag-name">
                         <input type="checkbox" name="{{ field.name }}" value="{{ tag.id }}"
-                            {% if tag in field.value.all %} checked {% endif %}>
+                            {% if tag.id in field.value %} checked {% endif %}>
                             <p>{{ tag }}</p>
                     </span>
                     {% empty %}
