@@ -52,17 +52,17 @@ class ActivityModelTest(TestCase):
 
     def test_time_remain_registration(self):
         # open
-        future_time = timezone.now() + timezone.timedelta(days=1)
+        future_time = timezone.now() + timezone.timedelta(days=1) + timezone.timedelta(hours=1)
         self.activity.end_date = future_time
-        self.assertEqual(self.activity.time_remain, "1 days, 0 hours")
+        self.assertEqual(self.activity.time_remain, timezone.timedelta(days=1) + timezone.timedelta(hours=1))
 
         # closed
         past_time = timezone.now() - timezone.timedelta(days=1)
         self.activity.end_date = past_time
-        self.assertEqual(self.activity.time_remain, "Registration closed")
+        self.assertEqual(self.activity.time_remain, timezone.timedelta(seconds=0))
 
     def test_remaining_space(self):
-        self.activity.participant_limit = -1
+        self.activity.participant_limit = 0
         self.assertEqual(self.activity.remaining_space, None)
 
         self.activity.participant_limit = 5

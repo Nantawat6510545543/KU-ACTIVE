@@ -1,10 +1,7 @@
-import datetime
-
 from allauth.socialaccount.models import SocialApp, SocialToken
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from decouple import config
-from googleapiclient.errors import HttpError
 import secrets
 
 
@@ -43,19 +40,14 @@ def create_event(request, activity_id, **kwargs):
 
 
 def remove_event(request, activity_id):
-    try:
-        event_id = str(activity_id)
-        user = request.user
+    event_id = str(activity_id)
+    user = request.user
+    service = build_service(request)
+    if service is not None:
         if event_id in user.event_encoder:
-            service = build_service(request)
-            if service is not None:
-                encoded_event = user.event_encoder[event_id]
-                service.events().delete(calendarId='primary',
-                                        eventId=encoded_event).execute()
-                user.event_encoder[event_id] = generate_random_id()
-                user.save()
-        else:
-            pass
-
-    except HttpError:
-        pass
+            encoded_event = user.event_encoder[event_id]
+            service.events().delete(calendarId='primary',
+                                    eventId=encoded_event).execute()
+            user.event_encoder[event_id] = generate_random_id()
+            del user.event_encoder[event_id]
+            user.save()
