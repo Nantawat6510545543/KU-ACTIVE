@@ -5,7 +5,7 @@ from action.models import FriendStatus, User
 
 
 class FriendView(LoginRequiredMixin, generic.ListView):
-    template_name = 'action/friends/detail.html'
+    template_name = 'action/friends/list.html'
     context_object_name = 'friend_list'
 
     def get_queryset(self):
