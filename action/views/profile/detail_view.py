@@ -9,15 +9,12 @@ from action import utils
 
 
 # TODO refactor to separate file (utils.py + each views/models), especially get_queryset()
-
-# TODO try get_context_data()?
 class ProfileView(LoginRequiredMixin, generic.ListView):
     template_name = 'action/profile/detail.html'
     context_object_name = 'profile'
 
     def get(self, request: HttpRequest, user_id=None):
-        # Set default value to current user
-        if user_id is None:
+        if user_id is None:  # Set default value to current user
             user_id = request.user.id
 
         try:

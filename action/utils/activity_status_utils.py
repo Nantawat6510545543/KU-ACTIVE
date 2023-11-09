@@ -9,11 +9,6 @@ def fetch_activity_status(request, activity_id: int) -> ActivityStatus:
     activity = get_object_or_404(Activity, pk=activity_id)
     user = request.user
 
-    # TODO factor out the activity part
-    # if not activity.can_participate():
-    #     messages.error(request, "You can't participate in this activity.")
-    #     return redirect("action:index")
-
     try:
         activity_status = ActivityStatus.objects. \
             get(participants=user, activity=activity)
