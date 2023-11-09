@@ -13,11 +13,6 @@ profile
     <form action="{% url 'action:edit_profile' %}">
         <button type="submit" class="edit">Edit Profile</button>
     </form>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="profile_picture">
-        <button type="submit">Upload Profile Picture</button>
-    </form>
     {% else %}
         <h2 class="title-profile">{{ profile.username }}'s Profile</h2>
     {% endif %}
@@ -58,7 +53,6 @@ profile
         </div>
     </div>
 <!--    <h1>Friends: {{ user.friends.all }} </h1>-->
-<!--    <h1>Friend Count: {{ user.friends.count }} </h1>-->
     <div class="participated-activity">
         <h1>Participated Activities: {{ profile.participated_activity.count }}</h1>
         <div class="scroll">
@@ -67,8 +61,6 @@ profile
             {% endfor %}
         </div>
     </div>
-<!--        <h1>Participated Activities: {{ user.participated_activity }} </h1>-->
-<!--        <h1>Participated Activity Count: {{ user.participated_activity.count }} </h1>-->
 <!--        <h1>Favorite Activities: {{ user.favorited_activity }} </h1>-->
 <!--        <h1>Favorite Activity Count: {{ user.favorited_activity.count }} </h1>-->
 
