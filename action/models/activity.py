@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib import admin
 from django.db import models
 from django.db.models import QuerySet
@@ -49,7 +51,7 @@ class Activity(models.Model):
 
     @property
     @admin.display(description='Time remain')
-    def time_remain(self) -> int:
+    def time_remain(self) -> timedelta:
         """
         Return the time remaining until registration close.
 
