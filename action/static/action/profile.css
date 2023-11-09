@@ -1,233 +1,224 @@
-/*set place to show profile*/
-.profile-box{
-    position: relative;
-    background-color: #79AC78;
-
-    border-radius: 30px;
-    padding-bottom: 10px;
-    height: 700px;
-    width:1000px;
-    margin: auto;
-}
-
-/*profile title "Your profile"*/
-.title-profile {
-    line-height: 100px;
-/* border: 3px solid green;*/
+.top-box {
     text-align: center;
+    grid-area: header;
+    font-family: Arial, Helvetica, sans-serif;
+    background: rgb(66,119,55);
+    background: linear-gradient(0deg, rgba(66,119,55,1) 0%, rgba(130,203,110,1) 57%, rgba(106,244,65,1) 100%);
+    }
 
-    color: white;
-    font-size: 50px;
-    font-family: Inter;
-    font-weight: 700;
-    word-wrap: break-word
+.top-box .profile-img{
+    text-align:center;
+    margin-top:-100px;
 }
 
-/* img on the left side */
-.profile-box .profile-img{
-    position: absolute;
-    top: 100px;
-    left: 100px;
-    height:220px;
-    width:220px;
-    background-color: #CECECE;
+.top-box .profile-background-img img{
+    width:80%;
+    height:500px;
     border-radius: 20px;
 }
 
-/*this for edit button on the right side*/
-.edit {
-    position: absolute;
-    top: 20px;
-    right: 20px;
+.top-box .profile-img img{
+    border:solid 4px;
+    border-color: #529944;
 
-    border-radius: 20px;
-    padding: 10px 20px 10px 20px;
+}
 
-    text-decoration: none;
-    background: #5A5A5A;
-    color: white;
+.top-box .top-header-detail{
     font-size: 30px;
-    font-family: Inter;
-    font-weight: 700;
-    word-wrap: break-word
+    margin:-30px 0px;
+    color:white;
+    text-shadow: 2px 2px 4px #000000;
 }
 
-/*this is detail on the ride side firstname , lastname ,email and count*/
-.profile-box .right-detail{
-    position: absolute;
-    top: 100px;
-    right: 70px;
-    background-color: #2B2B2B;
-    width:500px;
-}
-
-.right-detail h1{
-    color: white;
-    font-size: 20px;
-    font-family: Inter;
-    font-weight: 700;
-    word-wrap: break-word
-
-}
-
-.right-detail p{
-    color: white;
-    font-size: 20px;
-    font-family: Inter;
-    font-weight: 700;
-    word-wrap: break-word
-}
-
-.profile-box .right-detail .First-Name{
+.top-box .edit{
     display:inline-block;
 }
 
-.box-color h1{
+.top-box .edit button{
+    padding: 14px 40px;
+
+    background-color: #04AA6D;
+    border: none;
+    border-radius:10px;
+    color: white;
     text-align: center;
-    background-color: #4B4B4B;
-    padding: 18px;
-    margin:0%;
-    width:150px;
-}
-
-.right-detail .Last-Name {
-    display:inline-block;
-}
-
-.right-detail .Email {
-    display:inline-block;
-}
-
-.right-detail .Count {
-    display:inline-block;
-}
-
-/*'not done yet' this is on the bottom right*/
-
-.participated-activity h1{
-    background :#4B4B4B;
-    margin: 0%;
-    padding: 15px;
-
-    color: white;
+    text-decoration: none;
     font-size: 20px;
-    font-family: Inter;
-    font-weight: 700;
-    word-wrap: break-word
-}
-.profile-box .participated-activity {
-    position: absolute;
-    bottom: 138px;
-    right: 50px;
+    margin: 4px 2px;
+    cursor: pointer;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2),
+    0 12px 40px 0 rgba(0, 0, 0, 0.19);
+    transition:all .3s;
 }
 
-.participated-activity .scroll{
+.top-box .edit button:hover{
+    background-color: white;
+    color: green;
+    font-size: 25px;
+}
+
+.top-box .logout{
+    display:inline-block;
+}
+
+.top-box .logout a{
+    padding: 14px 55px;
+
+    background-color: gray;
+    border: none;
+    border-radius:10px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2),
+    0 12px 40px 0 rgba(0, 0, 0, 0.19);
+    transition:all .3s;
+}
+
+.top-box .logout a:hover{
+    background-color: white;
+    color: red;
+    font-size: 25px;
+}
+
+/*this is left side box*/
+.left-box {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    grid-area: menu;
+    margin-left: 50px;
+}
+
+.left-box .participated-activity{
+    max-height:300px;
+    min-width:390px;
+    margin-top: -20px;
+    padding: 15px 20px 10px 20px;
+    background: #B0D9B1;
+    border-radius:20px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2),
+    0 12px 40px 0 rgba(0, 0, 0, 0.19);
+}
+
+.left-box .title{
+    margin-top:-30px;
+    margin-bottom:-15px;
+    padding-bottom:0px;
+}
+
+.left-box h1{
+    text-decoration: underline;
+    text-underline-offset: 10px;
+}
+
+.left-box .favorite-activity{
+    max-height:300px;
+    min-width:390px;
+    margin-top:20px;
+    padding: 15px 20px 10px 20px;
+    background: #B0D9B1;
+    border-radius:20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.left-box .scroll li{
+    list-style-type:none;
+    background:white;
+    margin:10px 30px;
+    border-radius:10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding:10px 0px;
+}
+
+.left-box .scroll{
+    max-height: 210px;
     overflow-y: scroll;
-    height:150px;
-    width:400px;
-    background-color: #2B2B2B;
+    overflow-y: scroll;
+
 }
 
-.Participated-box{
-    text-align: center;
-    list-style-type: none;
-    background-color: #B8B8B8;
-    margin-bottom:2px;
-    padding:10px;
-    border-radius:45px;
+.left-box .scroll a{
+    font-size:25px;
+    width: 10px;
+    text-decoration:none;
+    background:white;
+    color:black;
+    transition: font-size 0.2s;
 }
 
-.scroll a {
-    color: white;
-    font-size: 24px;
-    font-family: Inter;
-    font-weight: 700;
-    word-wrap: break-word;
-    text-decoration: none;
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+.left-box .scroll a:hover{
+    font-size:30px;
 }
 
-/*this is on the bottom left*/
-.profile-box .bottom-left{
-    position: absolute;
-    bottom:30px;
-    left: 30px;
-    width: 450px;
+.right-box {
+    font-family: Arial, Helvetica, sans-serif;
+    grid-area: main;
+    margin-right: 50px;
+    background: #B0D9B1;
+    border-radius:20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    min-width:400px;
 }
 
-.bottom-left .name{
-    background-color: #2B2B2B;
-    color: white;
+.right-box .right-detail {
+    padding: 0px 20px;
 }
 
-.bottom-left .name .user-name {
+.right-box h1 {
     display:inline-block;
+    text-decoration: underline;
+    text-underline-offset: 5px;
 }
 
-.bottom-left .name h1{
-    color: white;
-    font-size: 20px;
-    font-family: Inter;
-    font-weight: 700;
-    word-wrap: break-word;
-
-    text-align: center;
-    background-color: #4B4B4B;
-    padding: 18px;
-    margin:0%;
-}
-
-.bottom-left .name p{
-    color: white;
-    font-size: 20px;
-    font-family: Inter;
-    font-weight: 700;
-    word-wrap: break-word
-}
-
-.bottom-left .bio{
-    background-color: #2B2B2B;
-    overflow: scroll;
-    color: white;
-    height: 250px
-}
-
-.bottom-left .bio p {
-    color: white;
-    background-color: #4B4B4B;
-    font-size: 20px;
-    font-family: Inter;
-    font-weight: 700;
-    word-wrap: break-word;
-    width: 100px;
-    margin: 0%;
-    padding: 10px;
-}
-
-.bottom-left .bio h1 {
-    color: white;
-    font-size: 20px;
-    font-family: Inter;
-    font-weight: 700;
-    word-wrap: break-word;
-    width: 100px;
-    margin: 0%;
-    padding: 10px;
-}
-
-/*this is logout button on the bottom right*/
-.profile-box .logout a {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    border-radius: 30px 0px 30px 0px;
-    padding: 10px 20px 10px 20px;
-
-    text-decoration: none;
-    background: #5A5A5A;
-    color: white;
+.right-box span {
     font-size: 30px;
-    font-family: Inter;
-    font-weight: 700;
-    word-wrap: break-word
+}
+
+.right-box .bio h1{
+    margin-top:5px;
+}
+
+.right-box .bio p {
+    margin-top:-10px;
+    font-size: 30px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-areas:
+      'header header header header header'
+      'menu menu main main main'
+      'menu menu main main main';
+    gap: 15px;
+    background: #427737;
+    padding: 0px 0px 100px 0px;
+}
+
+.grid-container > div {
+    padding: 20px 0px 20px 0px;
+}
+
+@media only screen and (max-width: 1239px) {
+    .grid-container {
+        display: block;
+    }
+
+    .left-box {
+        margin: 0px 50px;
+    }
+
+    .right-box {
+        margin: 0px 50px;
+    }
+
+    .top-box .profile-background-img img{
+        width:100%;
+    }
+
 }
