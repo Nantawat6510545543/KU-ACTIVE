@@ -5,7 +5,6 @@ from django.shortcuts import render, redirect
 from django.views import generic
 
 from action.models import User
-from action import utils
 
 
 # TODO refactor to separate file (utils.py + each views/models), especially get_queryset()
@@ -25,10 +24,3 @@ class ProfileView(LoginRequiredMixin, generic.ListView):
         except User.DoesNotExist:
             messages.warning(request, "Invalid user id.")
             return redirect('action:index')
-
-    def post(self, request, *args, **kwargs):
-        if 'profile_picture' in request.FILES:
-            image_file = request.FILES['profile_picture']
-            request.user.profile_picture = utils.image_to_base64(image_file)
-            request.user.save()
-        return redirect('action:profile')
