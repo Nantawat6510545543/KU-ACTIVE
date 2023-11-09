@@ -1,27 +1,31 @@
+import secrets
+
 from allauth.socialaccount.models import SocialApp, SocialToken
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from decouple import config
 from django.contrib.auth.decorators import login_required
-import secrets
+from django.shortcuts import get_object_or_404
+
+from action.models.activity import Activity
 
 
 @login_required
 def build_service(request):
-    if request.user.email:
-        app = SocialApp.objects.get(provider="google")
-        token = SocialToken.objects.get(app=app, account__user=request.user)
-        refresh_token = token.token_secret
-        scope = ['https://www.googleapis.com/auth/calendar']
-        user_info = {
-            "client_id": config('GOOGLE_OAUTH_CLIENT_ID', str),
-            "client_secret": config('GOOGLE_OAUTH_SECRET_KEY', str),
-            "refresh_token": str(refresh_token),
-        }
-        creds = Credentials.from_authorized_user_info(info=user_info,
-                                                      scopes=scope)
+    app = SocialApp.objects.get(provider="google")
+    token = SocialToken.objects.get(app=app, account__user=request.user)
+    refresh_token = token.token_secret
+    scope = ['https://www.googleapis.com/auth/calendar']
+    user_info = {
+        "client_id": config('GOOGLE_OAUTH_CLIENT_ID', str),
+        "client_secret": config('GOOGLE_OAUTH_SECRET_KEY', str),
+        "refresh_token": str(refresh_token),
+    }
+    creds = Credentials.from_authorized_user_info(info=user_info,
+                                                    scopes=scope)
+    return build('calendar', 'v3', credentials=creds)
 
-        return build('calendar', 'v3', credentials=creds)
+
 
 
 def generate_random_id():
@@ -31,15 +35,32 @@ def generate_random_id():
     return random_string
 
 
+def get_json_data(activity_id):
+    activity = get_object_or_404(Activity, pk=activity_id)
+    return {
+        'summary': activity.title,
+        'location': activity.place,
+        'description': activity.description,
+        'start': {
+            'dateTime': activity.start_date.strftime('%Y-%m-%dT%H:%M:%S'),
+            'timeZone': config('TIME_ZONE', default='UTC'),
+        },
+        'end': {
+            'dateTime': activity.last_date.strftime('%Y-%m-%dT%H:%M:%S'),
+            'timeZone': config('TIME_ZONE', default='UTC'),
+        },
+        'id': generate_random_id()  # new event code
+    }
+
 @login_required
-def create_event(request, activity_id, **kwargs):
+def create_event(request, activity_id):
     service = build_service(request)
-    if service is not None:
-        new_event_code = generate_random_id()
-        kwargs['id'] = new_event_code
-        request.user.event_encoder[str(activity_id)] = new_event_code
+    if service:
+        data = get_json_data(activity_id)
+        request.user.event_encoder[str(activity_id)] = data['id']
+        print(request.user.event_encoder)
         request.user.save()
-        service.events().insert(calendarId='primary', body=kwargs).execute()
+        service.events().insert(calendarId='primary', body=data).execute()
 
 
 @login_required
@@ -47,11 +68,11 @@ def remove_event(request, activity_id):
     event_id = str(activity_id)
     user = request.user
     service = build_service(request)
-    if service is not None:
-        if event_id in user.event_encoder:
-            encoded_event = user.event_encoder[event_id]
-            service.events().delete(calendarId='primary',
-                                    eventId=encoded_event).execute()
-            user.event_encoder[event_id] = generate_random_id()
-            del user.event_encoder[event_id]
-            user.save()
+
+    if service and event_id in user.event_encoder:
+        encoded_event = user.event_encoder[event_id]
+        service.events().delete(calendarId='primary',
+                                eventId=encoded_event).execute()
+        del user.event_encoder[event_id]
+        user.save()
+        print(request.user.event_encoder)
