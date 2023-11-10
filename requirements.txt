@@ -8,3 +8,4 @@ google_oauth2_tool
 google-api-python-client
 google-auth-httplib2
 google-auth-oauthlib
+coverage

@@ -25,6 +25,7 @@ def create_social_app():
     social_app.sites.add(site)
     return social_app
 
+
 def create_user(username='tester', password='password', **kwargs):
     user = User.objects.create_user(username=username, password=password)
 
@@ -54,18 +55,20 @@ def create_user(username='tester', password='password', **kwargs):
 
     return user
 
+
 def create_tag(name):
     tag = Tag(name=name)
     tag.save()
     return tag
 
+
 def create_activity(owner, **kwargs):
     defaults = {
         "title": "Test",
-        "start_date": timezone.now(),
-        "last_date": timezone.now() + timezone.timedelta(days=1),
-        "pub_date": timezone.now() + timezone.timedelta(days=2),
-        "end_date": timezone.now() + timezone.timedelta(days=3),
+        "pub_date": timezone.now(),
+        "end_date": timezone.now() + timezone.timedelta(days=1),
+        "start_date": timezone.now() + timezone.timedelta(days=2),
+        "last_date": timezone.now() + timezone.timedelta(days=3),
         "description": None,
         "place": None,
         "full_description": None,
@@ -93,13 +96,14 @@ def create_activity(owner, **kwargs):
     if defaults["full_description"] is not None:
         activity.full_description = defaults["full_description"]
 
-    if (defaults["participant_limit"] is not None):
+    if defaults["participant_limit"] is not None:
         activity.participant_limit = defaults["participant_limit"]
 
     if defaults["tags"] is not None:
         activity.tags.set(defaults["tags"])
 
     return activity
+
 
 def create_activity_status(participants, activity, participated=True,
                            favorite=None):
@@ -113,6 +117,7 @@ def create_activity_status(participants, activity, participated=True,
         activity_status.is_favorited = favorite
 
     return activity_status
+
 
 def create_friend_status(sender: User, receiver: User,
                          request_status: str = None) -> FriendStatus:

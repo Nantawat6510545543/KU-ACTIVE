@@ -18,6 +18,7 @@ class UserModelTest(TestCase):
         user = self.user  # shorter reference
         data = self.user_data
 
+        self.assertEqual(str(user), data['username'])
         self.assertEqual(user.username, data['username'])
         self.assertTrue(user.check_password(data['password']))
         self.assertEqual(user.email, data['email'])
