@@ -9,7 +9,7 @@ profile
 <div class="grid-container">
   <div class="top-box">
       <div class="profile-background-img">
-            <img src="{% if profile.profile_picture %} data:image/png;base64,{{ profile.profile_picture }}
+            <img src="{% if profile.background_picture %} data:image/png;base64,{{ profile.background_picture }}
                          {% else %} {% static 'action/images/guest-img.png' %}
                          {% endif %}"
                  alt="{{ profile.username }}'s Profile Picture"

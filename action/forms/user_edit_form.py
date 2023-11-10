@@ -33,6 +33,6 @@ class UserEditForm(UserChangeForm):
         image_file = self.cleaned_data.get('profile_picture')
         cleaned_data['profile_picture'] = utils.image_to_base64(image_file)
 
-        image_file = self.cleaned_data.get('background_picture')
-        cleaned_data['background_picture'] = utils.image_to_base64(image_file)
+        image_file2 = self.cleaned_data.get('background_picture')
+        cleaned_data['background_picture'] = utils.image_to_base64(image_file2)
         return cleaned_data
