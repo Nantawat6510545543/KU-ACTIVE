@@ -84,15 +84,16 @@
         </div>
     </nav>
 
-    <div class="message">
-        {% block message %}
-            {% if messages %}
-                {% for message in messages %}
-                    <a>{{ message }}</a>
-                {% endfor %}
-            {% endif %}
-        {% endblock %}
-    </div>
+    {% block message %}
+        {% if messages %}
+            {% for message in messages %}
+                <div id="alert-msg" class="alert-msg">
+                    <span class="close-msg" onclick="closeMsg()">&times;</span>
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endblock %}
 
     <div class="content">
         {% block content %}

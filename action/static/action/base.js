@@ -16,3 +16,18 @@ function check_size() {
 }
 
 window.addEventListener('resize', check_size)
+
+function closeMsg() {
+    var alertMsg = document.getElementById('alert-msg');
+
+    // Check if the alertMsg element exists
+    if (alertMsg) {
+        // Set opacity to 0 and transition to make it smooth
+        alertMsg.style.opacity = '0';
+
+        // After the transition is complete, set display to 'none'
+        setTimeout(function () {
+            alertMsg.style.display = 'none';
+        }, 1000); //(1 seconds) transition time in CSS
+    }
+}
