@@ -17,7 +17,7 @@ def image_to_base64(image_file):
 
         base64_encoded = base64.b64encode(image_data).decode('utf-8')
         return base64_encoded
-    except AttributeError:
-        return ""
-    except FileNotFoundError:
+    except (FileNotFoundError, OSError):
         return image_file
+    except (ValueError, AttributeError):
+        return ""
