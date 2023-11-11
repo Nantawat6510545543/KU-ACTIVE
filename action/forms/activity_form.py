@@ -87,11 +87,13 @@ class ActivityForm(forms.ModelForm):
         if not background_file and activity_is_created:
             background_data = activity_is_created[0].background_picture
         else:
-            for num, image in enumerate(background_file):
+            for image in background_file:
+                num = 1
                 encoded = utils.image_to_base64(image)
                 if encoded != '':
-                    image_key = f'background {num + 1}'
+                    image_key = f'background {num}'
                     background_data[image_key] = encoded
+                    num += 1
 
         cleaned_data['background_picture'] = background_data
 
