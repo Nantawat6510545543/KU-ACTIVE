@@ -2,9 +2,7 @@
     text-align: center;
     grid-area: header;
     font-family: Arial, Helvetica, sans-serif;
-    background: rgb(66,119,55);
-    background: linear-gradient(0deg, rgba(66,119,55,1) 0%, rgba(130,203,110,1) 57%, rgba(106,244,65,1) 100%);
-    }
+   }
 
 .top-box .profile-img{
     text-align:center;
@@ -196,7 +194,6 @@
       'menu menu main main main'
       'menu menu main main main';
     gap: 15px;
-    background: #427737;
     padding: 0px 0px 100px 0px;
 }
 

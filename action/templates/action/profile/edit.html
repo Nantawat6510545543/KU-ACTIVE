@@ -5,27 +5,43 @@ Edit profile
 {% endblock %}
 
 {% block content %}
-{{ form.errors }}
-<form action="{% url 'action:profile' %}">
-    <button type="submit">Go Back</button>
-</form>
-
-<form method="post" action="{% url 'action:edit_profile' %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    <button type="submit">Save Changes</button>
-    <h1>
-        {% for field in form %}
-            {% if field.name == 'profile_picture' %}
-                {{ field.label_tag }}<br>
-                <input type="file" name="profile_picture"><br>
-                <img src="data:image/png;base64,{{ user.profile_picture }}"
-                     alt="{{ user.username }}'s Profile Picture" width="220px" height="220px">
-            {% elif field.name == 'password' %}
-            {% else %}
-                {{ field.label_tag }} {{ field }}<br>
-            {% endif %}
-        {% endfor %}
-    </h1>
-</form>
+<div class="profile-outer-edit">
+    {{ form.errors }}
+    <div class="title">
+        <h1>Edit Profile</h1>
+    </div>
+    <div  class="profile-inner-edit">
+        <form method="post" action="{% url 'action:edit_profile' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h1>
+                <img class="background-img" id="uploaded_background" src="data:image/png;base64,{{ user.background_picture }}"
+                     alt="{{ user.username }}'s background_picture Profile Picture">
+                <div class="profile-img-box">
+                    <img class="profile-img" id="uploaded_profile" src="data:image/png;base64,{{ user.profile_picture }}"
+                        alt="{{ user.username }}'s Profile Picture" width="220px" height="220px">
+                </div>
+                {% for field in form %}
+                    {% if field.name == 'profile_picture' %}
+                        <div>
+                            <p>{{ field.label_tag }}</p>
+                            <input id="Input_profile" type="file" name="profile_picture" onchange="display_profile()">
+                        </div>
+                    {% elif field.name == 'background_picture' %}
+                        <div>
+                            <p>{{ field.label_tag }}</p>
+                            <input id="Input_background" type="file" name="profile_picture" onchange="display_Background()">
+                        </div>
+                    {% elif field.name == 'password' %}
+                    {% else %}
+                        <div><p>{{ field.label_tag }} </p>{{ field }}</div>
+                    {% endif %}
+                {% endfor %}
+                <div class="edit-save-profile">
+                    <button type="submit">Save Changes</button>
+                </div>
+            </h1>
+        </form>
+    </div>
+</div>
 
 {% endblock %}
