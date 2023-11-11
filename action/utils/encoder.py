@@ -1,5 +1,5 @@
 import base64
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from io import BytesIO
 
 
@@ -17,7 +17,7 @@ def image_to_base64(image_file):
 
         base64_encoded = base64.b64encode(image_data).decode('utf-8')
         return base64_encoded
+    except (ValueError, AttributeError, UnidentifiedImageError):
+        return ""
     except (FileNotFoundError, OSError):
         return image_file
-    except (ValueError, AttributeError):
-        return ""
