@@ -117,6 +117,6 @@ class Activity(models.Model):
             bool: True if the current date are within the activity's time range
             and there are remaining participant spaces available.
         """
-        if self.remaining_space == 0:
+        if self.remaining_space <= 0:
             return False
         return self.pub_date <= timezone.now() <= self.end_date

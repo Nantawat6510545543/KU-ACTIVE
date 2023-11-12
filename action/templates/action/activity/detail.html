@@ -58,11 +58,15 @@
             <p><strong>Place:</strong> {{ activity.place }}</p>
             <p><strong>Participants:</strong>
                 {% for participants in activity.participants %}
-                    {{ participants }} ,
+                    <a href="{% url 'action:profile' participants.id %}">
+                        {{ participants }}{% if not forloop.last %}, {% endif %}
+                    </a>
+                {% empty %}
+                    None
                 {% endfor %}
             </p>
             <p><strong>Participant Counts:</strong> {{ activity.participants.count }}</p>
-            <p><strong>Background Picture:</strong>
+            <p><strong>Background Picture:</strong><br>
             <a class="left-hover-text" onclick="plusDivs(-1)">&#10094;</a>
             <a class="right-hover-text" onclick="plusDivs(1)">&#10095;</a>
             <div class="Background-slide" style="max-width:800px">
@@ -73,7 +77,7 @@
                     {% endfor %}
 
                 {% else %}
-                    <img src=" {% static 'action/images/default-image.png' %}"
+                    <img src="{% static 'action/images/default-image.png' %}"
                     ALT="{{ activity.title }}'s Picture">
                 {% endif %}
             </div> 
@@ -82,7 +86,7 @@
                     {% if activity.participant_limit %}
                         {{ activity.participant_limit }}
                     {% else %}
-                        None.
+                        None
                     {% endif %}
                 </p>
 
