@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'action.middleware.Render404Middleware',
     'action.middleware.RemoveWhitespaceMiddleware',
     'action.middleware.UpdateSessionMiddleware'
 ]

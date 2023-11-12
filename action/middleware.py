@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
 
 from django.http import HttpRequest
+from django.shortcuts import render
+
+from mysite.settings import DEBUG
 
 
 class BaseMiddleware(ABC):
@@ -10,6 +13,18 @@ class BaseMiddleware(ABC):
     @abstractmethod
     def __call__(self, request: HttpRequest):
         pass
+
+
+class Render404Middleware(BaseMiddleware):
+    def __call__(self, request: HttpRequest):
+        response = self.get_response(request)
+
+        # TODO detailed error make DEBUG = True
+        # Check if the response has a 404 status code
+        if response.status_code == 404:
+            return render(request, '404_error.html', status=404)
+
+        return response
 
 
 class RemoveWhitespaceMiddleware(BaseMiddleware):
