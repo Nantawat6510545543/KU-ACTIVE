@@ -38,6 +38,7 @@ def get_tag_query(request: HttpRequest):
             'registered': Q(id__in=user.participated_activity),
             'favorited': Q(id__in=user.favorited_activity)
         })
+
     return tag_query
 
 
@@ -65,5 +66,5 @@ def get_index_queryset(request: HttpRequest):
 
     if tag:
         filters = tag_query[tag]
-        activities = activities.filter(filters)
+        activities = activities.filter(filters).distinct()
     return activities
