@@ -26,8 +26,6 @@ def build_service(request):
     return build('calendar', 'v3', credentials=creds)
 
 
-
-
 def generate_random_id():
     charset = "0123456789abcdefghijklmnopqrstuv"
     random_indices = [secrets.randbelow(32) for _ in range(100)]
@@ -55,10 +53,10 @@ def get_json_data(activity_id):
 @login_required
 def create_event(request, activity_id):
     service = build_service(request)
+
     if service:
         data = get_json_data(activity_id)
         request.user.event_encoder[str(activity_id)] = data['id']
-        print(request.user.event_encoder)
         request.user.save()
         service.events().insert(calendarId='primary', body=data).execute()
 
@@ -75,4 +73,3 @@ def remove_event(request, activity_id):
                                 eventId=encoded_event).execute()
         del user.event_encoder[event_id]
         user.save()
-        print(request.user.event_encoder)
