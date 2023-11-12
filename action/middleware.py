@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from django.http import HttpRequest
+from django.http import Http404, HttpRequest
 from django.shortcuts import render
 
 from mysite.settings import DEBUG
@@ -19,12 +19,13 @@ class Render404Middleware(BaseMiddleware):
     def __call__(self, request: HttpRequest):
         response = self.get_response(request)
 
-        # TODO detailed error make DEBUG = True
-        # Check if the response has a 404 status code
-        if response.status_code == 404:
-            return render(request, '404_error.html', status=404)
+        if response.status_code != 404:  # For other status code
+            return response
 
-        return response
+        # Use default 404 with DEBUG = True, otherwise use custom one
+        if DEBUG:
+            raise Http404()
+        return render(request, '404_error.html', status=404)
 
 
 class RemoveWhitespaceMiddleware(BaseMiddleware):
