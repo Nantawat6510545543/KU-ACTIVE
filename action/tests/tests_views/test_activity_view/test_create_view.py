@@ -1,15 +1,9 @@
 from datetime import timedelta
 
 from django.urls import reverse
-from django.contrib.auth.models import User
 from django.test import TestCase
+from action.tests.utils import create_user
 from django.utils import timezone
-
-from mysite import settings
-from action.models import *
-from action.tests import utils
-from action.tests.utils import *
-from action.forms.activity_form import *
 
 
 class ActivityCreateViewTests(TestCase):
@@ -46,25 +40,3 @@ class ActivityCreateViewTests(TestCase):
         self.assertEqual(form.initial['end_date'].date(), (timezone.now() + timedelta(days=1)).date())
         self.assertEqual(form.initial['start_date'].date(), (timezone.now() + timedelta(days=2)).date())
         self.assertEqual(form.initial['last_date'].date(), (timezone.now() + timedelta(days=3)).date())
-
-    # TODO: FIX BELOW
-    def test_valid_activity_creation(self):
-        """
-        Newly created activity should be added to the database.
-        If the activity is valid.
-        """
-        self.client.force_login(self.user)
-        response = self.client.get(reverse('action:create'))
-
-    # def test_invalid_activity_creation(self):
-    #     """
-    #     Test that new activity should not be able to create.
-    #     If the activity is invalid.
-    #     """
-    #     self.client.force_login(self.user)
-    #     initial_count = Activity.objects.count()
-    #
-    #     response = self.client.post(reverse('action:create'), {})
-    #
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(Activity.objects.count(), initial_count)
