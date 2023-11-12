@@ -7,13 +7,24 @@ from action.tests.utils import create_activity, create_user
 
 class ActivityDetailViewTests(TestCase):
     def setUp(self) -> None:
-        self.user = create_user()
+        user_data = {"email": "test@example.com"}
+        self.user = create_user(username="John", password="abc", **user_data)
         self.activity = create_activity(self.user)
 
-    def test_activity_detail_redirect(self):
+    def test_access_activity_detail_guest(self):
         """
         Anyone should be able to view the detail of any available activity.
         """
+        url = reverse('action:detail', args=(self.activity.id,))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_access_activity_detail_authenticated(self):
+        """
+        Authenticated users should be able to view
+        the detail of any available activity.
+        """
+        self.client.force_login(self.user)
         url = reverse('action:detail', args=(self.activity.id,))
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
