@@ -34,7 +34,10 @@
     </div>
 
     <div class="activity-owner"> 
-        <p class="top-owner">Owner: {{ activity.owner.username.title }}</p>
+        <p class="top-owner">
+            <strong>Owner:<strong>
+            <a href="{% url 'action:profile' activity.owner.id %}">{{ activity.owner.username }}</a>
+        </p>
         <div class="big_image">
             <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
                      {% else %} {% static 'action/images/background.png' %}

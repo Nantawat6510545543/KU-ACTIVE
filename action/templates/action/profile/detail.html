@@ -51,7 +51,7 @@ profile
                         <li><a href="{% url 'action:detail' participated.id %}">{{ participated }}</a></li>
                     {% endfor %}
                 {% else %}
-                    <p>You not have any participated activity</p>
+                    <p>You do not have any participated activity</p>
                 {% endif%}
             </div>
       </div>
@@ -65,7 +65,7 @@ profile
                   <li class="Participated-box"><a href="{% url 'action:detail' favorited.id %}">{{ favorited }}</a></li>
               {% endfor %}
             {% else %}
-              <p>You not have any favorited activity</p>
+              <p>You do not have any favorited activity</p>
             {% endif%}
           </div>
       </div>

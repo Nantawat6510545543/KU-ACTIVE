@@ -37,7 +37,7 @@
             <a class="title" href="{% url 'action:index' %}">KU-ACTIVE</a>
 
         {% if user.is_authenticated %}
-            <a class="logout" href="{% url 'logout' %}"> Logout </a>
+            <a class="logout" href="{% url 'logout' %}">Logout</a>
             <div class="user-box">
                 <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
                 <img class="img" src="data:image/png;base64,{{ user.profile_picture }}">
