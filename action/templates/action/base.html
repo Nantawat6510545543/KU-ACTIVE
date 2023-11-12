@@ -40,15 +40,13 @@
             <a class="logout" href="{% url 'logout' %}"> Logout </a>
             <div class="user-box">
                 <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
-                <img class="img" src="{% if user.profile_picture %} data:image/png;base64,{{ user.profile_picture }}
-                     {% else %} {% static 'action/images/guest-img.png' %}
-                     {% endif %}">
+                <img class="img" src="data:image/png;base64,{{ user.profile_picture }}">
             </div>
             <a class="friends" href="{% url 'action:friends' %}">Friends</a>
             <a class="new-activity" href="{% url 'action:manage' %}">Manage Your Activity!</a>
             <a class="calendar" href="{% url 'action:calendar' %}">Calendar</a>
             {% if user.is_superuser %}
-                <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
+                <a class="calendar" href="{% url 'admin:index' %}">Admin Interface</a>
             {% endif %}
 
         {% else %}
@@ -58,21 +56,6 @@
             </div>
         {% endif %}
         {% endblock %}
-        </div>
-
-        <div id="Dropdown" class="dropbox">
-            {% if user.is_superuser %}
-                <li><a class="drop-item" href="{% url 'admin:index' %}">Admin Interface</a></li>
-            {% endif %}
-            <li><a class="drop-item" href="{% url 'action:manage' %}">Manage Your Activity!</a></li>
-            <li><a class="drop-item" href="{% url 'action:friends' %}">Friends</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Registered Activity</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Interested Activity</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Your Friends Join!</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Upcoming</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Popular</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Recent</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Category</a></li>
         </div>
 
         <div class="secnav">

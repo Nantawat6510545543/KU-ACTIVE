@@ -19,37 +19,35 @@
     </form>
 </div>
 
-{% if activity_list %}
-    <div class="gird-box">
-        {% for activity in activity_list %}
-            <div class="activity">
-                <div class="activity-pics">
-                    <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
-                                {% else %} {% static 'action/images/background.png' %}
-                                {% endif %}"
-                        alt="{{ activity.title }}'s Picture">
-                </div>
-                <div class="activity-title">
-                    <p>{{ activity.title }}</p>
-                </div>
-                <div class="brief-detail">
-                    {{ activity.description }}
-                </div>
-                <div class="Participant">
-                    <span><strong>Participant Limit:</strong> {{ activity.participant_limit }}</span>
-                    <span><strong>Participant Count:</strong> {{ activity.participants.count }}</span>
-                </div>
-                <div class="shot-detail">
-                    <span><strong>Owner:</strong> {{ activity.owner.username }}</span>
-                    <span><i class="fas fa-calendar"></i> {{ activity.start_date }}</span>
-                </div>
-                <div class="detail-button">
-                    <a href="{% url 'action:detail' activity.id %}">Detail</a>
-                </div>
-            </div>
-        {% endfor %}
+<div class="gird-box">
+{% for activity in activity_list %}
+    <div class="activity">
+        <div class="activity-pics">
+            <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
+                        {% else %} {% static 'action/images/background.png' %}
+                        {% endif %}"
+                alt="{{ activity.title }}'s Picture">
+        </div>
+        <div class="activity-title">
+            <p>{{ activity.title }}</p>
+        </div>
+        <div class="brief-detail">
+            {{ activity.description }}
+        </div>
+        <div class="Participant">
+            <span><strong>Participant Limit:</strong> {{ activity.participant_limit }}</span>
+            <span><strong>Participant Count:</strong> {{ activity.participants.count }}</span>
+        </div>
+        <div class="shot-detail">
+            <span><strong>Owner:</strong> {{ activity.owner.username }}</span>
+            <span><i class="fas fa-calendar"></i> {{ activity.start_date }}</span>
+        </div>
+        <div class="detail-button">
+            <a href="{% url 'action:detail' activity.id %}">Detail</a>
+        </div>
     </div>
-{% else %}
+{% empty %}
     <h1>No activity found.</h1>
-{% endif %}
+{% endfor %}
+</div>
 {% endblock %}
