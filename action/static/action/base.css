@@ -30,7 +30,7 @@ nav {
     font-weight: 700;
     margin-left: 1%;
 
-    transition: font-size 1s, background-color 0.3s, color 0.3s, margin-top 1s;
+    transition: all 0.5s ;
 }
 
 .topnav a.title:hover {
@@ -132,6 +132,7 @@ nav {
     align-items: center;
     float: right;
 
+    text-decoration:none;
     color:black;
     margin: 6px;
     padding: 16px;
@@ -221,7 +222,7 @@ nav {
 .dropbox {
     display: none;
     margin:0%;
-    background: #B0D9B1;
+    background: #00b14f;
     padding:1%;
 }
 
@@ -231,13 +232,10 @@ nav {
 	list-style-type: none;
     text-align: center;
     text-align: center;
+    background:white;
     text-decoration: none;
     font-size: 17px;
     transition: background-color 1s;
-}
-
-.dropbox li:hover {
-    background-color:gray;
 }
 
 .dropbox .drop-item {
@@ -245,6 +243,7 @@ nav {
     font-size: 20px;
     font-weight: 700;
     margin-left: 1%;
+    font-family: Arial, Helvetica, sans-serif;
 
     text-align: center;
     text-decoration: none;
@@ -254,8 +253,10 @@ nav {
 
 
 .dropbox .drop-item:hover {
-    color: white;
     font-size: 25px;
+    text-decoration:underline;
+    border:none;
+
 }
 
 /* Content block */
@@ -314,6 +315,10 @@ nav {
         display: none;
     }
 
+    .topnav a.calendar {
+        display: none;
+    }
+
     .topnav a.logout {
         display: none;
     }
@@ -321,14 +326,12 @@ nav {
     .topnav a.title {
         float:left;
         margin-top:5px;
-        color: white;
         font-size:45px;
     }
 
     .topnav a.title:hover {
         margin-top:0px;
-        color: black;
-        font-size:55px;
+        font-size:50px;
     }
 
     .topnav .drop-button {

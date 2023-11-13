@@ -46,6 +46,7 @@ table.style1 a {
     background: white;
     font-size: 20px;
     height: 40px;
+    border-radius: 45px 0px 0px 45px;
     border: none;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19);
