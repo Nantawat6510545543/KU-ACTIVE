@@ -87,8 +87,8 @@ class ActivityForm(forms.ModelForm):
         if not background_file and activity_is_created:
             background_data = activity_is_created[0].background_picture
         else:
+            num = 1
             for image in background_file:
-                num = 1
                 encoded = utils.image_to_base64(image)
                 if encoded != '':
                     image_key = f'background {num}'

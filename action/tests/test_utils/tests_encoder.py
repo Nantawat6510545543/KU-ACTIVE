@@ -4,7 +4,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from action.utils import image_to_base64
 
 
-class YourTestCase(TestCase):
+class EncoderTest(TestCase):
     def test_image_to_base64(self):
         # Test with a valid image file
         image_content = b'content_of_your_image_file'
