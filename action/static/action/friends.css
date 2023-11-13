@@ -35,6 +35,7 @@ div.friend-nav-bar {
     text-decoration: none;
     width: 20%;
     overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .friend-nav-bar a:hover {
@@ -49,7 +50,7 @@ div.friend-nav-bar {
 
 .friend-search input {
     text-align: center;
-    border-radius: 15px;
+    border-radius: 5px;
     background-color: #04AA6D;
     color: black;
     background: white;
@@ -62,7 +63,7 @@ div.friend-nav-bar {
 
 .friend-search button {
     text-align: center;
-    border-radius: 15px;
+    border-radius: 5px;
     background-color: #04AA6D;
     color: black;
     background: white;
@@ -71,10 +72,11 @@ div.friend-nav-bar {
     height: 100%;
     border: none;
     overflow: hidden;
+    transition: background-color 0.3s;
 }
 
 .friend-search button:hover {
-    background-color: green;
+    background-color: #00b14f;
     color: white;
 }
 
@@ -89,21 +91,48 @@ div.friend-nav-bar {
 }
 
 .each-friend {
+    display: inline-grid;
+    grid-template-columns: auto auto;
     height: auto;
     width: 100%;
-    background-color: #B0D9B1;
-    padding: 20px;
+    background-color: white;
     border-bottom: 2px solid #000
 }
 
 .friend-name {
     font-size: 40px;
     color: white;
-    font-family: Inter;
+    font-family: Arial, Helvetica, sans-serif;
     font-weight: 700;
     word-wrap: break-word;
     margin-top: 0%;
     margin-bottom: 0%;
+    padding: 20px;
+}
+
+.add-button-box {
+    display: inline-block;
+    margin: 10px;
+    text-align: right;
+    padding: 20px;
+}
+
+.add-button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.add-button:hover {
+    background-color: #45a049;
 }
 
 .remove-button {
