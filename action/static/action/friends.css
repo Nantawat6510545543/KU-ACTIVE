@@ -135,9 +135,29 @@ div.friend-nav-bar {
     background-color: #45a049;
 }
 
+.remove-button-box {
+    display: inline-block;
+    margin: 10px;
+    text-align: right;
+    padding: 20px;
+}
+
 .remove-button {
-    position: sticky;
-    right: 0%;
+    background-color: red;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.remove-button:hover {
+    background-color: #45a049;
 }
 
 .no-friend {

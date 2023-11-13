@@ -22,8 +22,8 @@
                                 {{ each_friend }}
                             </a>
                         </div>
-                        <form action="{% url 'action:remove_friend' friend_id=each_friend.id %}" class="remove-button">
-                            <button type="submit">Remove Friend</button>
+                        <form action="{% url 'action:remove_friend' friend_id=each_friend.id %}" class="remove-button-box">
+                            <button type="submit" class="remove-button">Remove Friend</button>
                         </form>
                     </div>
                 {% empty %}

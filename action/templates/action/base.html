@@ -46,7 +46,7 @@
             <a class="new-activity" href="{% url 'action:manage' %}">Manage Your Activity!</a>
             <a class="calendar" href="{% url 'action:calendar' %}">Calendar</a>
             {% if user.is_superuser %}
-                <a class="calendar" href="{% url 'admin:index' %}">Admin Interface</a>
+                <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
             {% endif %}
 
         {% else %}

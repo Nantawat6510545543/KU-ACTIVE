@@ -30,7 +30,6 @@ table.style1 a {
 
 .left-search-criteria {
     text-align: center;
-    background-color: #04AA6D;
     color: black;
     background: white;
     font-size: 20px;
@@ -43,7 +42,6 @@ table.style1 a {
 
 .search-criteria {
     text-align: center;
-    background-color: #04AA6D;
     color: black;
     background: white;
     font-size: 20px;
@@ -82,7 +80,7 @@ table.style1 a {
 
 .search-button:hover {
     color: white;
-    background: green;
+    background: #00b14f;
 }
 
 /* Gird for activity */
@@ -97,7 +95,7 @@ table.style1 a {
 /* Activity box */
 .activity {
     padding: 10px;
-    background-color: #79AC78;
+    background-color: white;
     width: 400px;
     margin: auto;
     border-radius:10px;
@@ -123,12 +121,12 @@ table.style1 a {
     height:200px;
     border-radius:10px 10px 0px 0px;
     border: none;
-    border-bottom: 2px solid black;
 }
 
 .activity .activity-title {
     font-size:30px;
     margin: -25px 0px -20px 0px;
+    overflow: hidden;
 }
 
 .brief-detail{
@@ -169,17 +167,17 @@ table.style1 a {
     padding: 10px 158px;
     box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    background: white;
+    background: #04AA6D;
     border: none;
     border-radius:10px;
-    color: black;
+    color: white;
     text-decoration: none;
     transition: 0.3s;
     cursor: pointer;
 }
 
 .detail-button a:hover{
-    background: #04AA6D;
+    background: #04DD6D;
     color:white;
 }
 
