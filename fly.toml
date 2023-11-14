@@ -1,16 +1,15 @@
-# fly.toml app configuration file generated for ku-active on 2023-11-12T20:55:04+07:00
+# fly.toml app configuration file generated for ku-active on 2023-11-14T16:27:57+07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
 app = "ku-active"
-primary_region = "sin"
+primary_region = "sjc"
 console_command = "/code/manage.py shell"
 
 [build]
 
 [deploy]
-  release_command = "python manage.py migrate"
 
 [env]
   PORT = "8000"
