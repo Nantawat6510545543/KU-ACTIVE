@@ -1,0 +1,7 @@
+fly.toml
+.git/
+*.sqlite3
+Interpreter
+linux-setup-script.sh
+window-setup-script.bat
+sample.env
