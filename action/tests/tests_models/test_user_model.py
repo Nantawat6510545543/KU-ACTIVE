@@ -16,13 +16,10 @@ class UserModelTest(TestCase):
 
     def test_user_attributes(self):
         user = self.user  # shorter reference
-        data = self.user_data
 
-        self.assertEqual(str(user), data['username'])
-        self.assertEqual(user.username, data['username'])
-        self.assertTrue(user.check_password(data['password']))
-        self.assertEqual(user.email, data['email'])
-        self.assertEqual(user.first_name, data['first_name'])
-        self.assertEqual(user.last_name, data['last_name'])
-        self.assertFalse(user.is_staff)
-        self.assertTrue(user.is_active)
+        # Check every attribute of model object equal to a manual object
+        for key, value in self.user_data.items():
+            if key == 'password':  # can't compare password directly because it's hashed
+                self.assertTrue(user.check_password(value))
+            else:
+                self.assertEqual(getattr(user, key), value)
