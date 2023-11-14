@@ -23,6 +23,7 @@
 
 div.friend-nav-bar {
     display: inline-flex;
+    overflow: hidden;
     width: 90%;
     margin: 5%;
     margin-top: 1%;
@@ -92,22 +93,27 @@ div.friend-nav-bar {
 
 .each-friend {
     display: inline-grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 100px auto auto;
     height: auto;
     width: 100%;
     background-color: white;
     border-bottom: 2px solid #000
 }
 
+.friend-image {
+    text-align: center;
+    padding: 20px;
+}
+
 .friend-name {
     font-size: 40px;
-    color: white;
+    color: black;
     font-family: Arial, Helvetica, sans-serif;
-    font-weight: 700;
     word-wrap: break-word;
     margin-top: 0%;
     margin-bottom: 0%;
     padding: 20px;
+    line-height: 60px;
 }
 
 .add-button-box {
@@ -143,7 +149,7 @@ div.friend-nav-bar {
 }
 
 .remove-button {
-    background-color: red;
+    background-color: black;
     border: none;
     color: white;
     padding: 10px 20px;
@@ -157,11 +163,123 @@ div.friend-nav-bar {
 }
 
 .remove-button:hover {
-    background-color: #45a049;
+    background-color: red;
 }
 
 .no-friend {
     font-size: 20px;
     text-align: center;
     margin-top: 15%;
+}
+
+.request-manager {
+    display: grid;
+    text-align: center;
+}
+
+.accept-button-box {
+    display: inline-block;
+    text-align: right;
+    padding: 6.5px;
+}
+
+.accept-button {
+    background-color: green;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 50%;
+}
+
+.accept-button:hover {
+    background-color: #00B14F;
+}
+
+.decline-button-box {
+    display: inline-block;
+    text-align: right;
+    padding: 6.5px;
+}
+
+.decline-button {
+    background-color: #ff3366;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 50%;
+}
+
+.decline-button:hover {
+    background-color: #ff0000;
+}
+
+@media screen and (max-width: 1200px) {
+    div.friend-nav-bar {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        overflow: hidden;
+        width: 90%;
+        margin: 5%;
+        margin-top: 1%;
+        margin-bottom: 1%;
+    }
+
+    .friend-nav-bar a {
+        color: white;
+        font-size: 30px;
+        text-decoration: none;
+        width: auto;
+        overflow: hidden;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .friend-nav-bar a:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .friend-search {
+        grid-column: 1 / span 3;
+        display: inline-flex;
+        width: 100%;
+    }
+
+    .friend-search input {
+        text-align: center;
+        border-radius: 5px;
+        background-color: #04AA6D;
+        color: black;
+        background: white;
+        font-size: 20px;
+        width: 75%;
+        height: 100%;
+        border: none;
+        margin-right: 5%;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .friend-nav-bar a {
+        color: white;
+        font-size: 20px;
+        text-decoration: none;
+        width: auto;
+        overflow: hidden;
+        font-family: Arial, Helvetica, sans-serif;
+    }
 }

@@ -1,24 +1,29 @@
 {% extends "action/friends/list.html" %}
+{% load static %}
 
 {% block friend %}
 <div class="friend-list-box">
     {% for each_request in friend_request_list %}
         <div class="each-friend">
+            <div class="friend-image">
+                <img src="{% if each_friend.profile_picture %} data:image/png;base64,{{ each_friend.profile_picture }}
+                {% else %}{% static 'action/images/guest-img.png' %}{% endif %}"
+                    width="60px" height="60px" style="border-radius: 50%; border: 2px solid black;">
+            </div>
             <div class="friend-name">
                 From:
                 <a href="{% url 'action:profile' user_id=each_request.sender.id %}">
                     {{ each_request.sender }}<br>
                 </a>
             </div>
-            <p class="friend-name">
-                To: {{ each_request.receiver }}
-            </p>
-            <form action="{% url 'action:accept_request' friend_id=each_request.sender.id %}">
-                <button type="submit">Accept Friend Request</button>
-            </form>
-            <form action="{% url 'action:decline_request' friend_id=each_request.sender.id %}">
-                <button type="submit">Decline Friend Request</button>
-            </form>
+            <div class="request-manager">
+                <form class="accept-button-box" action="{% url 'action:accept_request' friend_id=each_request.sender.id %}">
+                    <button class="accept-button" type="submit">Accept Friend Request</button>
+                </form>
+                <form class="decline-button-box" action="{% url 'action:decline_request' friend_id=each_request.sender.id %}">
+                    <button class="decline-button" type="submit">Decline Friend Request</button>
+                </form>
+            </div>
         </div>
     {% empty %}
         <p class="no-friend">No friend request.</p>
