@@ -21,7 +21,7 @@
                     <img id="uploadedImage" src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
                          {% else %} {% static 'action/images/default-image.png' %}
                          {% endif %}"
-                    alt="{{ activity.title }}'s Picture" width="240" height="240">
+                    alt="{{ activity.title }}'s Picture" width="auto" height="240">
 
                 {% elif field.name == 'background_picture' %}
                     <div class="heading-detail">

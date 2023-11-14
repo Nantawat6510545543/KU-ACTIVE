@@ -139,7 +139,7 @@ nav {
     margin-right: 1%;
     border-radius: 45px;
     background-color: white;
-    transition: color 0.2s
+    transition: background-color 0.3s
 }
 
 .topnav a.logout:hover {

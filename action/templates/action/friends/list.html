@@ -1,4 +1,5 @@
 {% extends "action/base.html" %}
+{% load static %}
 
 {% block content %}
 
@@ -17,6 +18,12 @@
             <div class="friend-list-box">
                 {% for each_friend in user.friends %}
                     <div class="each-friend">
+                        <div class="friend-image">
+                          <img src="{% if each_friend.profile_picture %} data:image/png;base64,{{ each_friend.profile_picture }}
+                          {% else %}{% static 'action/images/guest-img.png' %}{% endif %}"
+                               alt="{{ each_friend.username }}'s Profile Picture" width="60px" height="60px"
+                          style="border-radius: 50%; border: 2px solid black;">
+                        </div>
                         <div class="friend-name">
                             <a href="{% url 'action:profile' user_id=each_friend.id %}">
                                 {{ each_friend }}
