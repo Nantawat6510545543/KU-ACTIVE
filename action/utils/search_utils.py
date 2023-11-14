@@ -41,7 +41,6 @@ def get_tag_query(request: HttpRequest):
 
     return tag_query
 
-
 def get_index_queryset(request: HttpRequest):
     tag = request.GET.get('tag')
     tag_query = get_tag_query(request)
@@ -53,7 +52,7 @@ def get_index_queryset(request: HttpRequest):
         pub_date__lte=timezone.now()).order_by('-pub_date')
 
     match tag:
-        case 'popular':        
+        case 'popular':
             activities = activities.filter(activity__is_participated=True)
             # Add a temporary column and filter by it (temp_participant_count), descending
             activities = activities.annotate(
@@ -67,4 +66,5 @@ def get_index_queryset(request: HttpRequest):
     if tag:
         filters = tag_query[tag]
         activities = activities.filter(filters).distinct()
+
     return activities

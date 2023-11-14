@@ -72,7 +72,7 @@ def create_activity(owner, **kwargs):
         "description": None,
         "place": None,
         "full_description": None,
-        "participant_limit": -1,
+        "participant_limit": None,
         "tags": None,
     }
 
@@ -84,7 +84,7 @@ def create_activity(owner, **kwargs):
         start_date=defaults["start_date"],
         last_date=defaults["last_date"],
         pub_date=defaults["pub_date"],
-        end_date=defaults["end_date"]
+        end_date=defaults["end_date"],
     )
 
     if defaults["description"] is not None:
@@ -102,20 +102,18 @@ def create_activity(owner, **kwargs):
     if defaults["tags"] is not None:
         activity.tags.set(defaults["tags"])
 
+    activity.save()
     return activity
 
 
-def create_activity_status(participants, activity, participated=True,
-                           favorite=None):
+def create_activity_status(participants, activity, is_participated=True,
+                           is_favorited=False):
     activity_status = ActivityStatus.objects.create(
         participants=participants,
         activity=activity,
-        is_participated=participated
+        is_participated=is_participated,
+        is_favorited=is_favorited
     )
-
-    if favorite is not None:
-        activity_status.is_favorited = favorite
-
     return activity_status
 
 
@@ -151,3 +149,9 @@ def create_friend_status(sender: User, receiver: User,
         friend_status.is_friend = request_status == 'Accepted'
 
     return friend_status
+
+def quick_join(participants, activity):
+    """
+    Given participants and activity object, automatically join an activity
+    """
+    create_activity_status(create_user(participants), activity, is_participated=True)
