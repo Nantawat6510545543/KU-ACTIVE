@@ -40,7 +40,9 @@
             <a class="logout" href="{% url 'logout' %}">Logout</a>
             <div class="user-box">
                 <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
-                <img class="img" src="data:image/png;base64,{{ user.profile_picture }}">
+                <img class="img" src="{% if user.profile_picture %} data:image/png;base64,{{ user.profile_picture }}
+                     {% else %} {% static 'action/images/guest-img.png' %}
+                     {% endif %}">
             </div>
             <a class="friends" href="{% url 'action:friends' %}">Friends</a>
             <a class="new-activity" href="{% url 'action:manage' %}">Manage Your Activity!</a>
