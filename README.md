@@ -1,5 +1,6 @@
 ![Unit Test](https://github.com/Nantawat6510545543/KU-ACTIVE/actions/workflows/django.yml/badge.svg?branch=main)
-[![codecov](https://codecov.io/gh/Nantawat6510545543/KU-ACTIVE/branch/master/graph/badge.svg)](https://codecov.io/gh/Nantawat6510545543/KU-ACTIVE)
+[![codecov](https://codecov.io/gh/Nantawat6510545543/KU-ACTIVE/branch/main/graph/badge.svg)](https://codecov.io/gh/Nantawat6510545543/KU-ACTIVE)
+ 
 
 # KU-ACTIVE: Activity center
 
