@@ -1,3 +1,4 @@
+from allauth.socialaccount.models import SocialToken
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
@@ -8,11 +9,12 @@ from action.models import ActivityStatus, Activity
 from action import utils
 
 
+# TODO modify so it fits open/closed principle using State pattern
 @login_required
 def participate(request, activity_id: int):
     activity = get_object_or_404(Activity, pk=activity_id)
-    activity_status: ActivityStatus = utils.fetch_activity_status(request,
-                                                                  activity_id)
+    activity_status: ActivityStatus = \
+        utils.fetch_activity_status(request, activity_id)
 
     if not activity.can_participate():
         messages.info(request,
@@ -20,28 +22,13 @@ def participate(request, activity_id: int):
     elif activity_status.is_participated:
         messages.info(request, "You are already participating.")
     else:
-        data = {
-            'summary': activity.title,
-            'location': activity.place,
-            'description': activity.description,
-            'start': {
-                'dateTime': activity.start_date.strftime('%Y-%m-%dT%H:%M:%S'),
-                'timeZone': "Asia/Bangkok",
-            },
-            'end': {
-                'dateTime': activity.last_date.strftime('%Y-%m-%dT%H:%M:%S'),
-                'timeZone': "Asia/Bangkok",
-            }
-        }
         try:
-            utils.create_event(request, activity_id, **data)
+            utils.create_event(request, activity_id)
+        except SocialToken.DoesNotExist:  # If user have email but not google accounts
+            pass
         except HttpError:
             messages.info(request,
-                          "Calendar is not working, please Login again.")
-
-        activity_status.is_participated = True
-        activity_status.save()
-        messages.success(request, "You have successfully participated.")
+                            "Calendar is not working, please Login again.")
 
         activity_status.is_participated = True
         activity_status.save()
@@ -61,6 +48,8 @@ def leave(request, activity_id: int):
         messages.success(request, "You have left this activity.")
         try:
             utils.remove_event(request, activity_id)
+        except SocialToken.DoesNotExist:  # If user have email but not google accounts
+            pass
         except HttpError:
             messages.info(request,
                           "Calendar is not working, please Login again.")

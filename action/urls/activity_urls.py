@@ -7,6 +7,7 @@ activity_patterns = [
     path('manage/', views.ActivityManageView.as_view(), name='manage'),
     path('create/', views.ActivityCreateView.as_view(), name='create'),
     path('edit/<int:activity_id>', views.ActivityEditView.as_view(), name='edit'),
+
     path('delete/<int:activity_id>', views.delete_activity, name='delete_activity'),
 
     path('participate/<int:activity_id>', views.participate, name='participate'),

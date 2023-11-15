@@ -6,19 +6,22 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'action/style.css'%}">
     <link rel="stylesheet" href="{% static 'action/base.css'%}">
     <link rel="stylesheet" href="{% static 'action/detail.css' %}">
     <link rel="stylesheet" href="{% static 'action/friends.css'%}">
     <link rel="stylesheet" href="{% static 'action/index.css' %}">
     <link rel="stylesheet" href="{% static 'action/profile.css'%}">
     <link rel="stylesheet" href="{% static 'action/calendar.css'%}">
-    <link rel="stylesheet" href="{% static 'action/style.css'%}">
     <link rel="stylesheet" href="{% static 'action/manage_activity.css'%}">
     <link rel="stylesheet" href="{% static 'action/edit_create_activity.css'%}">
     <link rel="stylesheet" href="{% static 'action/error.css'%}">
+    <link rel="stylesheet" href="{% static 'action/profile_edit.css'%}">
     <script src="{% static 'action/base.js' %}"></script>
     <script src="{% static 'action/edit.js' %}"></script>
+    <script src="{% static 'action/edit_profile.js' %}"></script>
     <script src="{% static 'action/detail.js' %}"></script>
+    <script src="{% static 'action/index.js' %}"></script>
     <title>
     {% block title %}
     {% endblock %}
@@ -35,7 +38,7 @@
             <a class="title" href="{% url 'action:index' %}">KU-ACTIVE</a>
 
         {% if user.is_authenticated %}
-            <a class="logout" href="{% url 'logout' %}"> Logout </a>
+            <a class="logout" href="{% url 'logout' %}">Logout</a>
             <div class="user-box">
                 <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
                 <img class="img" src="{% if user.profile_picture %} data:image/png;base64,{{ user.profile_picture }}
@@ -58,6 +61,16 @@
         {% endblock %}
         </div>
 
+        <div class="secnav">
+            <li><a class="title" href="{% url 'action:index' %}?tag=registered">Registered Activity</a></li>
+            <li><a class="title" href="{% url 'action:index' %}?tag=favorited">Interested Activity</a></li>
+            <li><a class="title" href="{% url 'action:index' %}?tag=friend_joined">Your Friends Join!</a></li>
+            <li><a class="title" href="{% url 'action:index' %}?tag=upcoming">Upcoming</a></li>
+            <li><a class="title" href="{% url 'action:index' %}?tag=popular">Popular</a></li>
+            <li><a class="title" href="{% url 'action:index' %}?tag=recent">Recent</a></li>
+            <li><a class="title" href="{% url 'action:index' %}">Category</a></li>
+        </div>
+
         <div id="Dropdown" class="dropbox">
             {% if user.is_superuser %}
                 <li><a class="drop-item" href="{% url 'admin:index' %}">Admin Interface</a></li>
@@ -71,28 +84,20 @@
             <li><a class="drop-item" href="{% url 'action:index' %}">Popular</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}">Recent</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}">Category</a></li>
-        </div>
-
-        <div class="secnav">
-            <li><a class="title" href="{% url 'action:index' %}?tag=registered">Registered Activity</a></li>
-            <li><a class="title" href="{% url 'action:index' %}?tag=favorited">Interested Activity</a></li>
-            <li><a class="title" href="{% url 'action:index' %}?tag=friend_joined">Your Friends Join!</a></li>
-            <li><a class="title" href="{% url 'action:index' %}?tag=upcoming">Upcoming</a></li>
-            <li><a class="title" href="{% url 'action:index' %}?tag=popular">Popular</a></li>
-            <li><a class="title" href="{% url 'action:index' %}?tag=recent">Recent</a></li>
-            <li><a class="title" href="{% url 'action:index' %}">Category</a></li>
+            <li><a class="drop-item" href="{% url 'action:calendar' %}">Calendar</a></li>
         </div>
     </nav>
 
-    <div class="message">
-        {% block message %}
-            {% if messages %}
-                {% for message in messages %}
-                    <a>{{ message }}</a>
-                {% endfor %}
-            {% endif %}
-        {% endblock %}
-    </div>
+    {% block message %}
+        {% if messages %}
+            {% for message in messages %}
+                <div id="alert-msg" class="alert-msg">
+                    <span class="close-msg" onclick="closeMsg()">&times;</span>
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endblock %}
 
     <div class="content">
         {% block content %}

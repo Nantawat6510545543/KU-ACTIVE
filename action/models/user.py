@@ -5,6 +5,7 @@ from django.db.models import Q
 
 class User(AbstractUser):
     profile_picture = models.TextField(blank=True)
+    background_picture = models.TextField(blank=True)
     bio = models.TextField(blank=True)
     event_encoder = models.JSONField(blank=True, default=dict)
 

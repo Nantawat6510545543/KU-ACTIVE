@@ -45,8 +45,9 @@ def configure_database_settings(BASE_DIR):
             cloud_database = {
                 'default': dj_database_url.config(
                     default=database_url,
-                    conn_max_age=600,
-                    conn_health_checks=True
+                    conn_max_age=0,
+                    conn_health_checks=True,
+                    ssl_require=True
                 )
             }
             logging.info("Using a valid DATABASE_URL. Connecting to the Neon.")

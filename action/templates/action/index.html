@@ -3,8 +3,14 @@
 
 {% comment %} TODO, use Javscript instead of manual if/else {% endcomment %}
 {% block content %}
+
 <div class="search-system">
     <form action="{% url 'action:index' %}">
+<!--        <select class="left-search-criteria" name="sort">-->
+<!--            <option value="upcoming">Upcoming</option>-->
+<!--            <option value="popularity">Popularity</option>-->
+<!--            <option value="recent">Recent</option>-->
+<!--        </select>-->
         <select class="search-criteria" name="tag">
         {% for tag_option, tag_label in tags %}
             <option value="{{ tag_option }}" {% if request.session.tag == tag_option %} selected {% endif %}>
@@ -12,44 +18,42 @@
             </option>
         {% endfor %}
         </select>
-        <input type="search" class="search-bar" name="q" 
-            placeholder=" {% if not request.session.query %}Search :{% endif %}"
+        <input type="search" class="search-bar" name="q"
+            placeholder="{% if not request.session.query %}Search :{% endif %}"
             value="{% if request.session.query %}{{ request.session.query }}{% endif %}">
         <button type="submit" class="search-button">Search</button>
     </form>
 </div>
 
-{% if activity_list %}
-    <div class="gird-box">
-        {% for activity in activity_list %}
-            <div class="activity">
-                <div class="activity-pics">
-                    <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
-                                {% else %} {% static 'action/images/background.png' %}
-                                {% endif %}"
-                        alt="{{ activity.title }}'s Picture">
-                </div>
-                <div class="activity-title">
-                    <p>{{ activity.title }}</p>
-                </div>
-                <div class="brief-detail">
-                    {{ activity.description }}
-                </div>
-                <div class="Participant">
-                    <span><strong>Participant Limit:</strong> {{ activity.participant_limit }}</span>
-                    <span><strong>Participant Count:</strong> {{ activity.participants.count }}</span>
-                </div>
-                <div class="shot-detail">
-                    <span><strong>Owner:</strong> {{ activity.owner.username }}</span>
-                    <span><i class="fas fa-calendar"></i> {{ activity.start_date }}</span>
-                </div>
-                <div class="detail-button">
-                    <a href="{% url 'action:detail' activity.id %}">Detail</a>
-                </div>
-            </div>
-        {% endfor %}
+<div class="gird-box">
+{% for activity in activity_list %}
+    <div class="activity">
+        <div class="activity-pics">
+            <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
+                        {% else %} {% static 'action/images/background.png' %}
+                        {% endif %}"
+                alt="{{ activity.title }}'s Picture">
+        </div>
+        <div class="activity-title">
+            <p>{{ activity.title }}</p>
+        </div>
+        <div class="brief-detail">
+            {{ activity.description }}
+        </div>
+        <div class="Participant">
+            <span><strong>Participant Limit:</strong> {{ activity.participant_limit }}</span>
+            <span><strong>Participant Count:</strong> {{ activity.participants.count }}</span>
+        </div>
+        <div class="shot-detail">
+            <span><strong>Owner:</strong> {{ activity.owner.username }}</span>
+            <span><i class="fas fa-calendar"></i> {{ activity.start_date }}</span>
+        </div>
+        <div class="detail-button">
+            <a href="{% url 'action:detail' activity.id %}">Detail</a>
+        </div>
     </div>
-{% else %}
+{% empty %}
     <h1>No activity found.</h1>
-{% endif %}
+{% endfor %}
+</div>
 {% endblock %}

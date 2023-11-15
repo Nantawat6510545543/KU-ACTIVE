@@ -1,0 +1,14 @@
+{% extends "action/base.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="error">
+    <img src="{% static 'action/images/error-404.png' %}">
+    <h1>Page is not found (404)</h1>
+    Sorry, the page you are looking or does not exist.
+</div>
+<div class="redirect-error">
+    <a href="{% url 'action:index' %}">Back to home page</a>
+</div>
+{% endblock %}

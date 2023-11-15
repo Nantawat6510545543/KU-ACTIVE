@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib import admin
 from django.db import models
 from django.db.models import QuerySet
@@ -13,7 +15,7 @@ class Activity(models.Model):
     """
     owner = models.ForeignKey(User, related_name='owner',
                               on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=22)
     pub_date = models.DateTimeField('Date published', default=timezone.now)
     end_date = models.DateTimeField('Application Deadline', null=True,
                                     blank=True)
@@ -49,7 +51,7 @@ class Activity(models.Model):
 
     @property
     @admin.display(description='Time remain')
-    def time_remain(self) -> int:
+    def time_remain(self) -> timedelta:
         """
         Return the time remaining until registration close.
 
@@ -115,6 +117,7 @@ class Activity(models.Model):
             bool: True if the current date are within the activity's time range
             and there are remaining participant spaces available.
         """
-        if self.remaining_space == 0:
-            return False
-        return self.pub_date <= timezone.now() <= self.end_date
+        if self.remaining_space is None or self.remaining_space > 0:
+            return self.pub_date <= timezone.now() <= self.end_date
+        return False
+

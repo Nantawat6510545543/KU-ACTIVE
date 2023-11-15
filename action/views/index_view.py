@@ -19,7 +19,6 @@ class IndexView(generic.ListView):
     template_name = 'action/index.html'
     context_object_name = 'activity_list'
 
-    # TODO refactor
     def get(self, request, *args, **kwargs):
         tag = request.GET.get('tag')
 

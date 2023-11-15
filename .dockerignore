@@ -1,0 +1,9 @@
+fly.toml
+.git/
+*.sqlite3
+.github
+Interpreter
+linux-setup-script.sh
+window-setup-script.bat
+sample.env
+.coverage

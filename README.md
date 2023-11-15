@@ -1,4 +1,6 @@
 ![Unit Test](https://github.com/Nantawat6510545543/KU-ACTIVE/actions/workflows/django.yml/badge.svg?branch=main)
+[![codecov](https://codecov.io/gh/Nantawat6510545543/KU-ACTIVE/branch/main/graph/badge.svg)](https://codecov.io/gh/Nantawat6510545543/KU-ACTIVE)
+ 
 
 # KU-ACTIVE: Activity center
 
@@ -29,9 +31,12 @@ deactivate
 
 ### Project wiki
 - [Vision Statement](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Vision-Statement)
+- [Project proposal](https://docs.google.com/document/d/1fCbarHMIbQTxGYIbg5Lh2DMRRupwHXWj80ErWb67ScI/edit?usp=sharing)
+- [User Stories](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/User-Stories)
 - [Requirements](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Requirements)
 - [Development Plan](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Development-Plan)
-- [Domain Model](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Domain-Model)
+- [Project Model](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Project-Model)
+- [Coding standard](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Coding-standard)
 
 ### Iteration plan and project board
 - [Iteration 1 Plan](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Iteration-1-Plan) and [Project Board](https://github.com/users/Nantawat6510545543/projects/4/views/2)
@@ -40,3 +45,4 @@ deactivate
 - [Iteration 4 Plan](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Iteration-4-Plan) and [Project Board](https://github.com/users/Nantawat6510545543/projects/4/views/5)
 - [Iteration 5 Plan](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Iteration-5-Plan) and [Project Board](https://github.com/users/Nantawat6510545543/projects/4/views/6)
 - [Iteration 6 Plan](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Iteration-6-Plan) and [Project Board](https://github.com/users/Nantawat6510545543/projects/4/views/7)
+- [Iteration 7 Plan](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Iteration-6-Plan) and [Project Board](https://github.com/users/Nantawat6510545543/projects/4/views/8)

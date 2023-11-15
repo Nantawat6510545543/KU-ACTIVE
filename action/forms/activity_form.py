@@ -1,3 +1,5 @@
+import json
+
 from django import forms
 from django.utils import timezone
 
@@ -75,19 +77,24 @@ class ActivityForm(forms.ModelForm):
             self.add_error('last_date', "Last Date must be after Start Date.")
 
         # # Set the activity's picture attribute
-        image_file = self.cleaned_data.get('picture')
-        cleaned_data['picture'] = utils.image_to_base64(image_file)
+        picture_file = self.cleaned_data.get('picture')
+        cleaned_data['picture'] = utils.image_to_base64(picture_file)
 
         # # Set the activity's background picture attribute
-        image_files = self.cleaned_data.get('background_picture')
-        image_data = {}
-        for num, image in enumerate(image_files):
-            try:
-                image_key = f'background {num + 1}'
-                image_data[image_key] = utils.image_to_base64(image)
-            except Exception as e:
-                pass
+        background_file = self.cleaned_data.get('background_picture')
+        background_data = {}
 
-        self.cleaned_data['background_picture'] = image_data
+        if not background_file and activity_is_created:
+            background_data = activity_is_created[0].background_picture
+        else:
+            num = 1
+            for image in background_file:
+                encoded = utils.image_to_base64(image)
+                if encoded != '':
+                    image_key = f'background {num}'
+                    background_data[image_key] = encoded
+                    num += 1
+
+        cleaned_data['background_picture'] = background_data
 
         return cleaned_data

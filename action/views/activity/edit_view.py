@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import generic
 
@@ -11,6 +11,17 @@ from action.models import Activity
 class ActivityEditView(LoginRequiredMixin, generic.UpdateView):
     form_class = ActivityForm
     template_name = 'action/activity/edit.html'
+
+    def get(self, request, *args, **kwargs):
+        # Get the activity object
+        activity = self.get_object()
+
+        # Check if the current user is the owner of the activity
+        if request.user != activity.owner:
+            messages.error(request, 'You do not have permission to edit this activity.')
+            return redirect('action:index')
+
+        return super().get(request, *args, **kwargs)
 
     def get_object(self, **kwargs):
         return Activity.objects.get(pk=self.kwargs['activity_id'])

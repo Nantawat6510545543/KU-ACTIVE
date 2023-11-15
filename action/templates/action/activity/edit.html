@@ -25,18 +25,30 @@
                     alt="{{ activity.title }}'s Picture" width="240" height="240">
 
                 {% elif field.name == 'background_picture' %}
-                    <div class="heading-detail"><p>{{ field.label_tag }}</p> <input type="file" multiple name="{{ field.name }}"></div>
-                    <img src="{% if activity.background_picture %} data:image/png;base64,{{ activity.background_picture}}
-                         {% else %} {% static 'action/images/default-image.png' %}
-                         {% endif %}"
-                    alt="{{ activity.title }}'s Picture" width="240" height="240">
+                    <div class="heading-detail">
+                        <p>{{ field.label_tag }}</p>
+                        <input id="fileInput" type="file" multiple name="{{ field.name }}">
+                    </div>
+                    <a class="left-hover-text" onclick="plusDivs(-1)">&#10094;</a>
+                    <a class="right-hover-text" onclick="plusDivs(1)">&#10095;</a>
+
+                    <div class="background-slide" id="backgroundSlide">
+                        {% if activity.background_picture %}
+                            {% for value in activity.background_picture.values %}
+                                <img class="image-Slides" src="data:image/png;base64,{{ value }}"
+                                    alt="Activity Picture" width="400" height="240">
+                            {% endfor %}
+                        {% else %}
+                            <img src="{% static 'action/images/default-image.png' %}" alt="Default Picture">
+                        {% endif %}
+                    </div>
 
                 {% elif field.name == 'tags' %}
                     <div><p>{{ field.label_tag }}</p></div>
                     {% for tag in field.field.queryset %}
                     <span class="tag-name">
                         <input type="checkbox" name="{{ field.name }}" value="{{ tag.id }}"
-                            {% if tag in field.value.all %} checked {% endif %}>
+                            {% if tag.id in field.value %} checked {% endif %}>
                             <p>{{ tag }}</p>
                     </span>
                     {% empty %}

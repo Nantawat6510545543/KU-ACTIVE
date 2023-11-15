@@ -20,7 +20,9 @@ from django.views.generic import RedirectView
 from . import views
 from mysite.settings import DEBUG
 
+
 admin.site.site_header = "Action Administration"
+
 urlpatterns = [
     path('', RedirectView.as_view(pattern_name='action:index',
                                   permanent=False)),

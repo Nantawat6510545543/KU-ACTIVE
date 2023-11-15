@@ -12,11 +12,15 @@ class ActivityModelTest(TestCase):
         time = timezone.now()
 
         self.activity_data = {
+            'title': "activity01",
             'owner': self.user_list[0],
             'pub_date': time,
             'end_date': time + timezone.timedelta(days=1),
             'start_date': time + timezone.timedelta(days=2),
             'last_date': time + timezone.timedelta(days=3),
+            'place': '',
+            'description': "this is activity",
+            'full_description': '',
             'participant_limit': 5,
             'tags': self.tag_list
         }
@@ -27,13 +31,13 @@ class ActivityModelTest(TestCase):
         activity = self.activity
         data = self.activity_data
 
-        self.assertEqual(activity.owner, data['owner'])
-        self.assertEqual(activity.start_date, data['start_date'])
-        self.assertEqual(activity.last_date, data['last_date'])
-        self.assertEqual(activity.pub_date, data['pub_date'])
-        self.assertEqual(activity.end_date, data['end_date'])
-        self.assertEqual(activity.participant_limit, data['participant_limit'])
-        self.assertCountEqual(activity.tags.all(), data['tags'])
+        # Check every attribute of model object equal to a manual object
+        for key, value in data.items():
+            if key == 'tags':  # modify activity.tags to list
+                self.assertEqual(list(activity.tags.all()), value)
+            else:
+                # getattr loops over all attributes in an object (model)
+                self.assertEqual(getattr(activity, key), value)
 
     def test_participant_count(self):
         self.assertEqual(self.activity.participant_count, 0)
@@ -61,7 +65,8 @@ class ActivityModelTest(TestCase):
         # closed
         past_time = timezone.now() - timezone.timedelta(days=1)
         self.activity.end_date = past_time
-        self.assertEqual(self.activity.time_remain, timezone.timedelta(seconds=0))
+        self.assertEqual(self.activity.time_remain,
+                         timezone.timedelta(seconds=0))
 
     def test_remaining_space(self):
         self.activity.participant_limit = 0
