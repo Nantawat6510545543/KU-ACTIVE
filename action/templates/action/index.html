@@ -3,6 +3,7 @@
 
 {% comment %} TODO, use Javscript instead of manual if/else {% endcomment %}
 {% block content %}
+
 <div class="search-system">
     <form action="{% url 'action:index' %}">
 <!--        <select class="left-search-criteria" name="sort">-->
@@ -17,8 +18,8 @@
             </option>
         {% endfor %}
         </select>
-        <input type="search" class="search-bar" name="q" 
-            placeholder=" {% if not request.session.query %}Search :{% endif %}"
+        <input type="search" class="search-bar" name="q"
+            placeholder="{% if not request.session.query %}Search :{% endif %}"
             value="{% if request.session.query %}{{ request.session.query }}{% endif %}">
         <button type="submit" class="search-button">Search</button>
     </form>
