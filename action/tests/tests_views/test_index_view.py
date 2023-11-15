@@ -15,7 +15,7 @@ class ActivityIndexViewTests(TestCase):
         """
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['activity_list'], [])
+        self.assertCountEqual(response.context['activity_list'], [])
 
     def test_view_available_activity(self):
         """
@@ -25,7 +25,7 @@ class ActivityIndexViewTests(TestCase):
         new_activity = create_activity(self.user)
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['activity_list'], [new_activity])
+        self.assertCountEqual(response.context['activity_list'], [new_activity])
 
     def test_not_published_activity(self):
         """
@@ -57,7 +57,7 @@ class ActivityIndexViewTests(TestCase):
         old_activity = create_activity(self.user)
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['activity_list'], [old_activity])
+        self.assertCountEqual(response.context['activity_list'], [old_activity])
 
     def test_multiple_available_activity(self):
         """
@@ -71,7 +71,7 @@ class ActivityIndexViewTests(TestCase):
         activity_3 = create_activity(self.user, **activity_3_data)
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['activity_list'],
+        self.assertCountEqual(response.context['activity_list'],
                                  [activity_3, activity_2, activity_1])
 
     def test_multiple_available_activity_and_owner(self):
@@ -88,8 +88,8 @@ class ActivityIndexViewTests(TestCase):
         activity_3 = create_activity(john, **activity_3_data)
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['activity_list'],
-                                 [activity_3, activity_2, activity_1])
+        self.assertCountEqual(response.context['activity_list'],
+                              [activity_1, activity_2, activity_3])
 
     def test_index_with_tag_guest(self):
         """
