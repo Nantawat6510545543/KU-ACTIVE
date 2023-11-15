@@ -7,3 +7,4 @@ linux-setup-script.sh
 window-setup-script.bat
 sample.env
 .coverage
+action/tests
