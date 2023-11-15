@@ -41,7 +41,7 @@ class ActivityIndexViewTests(TestCase):
         new_activity = create_activity(self.user, **update_date)
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['activity_list'], [])
+        self.assertCountEqual(response.context['activity_list'], [])
 
     def test_activity_published_and_yet(self):
         """
