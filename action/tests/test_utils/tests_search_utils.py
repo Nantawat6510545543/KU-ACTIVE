@@ -1,10 +1,11 @@
 import logging
 import unittest
+from django.contrib.auth.models import AnonymousUser
 from django.urls import reverse
 from django.utils import timezone
 from django.test import RequestFactory, TestCase
 from action.utils.search_utils import get_index_queryset
-from action.tests.utils import create_activity, create_activity_status, create_tag, create_user, quick_join
+from action.tests.utils import create_activity, create_activity_status, create_friend_status, create_tag, create_user, quick_join
 
 
 class SearchUtilsTests(TestCase):
@@ -12,10 +13,7 @@ class SearchUtilsTests(TestCase):
         logging.disable(logging.CRITICAL)  # Disable error message during unittest
         self.factory = RequestFactory()
         self.user = create_user()
-        self.tags = [create_tag(f"Tag{i}") for i in range(1, 6)]
-        # self.login_activity = [
-        #     create_activity(owner=self.user)
-        # ]
+        # self.tags = [create_tag(f"Tag{i}") for i in range(1, 6)]
 
     def test_selection(self):
         response = self.client.get(reverse('action:index'), {'tag': 'title', 'q': 'test'})
@@ -93,3 +91,53 @@ class SearchUtilsTests(TestCase):
             owner=request.user, title="Test Recent", pub_date=timezone.now() - timezone.timedelta(seconds=10000))
         query = get_index_queryset(request).first()
         self.assertEqual(query, recent_activity)
+
+    def test_registered_tag(self):
+        request = self.factory.get(reverse('action:index'), {'tag': 'registered'})
+        request.user = self.user
+        creator = create_user(username="Creator")
+
+        # not registered case
+        activity = create_activity(owner=creator, title="Test Registered Tag")
+        query = get_index_queryset(request).first()
+        self.assertIsNone(query, "Registered should be None, no registered yet")
+
+        # registered case
+        create_activity_status(request.user, activity)
+        query = get_index_queryset(request).first()
+        self.assertEqual(query, activity)
+
+    def test_favorited_tag(self):
+        request = self.factory.get(reverse('action:index'), {'tag': 'favorited'})
+        request.user = self.user
+        creator = create_user(username="Creator")
+
+        # not favorited case
+        activity = create_activity(owner=creator, title="Test Favorited Tag")
+        query = get_index_queryset(request).first()
+        self.assertIsNone(query, "Favorite should be None, no favorite yet")
+
+        # favorited case
+        create_activity_status(request.user, activity, is_favorited=True)
+        query = get_index_queryset(request).first()
+        self.assertEqual(query, activity)
+
+    def test_friends_tag(self):
+        request = self.factory.get(reverse('action:index'), {'tag': 'friend_joined'})
+        request.user = self.user
+        friend = create_user(username="Friend")
+
+        # not friend case
+        activity = create_activity(owner=self.user, title="Test Friend_joined Tag")
+        query = get_index_queryset(request).first()
+        self.assertIsNone(query, "Friend should be None, no friend yet")
+
+        # friend case, not joined
+        create_friend_status(request.user, friend, request_status="Accepted")
+        query = get_index_queryset(request).first()
+        self.assertIsNone(query, "Friend exists, but didn't join yet")
+
+        # friend case, joined
+        create_activity_status(friend, activity)
+        query = get_index_queryset(request).first()
+        self.assertEqual(query, activity)

@@ -53,6 +53,7 @@ def create_user(username='tester', password='password', **kwargs):
     if user_fields["active"] is not None:
         user.active = user_fields["active"]
 
+    user.save()
     return user
 
 
@@ -148,7 +149,9 @@ def create_friend_status(sender: User, receiver: User,
         friend_status.request_status = request_status
         friend_status.is_friend = request_status == 'Accepted'
 
+    friend_status.save()
     return friend_status
+
 
 def quick_join(participants, activity):
     """
