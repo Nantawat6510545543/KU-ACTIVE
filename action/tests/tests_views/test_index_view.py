@@ -90,3 +90,33 @@ class ActivityIndexViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertQuerysetEqual(response.context['activity_list'],
                                  [activity_3, activity_2, activity_1])
+
+    def test_index_with_tag_guest(self):
+        """
+        Guest should not be able to view pages with tag.
+        Should be redirected.
+        """
+        # Try to access registered page.
+        response = self.client.get(reverse('action:index') + "?tag=registered")
+        self.assertEqual(response.status_code, 302)
+        # Try to access favorited page.
+        response = self.client.get(reverse('action:index') + "?tag=favorited")
+        self.assertEqual(response.status_code, 302)
+        # Try to access friend_joined page.
+        response = self.client.get(reverse('action:index') + "?tag=friend_joined")
+        self.assertEqual(response.status_code, 302)
+
+    def test_index_with_tag_authenticated(self):
+        """
+        Authenticated users should be able to view pages with tag.
+        """
+        self.client.force_login(self.user)
+        # Try to access registered page.
+        response = self.client.get(reverse('action:index') + "?tag=registered")
+        self.assertEqual(response.status_code, 200)
+        # Try to access favorited page.
+        response = self.client.get(reverse('action:index') + "?tag=favorited")
+        self.assertEqual(response.status_code, 200)
+        # Try to access friend_joined page.
+        response = self.client.get(reverse('action:index') + "?tag=friend_joined")
+        self.assertEqual(response.status_code, 200)
