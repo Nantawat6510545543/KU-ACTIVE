@@ -6,11 +6,6 @@
 
 <div class="search-system">
     <form action="{% url 'action:index' %}">
-<!--        <select class="left-search-criteria" name="sort">-->
-<!--            <option value="upcoming">Upcoming</option>-->
-<!--            <option value="popularity">Popularity</option>-->
-<!--            <option value="recent">Recent</option>-->
-<!--        </select>-->
         <select class="search-criteria" name="tag">
         {% for tag_option, tag_label in tags %}
             <option value="{{ tag_option }}" {% if request.session.tag == tag_option %} selected {% endif %}>
@@ -21,6 +16,13 @@
         <input type="search" class="search-bar" name="q"
             placeholder="{% if not request.session.query %}Search :{% endif %}"
             value="{% if request.session.query %}{{ request.session.query }}{% endif %}">
+        <span class="categories">
+            <select class="tag-search" name="q" style="display:none;">
+                {% for tag in categories %}
+                    <option value="{{ tag }}"> {{ tag }} </option>
+                {% endfor %}
+            </select>
+        </span>
         <button type="submit" class="search-button">Search</button>
     </form>
 </div>

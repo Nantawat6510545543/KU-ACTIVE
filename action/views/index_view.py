@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 from django.views import generic
 
+from action.models import Tag
 from action.utils.search_utils import BaseSearcher
 
 TAG_OPTIONS = [
@@ -37,5 +38,6 @@ class IndexView(generic.ListView):
         context = super().get_context_data(**kwargs)
 
         # Add the tag options to the context
+        context['categories'] = Tag.objects.all()
         context['tags'] = TAG_OPTIONS
         return context

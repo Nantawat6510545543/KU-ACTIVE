@@ -1,12 +1,36 @@
-document.addEventListener("DOMContentLoaded", function() {
+function setupSearchFunction() {
     var selectElement = document.querySelector('.search-criteria');
     var inputElement = document.querySelector('.search-bar');
+    var dropdownElement = document.querySelector('.tag-search');
 
-    selectElement.addEventListener('change', function() {
+    function updateSearchUI() {
         if (selectElement.value === 'date') {
             inputElement.type = 'datetime-local';
+            inputElement.style.display = 'inline-block';
+            inputElement.disabled = false;
+            dropdownElement.disabled = true;
+            dropdownElement.style.display = 'none';
+        } else if (selectElement.value === 'categories') {
+            inputElement.style.display = 'none';
+            dropdownElement.style.display = 'inline-block';
+            inputElement.disabled = true;
+            dropdownElement.disabled = false;
         } else {
             inputElement.type = 'text';
+            inputElement.style.display = 'inline-block';
+            inputElement.disabled = false;
+            dropdownElement.disabled = true;
+            dropdownElement.style.display = 'none';
         }
-    });
-});
+    }
+
+    // setup
+    updateSearchUI();
+    selectElement.addEventListener('change', updateSearchUI);
+}
+
+// Call the Function on initial page load
+document.addEventListener("DOMContentLoaded", setupSearchFunction);
+
+// Call the Function when the page is refreshed
+window.addEventListener('load', setupSearchFunction);
