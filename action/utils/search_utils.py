@@ -16,12 +16,13 @@ class BaseSearcher:
         pub_date__lte=timezone.now()).order_by('-pub_date')
 
     def set_searcher(self):
+        print(f"{self.tag =}")
         match self.tag:
             case None: searcher = IndexSearcher(self.request)
             case 'title': searcher = TitleSearcher(self.request)
             case 'owner': searcher = OwnerSearcher(self.request)
             case 'date': searcher = DateSearcher(self.request)
-            case 'tag': searcher = TagSearcher(self.request)
+            case 'categories': searcher = TagSearcher(self.request)
             case 'place': searcher = PlaceSearcher(self.request)
             case 'upcoming': searcher = UpcomingSearcher(self.request)
             case 'popular': searcher = PopularSearcher(self.request)
@@ -54,8 +55,9 @@ class OwnerSearcher(BaseSearcher):
 # TODO
 class DateSearcher(BaseSearcher):
     def get_index_query(self):
-        start_date, end_date = self.query
-        return self.activities.filter(pub_date__range=(start_date, end_date))
+        start_date = self.query
+        # TODO replace timezone.now() with end_date
+        return self.activities.filter(pub_date__range=(start_date, timezone.now()))
 
 
 class TagSearcher(BaseSearcher):
@@ -115,3 +117,29 @@ class RegisteredSearcher(LoginRequiredMixin, BaseSearcher):
 class FavoritedSearcher(LoginRequiredMixin, BaseSearcher):
     def get_index_query(self):
         return self.activities.filter(id__in=self.user.favorited_activity)
+
+
+class BaseFilterSearcher(BaseSearcher):
+    def __init__(self, request: HttpRequest):
+        self.request = request
+        self.query = request.GET.get('q')
+        self.tag = request.GET.get('tag')
+        self.user = request.user
+
+        self.activities = Activity.objects.filter(
+        pub_date__lte=timezone.now()).order_by('-pub_date')
+
+    def set_filter_searcher(self):
+        match self.tag:
+            case 'upcoming': searcher = UpcomingSearcher(self.request)
+            case 'popular': searcher = PopularSearcher(self.request)
+            case 'recent': searcher = RecentSearcher(self.request)
+            case 'friend_joined': searcher = FriendJoinedSearcher(self.request)
+            case 'registered': searcher = RegisteredSearcher(self.request)
+            case 'favorited': searcher = FavoritedSearcher(self.request)
+            case _: raise ValueError("Invalid Tag")
+        self.searcher = searcher
+
+    def get_index_query(self):
+        self.set_filter_searcher()
+        return self.searcher.get_index_query()

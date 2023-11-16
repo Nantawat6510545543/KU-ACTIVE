@@ -6,9 +6,9 @@ from action.utils.search_utils import BaseSearcher
 TAG_OPTIONS = [
     ('title', 'Title'),
     ('owner', 'Owner'),
-    ('tag', 'Tag'),
+    ('categories', 'Categories'),
     ('place', 'Place'),
-    ('start_date', 'Date'),
+    ('date', 'Date'),
 ]
 
 # Some tag requires login
