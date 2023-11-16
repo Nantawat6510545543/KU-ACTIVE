@@ -103,14 +103,14 @@ class FriendJoinedSearcher(LoginRequiredMixin, BaseSearcher):
         user_activity_status = ActivityStatus.objects.filter(
             participants__in=self.user.friends, is_participated=True)
 
-        return self.activities.filter(Q(activity__in=user_activity_status))
+        return self.activities.filter(activity__in=user_activity_status).distinct()
 
 
 class RegisteredSearcher(LoginRequiredMixin, BaseSearcher):
     def get_index_query(self):
-        return self.activities.filter(Q(id__in=self.user.participated_activity))
+        return self.activities.filter(id__in=self.user.participated_activity)
 
 
 class FavoritedSearcher(LoginRequiredMixin, BaseSearcher):
     def get_index_query(self):
-        return self.activities.filter(Q(id__in=self.user.favorited_activity))
+        return self.activities.filter(id__in=self.user.favorited_activity)
