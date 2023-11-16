@@ -15,7 +15,7 @@ class ActivityIndexViewTests(TestCase):
         """
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['activity_list'], [])
+        self.assertCountEqual(response.context['activity_list'], [])
 
     def test_view_available_activity(self):
         """
@@ -25,7 +25,7 @@ class ActivityIndexViewTests(TestCase):
         new_activity = create_activity(self.user)
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['activity_list'], [new_activity])
+        self.assertCountEqual(response.context['activity_list'], [new_activity])
 
     def test_not_published_activity(self):
         """
@@ -41,7 +41,7 @@ class ActivityIndexViewTests(TestCase):
         new_activity = create_activity(self.user, **update_date)
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['activity_list'], [])
+        self.assertCountEqual(response.context['activity_list'], [])
 
     def test_activity_published_and_yet(self):
         """
@@ -57,7 +57,7 @@ class ActivityIndexViewTests(TestCase):
         old_activity = create_activity(self.user)
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['activity_list'], [old_activity])
+        self.assertCountEqual(response.context['activity_list'], [old_activity])
 
     def test_multiple_available_activity(self):
         """
@@ -71,7 +71,7 @@ class ActivityIndexViewTests(TestCase):
         activity_3 = create_activity(self.user, **activity_3_data)
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['activity_list'],
+        self.assertCountEqual(response.context['activity_list'],
                                  [activity_3, activity_2, activity_1])
 
     def test_multiple_available_activity_and_owner(self):
@@ -88,5 +88,35 @@ class ActivityIndexViewTests(TestCase):
         activity_3 = create_activity(john, **activity_3_data)
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['activity_list'],
-                                 [activity_3, activity_2, activity_1])
+        self.assertCountEqual(response.context['activity_list'],
+                              [activity_1, activity_2, activity_3])
+
+    def test_index_with_tag_guest(self):
+        """
+        Guest should not be able to view pages with tag.
+        Should be redirected.
+        """
+        # Try to access registered page.
+        response = self.client.get(reverse('action:index') + "?tag=registered")
+        self.assertEqual(response.status_code, 302)
+        # Try to access favorited page.
+        response = self.client.get(reverse('action:index') + "?tag=favorited")
+        self.assertEqual(response.status_code, 302)
+        # Try to access friend_joined page.
+        response = self.client.get(reverse('action:index') + "?tag=friend_joined")
+        self.assertEqual(response.status_code, 302)
+
+    def test_index_with_tag_authenticated(self):
+        """
+        Authenticated users should be able to view pages with tag.
+        """
+        self.client.force_login(self.user)
+        # Try to access registered page.
+        response = self.client.get(reverse('action:index') + "?tag=registered")
+        self.assertEqual(response.status_code, 200)
+        # Try to access favorited page.
+        response = self.client.get(reverse('action:index') + "?tag=favorited")
+        self.assertEqual(response.status_code, 200)
+        # Try to access friend_joined page.
+        response = self.client.get(reverse('action:index') + "?tag=friend_joined")
+        self.assertEqual(response.status_code, 200)
