@@ -95,14 +95,15 @@ table.style1 a {
 
 /* Activity box */
 .activity {
+    margin: 30px;
     padding: 10px;
     background-color: white;
     width: 400px;
-    margin: auto;
     border-radius:10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19);
     margin-bottom:30px;
+    cursor: pointer;
 
     text-align: center;
     font-family:sans-serif;
@@ -114,6 +115,8 @@ table.style1 a {
 }
 
 .activity:hover {
+    margin: 20px;
+    padding: 20px;
     width: 410px;
 }
 
@@ -157,30 +160,6 @@ table.style1 a {
     margin: 10px 20px;
 }
 
-
-.detail-button {
-    padding:10px 0px;
-    margin-bottom:5px
-}
-
-.detail-button a {
-    font-size: 25px;
-    padding: 10px 158px;
-    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
-    0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    background: #04AA6D;
-    border: none;
-    border-radius: 10px;
-    color: white;
-    text-decoration: none;
-    transition: 0.3s;
-    cursor: pointer;
-}
-
-.detail-button a:hover {
-    background: #04DD6D;
-    color:white;
-}
 
 @media only screen and (max-width: 1239px) and (min-width: 1014px) {
     .activity {

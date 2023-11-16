@@ -27,7 +27,7 @@
 
 <div class="gird-box">
 {% for activity in activity_list %}
-    <div class="activity">
+    <div class="activity" onclick="location.href='{% url 'action:detail' activity.id %}';">
         <div class="activity-pics">
             <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
                         {% else %} {% static 'action/images/background.png' %}
@@ -47,9 +47,6 @@
         <div class="shot-detail">
             <span><strong>Owner:</strong> {{ activity.owner.username }}</span>
             <span><i class="fas fa-calendar"></i> {{ activity.start_date }}</span>
-        </div>
-        <div class="detail-button">
-            <a href="{% url 'action:detail' activity.id %}">Detail</a>
         </div>
     </div>
 {% empty %}
