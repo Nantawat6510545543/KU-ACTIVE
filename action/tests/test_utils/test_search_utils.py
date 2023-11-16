@@ -1,5 +1,6 @@
 import logging
 import unittest
+
 from django.urls import reverse
 from django.utils import timezone
 from django.test import RequestFactory, TestCase
@@ -10,7 +11,6 @@ from action.tests.utils import create_activity, create_activity_status, create_f
 class SearchUtilsTests(TestCase):
     def setUp(self) -> None:
         logging.disable(logging.CRITICAL)  # Disable error message during unittest
-        # self.searcher = BaseSearcher()
         self.factory = RequestFactory()
         self.user = create_user()
         # self.tags = [create_tag(f"Tag{i}") for i in range(1, 6)]
