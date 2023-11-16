@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count, Q
+from django.db.models import Count
 from django.http import HttpRequest
 from django.utils import timezone
 
@@ -51,10 +51,11 @@ class OwnerSearcher(BaseSearcher):
     def get_index_query(self):
         return self.activities.filter(owner__username__icontains=self.query)
 
-
+# TODO
 class DateSearcher(BaseSearcher):
     def get_index_query(self):
-        return self.activities.filter(date__icontains=self.query)
+        start_date, end_date = self.query
+        return self.activities.filter(pub_date__range=(start_date, end_date))
 
 
 class TagSearcher(BaseSearcher):
