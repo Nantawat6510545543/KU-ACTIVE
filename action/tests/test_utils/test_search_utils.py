@@ -1,5 +1,4 @@
 import logging
-import unittest
 
 from django.urls import reverse
 from django.utils import timezone
@@ -45,10 +44,17 @@ class SearchUtilsTests(TestCase):
         query = searcher.get_index_query().first()
         self.assertEqual(query, activity_tester100)
 
-    # TODO
-    @unittest.skip('Will re-implement after feature is properly implemented')
-    def test_tag_tag(self):
-        pass
+    # TODO change tag to categories + add multiple tag support????
+    def test_categories_tag(self):
+        request = self.factory.get(reverse('action:index'), {'tag': 'categories', 'q': 'Electronics'})
+        request.user = self.user
+        # this should be categories='Electronics' instead
+        activity_tag = create_tag(name='electronics')
+        activity_categories = create_activity(owner=request.user, title="Test Categories", tags=[activity_tag])
+
+        searcher = BaseSearcher(request)
+        query = searcher.get_index_query().first()
+        self.assertEqual(query, activity_categories)
 
     def test_place_tag(self):
         request = self.factory.get(reverse('action:index'), {'tag': 'place', 'q': 'Home'})

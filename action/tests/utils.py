@@ -1,6 +1,7 @@
 from django.contrib.sites.models import Site
 from django.utils import timezone
 from allauth.socialaccount.models import SocialApp
+
 from action.models import User, Activity, ActivityStatus, FriendStatus, Tag
 from mysite.settings import SITE_ID, SITE_NAME, SITE_DOMAIN
 
@@ -56,12 +57,8 @@ def create_user(username='tester', password='password', **kwargs):
     user.save()
     return user
 
-
 def create_tag(name):
-    tag = Tag(name=name)
-    tag.save()
-    return tag
-
+    return Tag.objects.create(name=name)
 
 def create_activity(owner, **kwargs):
     defaults = {
@@ -137,8 +134,10 @@ def create_friend_status(sender: User, receiver: User,
         - The created FriendStatus object will have an 'is_friend' field set to True if the
           request_status is 'Accepted', indicating that the users are now friends.
     """
+    STATUS_CHOICES = [choice[0] for choice in FriendStatus.STATUS_CHOICES]
+
     if (request_status is not None and
-            request_status.title() not in ['Pending', 'Accepted', 'Declined']):
+            request_status.title() not in STATUS_CHOICES):
         request_status = None
 
     friend_status = FriendStatus.objects.create(
