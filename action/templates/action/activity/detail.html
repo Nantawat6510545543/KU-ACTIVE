@@ -64,7 +64,10 @@
                 <p><strong>Application Deadline:</strong> {{ activity.end_date }}</p>
                 <p><strong>Date of Activity:</strong> {{ activity.start_date }}</p>
                 <p><strong>Last date of activity:</strong> {{ activity.last_date }}</p>
-                <p><strong>Place:</strong> {{ activity.place }}</p>
+                <p>
+                    <strong>Place: </strong>
+                    <a href="{% url 'action:index' %}?tag=place&q={{ activity.place }}">{{ activity.place }}</a>
+                </p>
                 <p><strong>Participant Limit:</strong>
                     {% if activity.participant_limit %}
                         {{ activity.participant_limit }}
@@ -85,10 +88,10 @@
 
             </div>
             <div class="tags">
-                <p><strong>Tags:</strong></p>
+                <p><strong>Categories:</strong></p>
                 <ul>
                     {% for tag in activity.tags.all %}
-                        <li>{{ tag.name }}</li>
+                        <li><a href="{% url 'action:index' %}?tag=categories&q={{ tag.name }}">{{ tag.name }}</a></li>
                     {% empty %}
                         <li>No tags available for this activity.</li>
                     {% endfor %}
