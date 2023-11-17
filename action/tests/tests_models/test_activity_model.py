@@ -7,7 +7,7 @@ class ActivityModelTest(TestCase):
 
     def setUp(self):
         self.user_list = [utils.create_user(f'tester{i}') for i in range(1, 4)]
-        self.tag_list = [utils.create_tag(name=f'Tag{i}') for i in range(1, 3)]
+        self.category_list = [utils.create_category(name=f'Category{i}') for i in range(1, 3)]
 
         time = timezone.now()
 
@@ -22,7 +22,7 @@ class ActivityModelTest(TestCase):
             'description': "this is activity",
             'full_description': '',
             'participant_limit': 5,
-            'tags': self.tag_list
+            'categories': self.category_list
         }
 
         self.activity = utils.create_activity(**self.activity_data)
@@ -33,8 +33,8 @@ class ActivityModelTest(TestCase):
 
         # Check every attribute of model object equal to a manual object
         for key, value in data.items():
-            if key == 'tags':  # modify activity.tags to list
-                self.assertEqual(list(activity.tags.all()), value)
+            if key == 'categories':  # modify activity.tags to list
+                self.assertEqual(list(activity.categories.all()), value)
             else:
                 # getattr loops over all attributes in an object (model)
                 self.assertEqual(getattr(activity, key), value)

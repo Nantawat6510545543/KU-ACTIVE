@@ -1,4 +1,5 @@
 from datetime import timedelta
+from unicodedata import category
 
 from django.contrib import admin
 from django.db import models
@@ -6,7 +7,7 @@ from django.db.models import QuerySet
 from django.utils import timezone
 
 from .user import User
-from .tag import Tag
+from .category import Category
 
 
 class Activity(models.Model):
@@ -30,7 +31,7 @@ class Activity(models.Model):
     full_description = models.TextField('Full Description', blank=True)
     picture = models.TextField(blank=True, default='')
     background_picture = models.JSONField(blank=True, null=True)
-    tags = models.ManyToManyField(Tag, blank=True)
+    categories = models.ManyToManyField(Category, blank=True)
 
     @property
     def participants(self) -> QuerySet[User]:
@@ -56,7 +57,7 @@ class Activity(models.Model):
         Return the time remaining until registration close.
 
         Returns:
-            str: A string representing the time remaining.
+            timedelta: A string representing the time remaining.
                  If the remaining time is zero or negative,
                  it returns "0" second difference
         """

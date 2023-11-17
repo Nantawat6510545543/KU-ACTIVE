@@ -87,11 +87,13 @@
                 </p>
 
             </div>
-            <div class="tags">
+            <div class="category">
                 <p><strong>Categories:</strong></p>
                 <ul>
-                    {% for tag in activity.tags.all %}
-                        <li><a href="{% url 'action:index' %}?tag=categories&q={{ tag.name }}">{{ tag.name }}</a></li>
+                    {% for each_category in activity.categories.all %}
+                        <li><a href="{% url 'action:index' %}?tag=categories&q={{ each_category.name }}">
+                            {{ each_category.name }}</a>
+                        </li>
                     {% empty %}
                         <li>No tags available for this activity.</li>
                     {% endfor %}

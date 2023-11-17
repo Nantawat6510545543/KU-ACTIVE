@@ -62,7 +62,7 @@ class DateSearcher(BaseSearcher):
 
 class CategoriesSearcher(BaseSearcher):
     def get_index_query(self):
-        return self.activities.filter(tags__name__icontains=self.query)
+        return self.activities.filter(categories__name__icontains=self.query)
 
 
 class PlaceSearcher(BaseSearcher):

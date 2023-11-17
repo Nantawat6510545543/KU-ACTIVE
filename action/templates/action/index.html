@@ -18,8 +18,8 @@
             value="{% if request.session.query %}{{ request.session.query }}{% endif %}">
         <span class="categories">
             <select class="tag-search" name="q" style="display:none;">
-                {% for tag in categories %}
-                    <option value="{{ tag }}"> {{ tag }} </option>
+                {% for each_category in categories %}
+                    <option value="{{ each_category }}"> {{ each_category }} </option>
                 {% endfor %}
             </select>
         </span>

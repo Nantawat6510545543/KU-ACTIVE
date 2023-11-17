@@ -2,7 +2,7 @@ from django.contrib.sites.models import Site
 from django.utils import timezone
 from allauth.socialaccount.models import SocialApp
 
-from action.models import User, Activity, ActivityStatus, FriendStatus, Tag
+from action.models import User, Activity, ActivityStatus, FriendStatus, Category
 from mysite.settings import SITE_ID, SITE_NAME, SITE_DOMAIN
 
 
@@ -57,8 +57,8 @@ def create_user(username='tester', password='password', **kwargs):
     user.save()
     return user
 
-def create_tag(name):
-    return Tag.objects.create(name=name)
+def create_category(name):
+    return Category.objects.create(name=name)
 
 def create_activity(owner, **kwargs):
     defaults = {
@@ -71,7 +71,7 @@ def create_activity(owner, **kwargs):
         "place": None,
         "full_description": None,
         "participant_limit": None,
-        "tags": None,
+        "categories": None,
     }
 
     defaults.update(kwargs)
@@ -97,8 +97,8 @@ def create_activity(owner, **kwargs):
     if defaults["participant_limit"] is not None:
         activity.participant_limit = defaults["participant_limit"]
 
-    if defaults["tags"] is not None:
-        activity.tags.set(defaults["tags"])
+    if defaults["categories"] is not None:
+        activity.categories.set(defaults["categories"])
 
     activity.save()
     return activity

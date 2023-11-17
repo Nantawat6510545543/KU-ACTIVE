@@ -1,10 +1,11 @@
+from unicodedata import category
 from django import forms
-from action.models import Activity, Tag
+from action.models import Activity, Category
 
 
 class ActivityAdminForm(forms.ModelForm):
-    tags = forms.ModelMultipleChoiceField(
-        queryset=Tag.objects.all(),
+    categories = forms.ModelMultipleChoiceField(
+        queryset=Category.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=False,
     )

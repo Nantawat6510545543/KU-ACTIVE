@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.test import RequestFactory, TestCase
 from action.utils.search_utils import BaseSearcher
-from action.tests.utils import create_activity, create_activity_status, create_friend_status, create_tag, create_user, quick_join
+from action.tests.utils import create_activity, create_activity_status, create_friend_status, create_category, create_user, quick_join
 
 
 class SearchUtilsTests(TestCase):
@@ -12,7 +12,7 @@ class SearchUtilsTests(TestCase):
         logging.disable(logging.CRITICAL)  # Disable error message during unittest
         self.factory = RequestFactory()
         self.user = create_user()
-        # self.tags = [create_tag(f"Tag{i}") for i in range(1, 6)]
+        # self.categories = [create_categories(f"Category{i}") for i in range(1, 6)]
 
     def test_selection(self):
         response = self.client.get(reverse('action:index'), {'tag': 'title', 'q': 'test'})
@@ -49,8 +49,8 @@ class SearchUtilsTests(TestCase):
         request = self.factory.get(reverse('action:index'), {'tag': 'categories', 'q': 'Electronics'})
         request.user = self.user
         # this should be categories='Electronics' instead
-        activity_tag = create_tag(name='electronics')
-        activity_categories = create_activity(owner=request.user, title="Test Categories", tags=[activity_tag])
+        activity_tag = create_category(name='electronics')
+        activity_categories = create_activity(owner=request.user, title="Test Categories", categories=[activity_tag])
 
         searcher = BaseSearcher(request)
         query = searcher.get_index_query().first()
