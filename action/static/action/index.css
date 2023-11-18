@@ -98,6 +98,122 @@ table.style1 a {
     background: #00b14f;
 }
 
+.search-system .advance-button{
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    border-radius: 45px;
+    background-color: #04AA6D;
+    color: black;
+    background: white;
+    font-size: 20px;
+    height: 40px;
+    border: none;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 8px 12px;
+    transition: all .3s;
+}
+
+.search-system .advance-button:hover {
+    background:#ECECEC;
+}
+
+.advance-search {
+    text-align:left;
+    padding:auto;
+}
+
+/* Advance search */
+
+.advance-search {
+    background:#C0D64D;
+    padding: 0px 0px 20px 0px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border:solid 5px;
+    border-color: #00b14f;
+}
+.advance-search .categories-title {
+    font-family: Arial, Helvetica, sans-serif;
+    margin-left:20px;
+    text-decoration:underline;
+}
+
+.advance-search .advance-detail {
+    text-align:center;
+}
+
+.advance-search .grid-tag{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    gap: 10px;
+    margin:10px;
+    font-size:22px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.advance-search .grid-tag input{
+    width: 20px;
+    height: 20px;
+}
+
+.advance-search .advance-detail span {
+    width:200px;
+    display:inline-block;
+    text-decoration:underline;
+}
+
+.advance-search .advance-detail h1{
+    text-align:center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.advance-search .advance-detail input{
+    width:70%;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+    transition: width 0.4s ease-in-out;
+}
+
+.advance-search .advance-detail p {
+    font-size: 28px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.advance-search .submit-advance {
+    text-align:center;
+}
+
+.advance-search  button{
+    text-align:center;
+    width:60%;
+    background-color: #04AA6D;
+    border: none;
+    border-radius:10px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2),
+    0 12px 40px 0 rgba(0, 0, 0, 0.19);
+    transition:all .3s;
+    padding: 14px 40px;
+}
+
+.advance-search  button:hover{
+    background-color: white;
+    color: green;
+    font-size: 25px;
+}
+
 /* Gird for activity */
 .gird-box {
     display: grid;
@@ -126,10 +242,11 @@ table.style1 a {
     text-decoration:none;
     text-transform:capitalize;
     transition: .3s;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .activity:hover {
-    margin: 20px;
     padding: 20px;
     width: 410px;
 }

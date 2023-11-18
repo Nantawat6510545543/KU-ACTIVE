@@ -24,6 +24,47 @@
             </select>
         </span>
         <button type="submit" class="search-button">Search</button>
+        <span class="advance-button" onclick="AdvanceFunction()">Advance</span>
+    </form>
+</div>
+<div id="advance-search" class="advance-search" style="display:none;">
+    <form action="{% url 'action:index' %}">
+        <div class="categories-title">
+            <h1>categories</h1>
+        </div>
+        <div class="grid-tag">
+            {% for tag in categories %}
+                <div><input type="checkbox" name="q" value="{{ tag }}">{{ tag }}</input></div>
+            {% endfor %}
+        </div>
+        <div class="advance-detail">
+            <div>
+                <span><h1>Title :</h1></span>
+                <input type="search" class="search" name="tag"
+                        placeholder="{% if not request.session.query %}owner :{% endif %}">
+            </div>
+            <div>
+                <span><h1>Owner :</h1></span>
+                <input type="search" class="search" name="tag"
+                        placeholder="{% if not request.session.query %}owner :{% endif %}">
+            </div>
+            <div>
+                <span><h1>Place :</h1></span>
+                <input type="search" class="search" name="tag"
+                        placeholder="{% if not request.session.query %}place :{% endif %}">
+            </div>
+            <div>
+                <span><h1>Start-date :</h1></span>
+                <input type="datetime-local" class="search" name="tag">
+            </div>
+            <div>
+                <span><h1>End-date :</h1></span>
+                <input type="datetime-local" class="search" name="tag">
+            </div>
+        </div>
+        <div class="submit-advance">
+            <button type="submit">Search</button>
+        </div>
     </form>
 </div>
 
