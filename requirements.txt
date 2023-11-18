@@ -11,3 +11,4 @@ google-auth-oauthlib
 coverage
 gunicorn
 whitenoise
+selenium
