@@ -34,3 +34,12 @@ document.addEventListener("DOMContentLoaded", setupSearchFunction);
 
 // Call the Function when the page is refreshed
 window.addEventListener('load', setupSearchFunction);
+
+function AdvanceFunction() {
+  var advance = document.getElementById("advance-search");
+  if (advance.style.display === "block") {
+    advance.style.display = "none";
+  } else if (advance.style.display = "none"){
+    advance.style.display = "block";
+  }
+}
