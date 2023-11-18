@@ -1,12 +1,11 @@
-import time
-
-# from django.urls import reverse
+from django.urls import reverse
 from django.test import TestCase
-# from django.utils import timezone
+from django.utils import timezone
+from django.contrib.messages import get_messages
 
-# from action.tests.utils import create_activity, create_user, create_request
-from action.tests.utils import *
+from action.models import ActivityStatus
 from action.tests.end_to_end_base import EndToEndTestBase
+from action.tests.utils import create_user, create_activity
 
 
 class ActivityDetailViewTests(TestCase):
@@ -15,7 +14,7 @@ class ActivityDetailViewTests(TestCase):
         self.user = create_user(username="John", password="abc", **user_data)
         self.activity = create_activity(self.user)
 
-    def test_access_activity_detail_guest(self):
+    def test_view_activity_detail_guest(self):
         """
         Anyone should be able to view the detail of any available activity.
         """
@@ -23,7 +22,10 @@ class ActivityDetailViewTests(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_access_activity_detail_authenticated(self):
+        self.assertIn('activity', response.context)
+        self.assertEqual(response.context['activity'], self.activity)
+
+    def test_view_activity_detail_authenticated(self):
         """
         Authenticated users should be able to view
         the detail of any available activity.
@@ -33,10 +35,14 @@ class ActivityDetailViewTests(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_unavailable_activity_detail_redirect(self):
+        self.assertIn('activity', response.context)
+        self.assertEqual(response.context['activity'], self.activity)
+
+    def test_view_unavailable_activity_detail(self):
         """
         Should not be able to view the detail of unavailable activity.
         Should be redirected to index instead.
+        Failed messages should be shown.
         """
         update_date = {
             "pub_date": timezone.now() + timezone.timedelta(days=3),
@@ -48,8 +54,27 @@ class ActivityDetailViewTests(TestCase):
         url = reverse('action:detail', args=(new_activity.id,))
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
-        redirected_response = self.client.get(response.url)
-        self.assertEqual(redirected_response.status_code, 200)
+        self.assertRedirects(response, reverse('action:index'))
+        # Check the messages.
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'Activity does not exist or is not published yet.')
+
+    def test_view_nonexistent_activity_detail(self):
+        """
+        Should not be able to view the details of nonexistent activity.
+        Should be redirected to index instead.
+        Failed messages should be shown.
+        """
+        nonexistent_act_id = 999
+        url = reverse('action:detail', args=(nonexistent_act_id,))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('action:index'))
+        # Check the messages.
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'Activity does not exist or is not published yet.')
 
 
 class ActivityDetailViewTestsE2E(EndToEndTestBase):
