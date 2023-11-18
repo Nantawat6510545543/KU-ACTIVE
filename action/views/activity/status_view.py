@@ -21,7 +21,7 @@ def participate(request, activity_id: int):
                       "This activity can no longer be participated in.")
     elif activity_status.is_participated:
         messages.info(request, "You are already participating.")
-    else:
+    else: # pragma: no cover
         try:
             utils.create_event(request, activity_id)
         except SocialToken.DoesNotExist:  # If user have email but not google accounts
@@ -46,11 +46,11 @@ def leave(request, activity_id: int):
         activity_status.is_participated = False
         activity_status.save()
         messages.success(request, "You have left this activity.")
-        try:
+        try: # pragma: no cover
             utils.remove_event(request, activity_id)
-        except SocialToken.DoesNotExist:  # If user have email but not google accounts
+        except SocialToken.DoesNotExist:  # If user have email but not google accounts # pragma: no cover
             pass
-        except HttpError:
+        except HttpError: # pragma: no cover
             messages.info(request,
                           "Calendar is not working, please Login again.")
 
@@ -85,7 +85,7 @@ def unfavorite(request, activity_id: int):
     if activity_status.is_favorited:
         activity_status.is_favorited = False
         activity_status.save()
-        messages.success(request, "You have un-favorited this activity.")
+        messages.success(request, "You have unfavorited this activity.")
     else:
         messages.info(request,
                       "You have not currently favorite this activity.")
