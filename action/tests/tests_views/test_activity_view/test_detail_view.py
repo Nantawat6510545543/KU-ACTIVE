@@ -1,8 +1,12 @@
-from django.urls import reverse
-from django.test import TestCase
-from django.utils import timezone
+import time
 
-from action.tests.utils import create_activity, create_user
+# from django.urls import reverse
+from django.test import TestCase
+# from django.utils import timezone
+
+# from action.tests.utils import create_activity, create_user, create_request
+from action.tests.utils import *
+from action.tests.end_to_end_base import EndToEndTestBase
 
 
 class ActivityDetailViewTests(TestCase):
@@ -46,3 +50,47 @@ class ActivityDetailViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         redirected_response = self.client.get(response.url)
         self.assertEqual(redirected_response.status_code, 200)
+
+
+class ActivityDetailViewTestsE2E(EndToEndTestBase):
+    def setUp(self):
+        super().setUp()
+
+        self.user = create_user(username='user1', password='pass1')
+        self.login(username='user1', password='pass1')
+        self.activity = create_activity(self.user)
+        self.view = 'action:detail'
+
+        self.url = self.getUrl(self.view, (self.activity.id,))
+        self.browser.get(self.url)
+
+    def participated_count(self):
+        return ActivityStatus.objects.filter(
+            id__in=self.user.participated_activity).count()
+
+    def find_participate_button(self):
+        return self.browser.find_element(self.by.CLASS_NAME, "Participate")
+
+    def test_participate(self):
+        # Ensure user is not participating initially
+        self.assertEqual(self.participated_count(), 0)
+
+        # Participate and check button text
+        participate_button = self.find_participate_button()
+        self.assertEqual(participate_button.text, 'Participate')
+        participate_button.click()
+
+        # Check if button text changes after participating
+        participate_button = self.find_participate_button()
+        self.assertEqual(participate_button.text, 'Leave')
+
+        # Check if user is now participating
+        self.assertEqual(self.participated_count(), 1)
+
+        # Leave and check button text
+        participate_button.click()
+        participate_button = self.find_participate_button()
+        self.assertEqual(participate_button.text, 'Participate')
+
+        # Ensure user is no longer participating
+        self.assertEqual(self.participated_count(), 0)
