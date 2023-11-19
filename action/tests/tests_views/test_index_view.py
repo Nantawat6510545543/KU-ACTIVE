@@ -2,6 +2,7 @@ from django.utils import timezone
 from django.urls import reverse
 from django.test import TestCase
 from action.tests.utils import create_activity, create_user
+from action.tests.end_to_end_base import EndToEndTestBase
 
 
 class ActivityIndexViewTests(TestCase):
@@ -25,7 +26,8 @@ class ActivityIndexViewTests(TestCase):
         new_activity = create_activity(self.user)
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertCountEqual(response.context['activity_list'], [new_activity])
+        self.assertCountEqual(response.context['activity_list'],
+                              [new_activity])
 
     def test_not_published_activity(self):
         """
@@ -57,7 +59,8 @@ class ActivityIndexViewTests(TestCase):
         old_activity = create_activity(self.user)
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertCountEqual(response.context['activity_list'], [old_activity])
+        self.assertCountEqual(response.context['activity_list'],
+                              [old_activity])
 
     def test_multiple_available_activity(self):
         """
@@ -72,7 +75,7 @@ class ActivityIndexViewTests(TestCase):
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
         self.assertCountEqual(response.context['activity_list'],
-                                 [activity_3, activity_2, activity_1])
+                              [activity_3, activity_2, activity_1])
 
     def test_multiple_available_activity_and_owner(self):
         """
@@ -103,7 +106,8 @@ class ActivityIndexViewTests(TestCase):
         response = self.client.get(reverse('action:index') + "?tag=favorited")
         self.assertEqual(response.status_code, 302)
         # Try to access friend_joined page.
-        response = self.client.get(reverse('action:index') + "?tag=friend_joined")
+        response = self.client.get(
+            reverse('action:index') + "?tag=friend_joined")
         self.assertEqual(response.status_code, 302)
 
     def test_index_with_tag_authenticated(self):
@@ -118,5 +122,10 @@ class ActivityIndexViewTests(TestCase):
         response = self.client.get(reverse('action:index') + "?tag=favorited")
         self.assertEqual(response.status_code, 200)
         # Try to access friend_joined page.
-        response = self.client.get(reverse('action:index') + "?tag=friend_joined")
+        response = self.client.get(
+            reverse('action:index') + "?tag=friend_joined")
         self.assertEqual(response.status_code, 200)
+
+
+class ActivityIndexViewTestsE2E(EndToEndTestBase):
+    pass
