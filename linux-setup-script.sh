@@ -20,12 +20,6 @@ pip install -r requirements.txt
 # Create .env file
 cp sample.env .env
 
-# Install Django Debug Toolbar if DEBUG is True in .env
-if [ "$(grep -E '^\s*DEBUG\s*=\s*True' .env)" ]; then
-    echo "DEBUG is set to True. Installing Django Debug Toolbar..."
-    pip install django-debug-toolbar
-fi
-
 echo "Run migrations..."
 $PYTHON_CMD manage.py migrate
 
@@ -34,7 +28,3 @@ $PYTHON_CMD manage.py setup_oauth
 
 echo "Run tests..."
 $PYTHON_CMD manage.py test
-
-# Start the server
-echo "Starting the server..."
-$PYTHON_CMD manage.py runserver --insecure
