@@ -99,37 +99,71 @@ textarea {
     background-color: #f3f4f6;
 }
 
+.detail-slide-button {
+    height: 600px;
+    width: 100%;
+    margin-top: -600px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    line-height: 600px;
+    font-size: 60px;
+    cursor: pointer;
+}
 
-.tag-name {
-    background:red;
-    display:inline-block;
-    text-align: center;
-    list-style-type: none;
-    background-color: #B8B8B8;
-    margin:1% 1% 1% 0%;
-    padding:10px;
-    border-radius:45px;
+.detail-slide-button .left-hover-text {
+    text-align: left;
+    color: black;
+    width: 98%;
+    padding-left: 2%;
+    opacity: 0.5;
+}
+
+.detail-slide-button .left-hover-text:hover {
+    opacity: 0.8;
+}
+
+.detail-slide-button .right-hover-text {
+    text-align: right;
+    color: black;
+    width: 98%;
+    padding-right: 2%;
+    opacity: 0.5;
+}
+
+.detail-slide-button .right-hover-text:hover {
+    opacity: 0.8;
+}
+
+.detail-slide-button .grid-tag-name {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 10px;
+    margin:10px;
+    font-size:22px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.grid-tag-name {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 10px;
+    margin:10px;
+    font-size:22px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.grid-tag-name div {
+    background:white;
+    border-radius:5px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    width:300px;
-}
+    }
 
-.tag-name input[type='checkbox'] {
-    display:inline-block;
-    width: 10%;
-    height: 20px;
+.grid-tag-name input[type='checkbox'] {
     width: 20px;
-    margin:0%;
-    background-color: #eee;
-}
-
-.tag-name p{
-    display:inline-block;
-    font-size:25px;
-    font-weight: 500;
-    border: none;
-    padding: 0%;
-    margin:0%;
+    height: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .edit-inner-detail input[type='submit']{
@@ -158,17 +192,13 @@ textarea {
     }
 }
 
-@media screen and (max-width: 1170px) {
-    .edit-inner-detail input {
-        width: 100%;
+@media screen and (max-width: 1064px) {
+    .grid-tag-name {
+        display: grid;
+        grid-template-columns: auto auto ;
+        gap: 10px;
+        margin:10px;
+        font-size:22px;
+        font-family: Arial, Helvetica, sans-serif;
     }
-
-    input[type='checkbox'] {
-        width: 10%;
-    }
-    .tag-name {
-        margin-left:3%;
-        width: 90%;
-    }
-
 }

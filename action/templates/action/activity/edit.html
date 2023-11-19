@@ -29,31 +29,34 @@
                         <p>{{ field.label_tag }}</p>
                         <input id="fileInput" type="file" multiple name="{{ field.name }}">
                     </div>
-                    <a class="left-hover-text" onclick="plusDivs(-1)">&#10094;</a>
-                    <a class="right-hover-text" onclick="plusDivs(1)">&#10095;</a>
-
                     <div class="background-slide" id="backgroundSlide">
                         {% if activity.background_picture %}
                             {% for value in activity.background_picture.values %}
                                 <img class="image-Slides" src="data:image/png;base64,{{ value }}"
-                                    alt="Activity Picture" width="400" height="240">
+                                    alt="Activity Picture" width="100%">
                             {% endfor %}
                         {% else %}
-                            <img src="{% static 'action/images/default-image.png' %}" alt="Default Picture">
+                            <img src="{% static 'action/images/default-image.png' %}" alt="Default Picture" width="100%">
                         {% endif %}
+                    </div>
+                    <div class="detail-slide-button">
+                        <a class="left-hover-text" onclick="plusDivs(-1)">&#10094;</a>
+                        <a class="right-hover-text" onclick="plusDivs(1)">&#10095;</a>
                     </div>
 
                 {% elif field.name == 'tags' %}
                     <div><p>{{ field.label_tag }}</p></div>
+                    <div class="grid-tag-name">
                     {% for tag in field.field.queryset %}
-                    <span class="tag-name">
-                        <input type="checkbox" name="{{ field.name }}" value="{{ tag.id }}"
-                            {% if tag.id in field.value %} checked {% endif %}>
-                            <p>{{ tag }}</p>
-                    </span>
+
+                        <div>
+                            <input type="checkbox" name="{{ field.name }}" value="{{ tag.id }}"
+                                {% if tag in field.value.all %} checked {% endif %}>{{ tag }}</input>
+                        </div>
                     {% empty %}
                         <p>No tag currently available.</p>
                     {% endfor %}
+                    </div>
 
                 {% else %}
                     <div class="heading-detail"><p>{{ field.label_tag }}</p>{{ field }}</div>
