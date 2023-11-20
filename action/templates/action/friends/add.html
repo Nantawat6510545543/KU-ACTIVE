@@ -1,6 +1,10 @@
 {% extends "action/friends/list.html" %}
 {% load static %}
 
+{% block title %}
+Friend
+{% endblock %}
+
 {% block friend %}
 <div class="friend-list-box">
     {% for each_friend in friend_add_list %}

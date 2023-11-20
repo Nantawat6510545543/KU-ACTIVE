@@ -1,6 +1,10 @@
 {% extends "action/base.html" %}
 {% load static %}
 
+{% block title %}
+Create
+{% endblock %}
+
 {% block content %}
 <h3 xmlns="http://www.w3.org/1999/html">
 <form method="post" enctype="multipart/form-data">
@@ -21,7 +25,7 @@
                     <img id="uploadedImage" src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
                          {% else %} {% static 'action/images/default-image.png' %}
                          {% endif %}"
-                    alt="{{ activity.title }}'s Picture" width="auto" height="240">
+                    alt="{{ activity.title }}'s Picture" width="100%" height="600">
 
                 {% elif field.name == 'background_picture' %}
                     <div class="heading-detail">
@@ -33,13 +37,14 @@
                         {% if activity.background_picture %}
                             {% for value in activity.background_picture.values %}
                                 <img class="image-Slides" src="data:image/png;base64,{{ value }}"
-                                    alt="Activity Picture" width="100%">
+                                    alt="Activity Picture" width="400" height="240">
                             {% endfor %}
                         {% else %}
-                            <img src="{% static 'action/images/default-image.png' %}" alt="Default Picture" width="100%">
+                            <img src="{% static 'action/images/default-image.png' %}" alt="Default Picture"
+                            width="100%" height="600">
                         {% endif %}
                     </div>
-                    <div class="detail-slide-button">
+                    <div class="slide-button">
                         <a class="left-hover-text" onclick="plusDivs(-1)">&#10094;</a>
                         <a class="right-hover-text" onclick="plusDivs(1)">&#10095;</a>
                     </div>

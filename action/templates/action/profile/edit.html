@@ -15,7 +15,7 @@ Edit profile
         <form method="post" action="{% url 'action:edit_profile' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <h1>
-                <img class="background-img" id="uploaded_background" src="{% if user.background_picture %} data:image/png;base64,{{ user.background_picture }} {% else %} {% static 'action/images/guest-img.png' %} {% endif %}"
+                <img class="background-img" id="uploaded_background" src="{% if user.background_picture %} data:image/png;base64,{{ user.background_picture }} {% else %} {% static 'action/images/background.png' %} {% endif %}"
                      alt="{{ user.username }}'s background_picture Profile Picture">
                 <div class="profile-img-box">
                     <img class="profile-img" id="uploaded_profile" src="{% if user.profile_picture %} data:image/png;base64,{{ user.profile_picture }} {% else %} {% static 'action/images/guest-img.png' %} {% endif %}"
