@@ -9,7 +9,7 @@ TAG_OPTIONS = [
     ('owner', 'Owner'),
     ('categories', 'Categories'),
     ('place', 'Place'),
-    ('date', 'Date'),
+    ('exact_date', 'Exact Date'),
 ]
 
 # Some tag requires login
@@ -23,7 +23,7 @@ class IndexView(generic.ListView):
     def get(self, request, *args, **kwargs):
         tag = request.GET.get('tag')
 
-        # Check if tag in register_tag_list and user is logged in
+        # User must log in to access registered tag list
         if tag in REGISTERED_TAG_LIST and not request.user.is_authenticated:
             return redirect('login')
 

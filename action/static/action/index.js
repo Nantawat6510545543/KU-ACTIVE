@@ -1,10 +1,10 @@
 function setupSearchFunction() {
     var selectElement = document.querySelector('.search-criteria');
     var inputElement = document.querySelector('.search-bar');
-    var dropdownElement = document.querySelector('.tag-search');
+    var dropdownElement = document.querySelector('.category-search');
 
     function updateSearchUI() {
-        if (selectElement.value === 'date') {
+        if (selectElement.value === 'date_exact') {
             inputElement.type = 'datetime-local';
             inputElement.style.display = 'inline-block';
             inputElement.disabled = false;
