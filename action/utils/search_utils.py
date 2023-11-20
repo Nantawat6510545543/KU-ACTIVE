@@ -33,25 +33,25 @@ class BaseSearcher:
 
     def set_searcher(self):
         match self.tag:
-            case None: searcher = IndexSearcher(self.request)
-            case 'title': searcher = TitleSearcher(self.request)
-            case 'owner': searcher = OwnerSearcher(self.request)
-            case 'date_start_point': searcher = DateSearcher(self.request)
-            case 'date_end_point': searcher = DateSearcher(self.request)
-            case 'date_exact': searcher = DateSearcher(self.request)
-            case 'categories': searcher = CategoriesSearcher(self.request)
-            case 'place': searcher = PlaceSearcher(self.request)
-            case 'upcoming': searcher = UpcomingSearcher(self.request)
-            case 'popular': searcher = PopularSearcher(self.request)
-            case 'recent': searcher = RecentSearcher(self.request)
-            case 'friend_joined': searcher = FriendJoinedSearcher(self.request)
-            case 'registered': searcher = RegisteredSearcher(self.request)
-            case 'favorited': searcher = FavoritedSearcher(self.request)
+            case None: searcher = IndexSearcher
+            case 'title': searcher = TitleSearcher
+            case 'owner': searcher = OwnerSearcher
+            case 'date_start_point': searcher = DateSearcher
+            case 'date_end_point': searcher = DateSearcher
+            case 'date_exact': searcher = DateSearcher
+            case 'categories': searcher = CategoriesSearcher
+            case 'place': searcher = PlaceSearcher
+            case 'upcoming': searcher = UpcomingSearcher
+            case 'popular': searcher = PopularSearcher
+            case 'recent': searcher = RecentSearcher
+            case 'friend_joined': searcher = FriendJoinedSearcher
+            case 'registered': searcher = RegisteredSearcher
+            case 'favorited': searcher = FavoritedSearcher
             case _: raise ValueError(f"Invalid Tag: {self.tag}")
-        self.searcher = searcher
+        self.searcher = searcher(self.request)
 
+    # Note: "is None" does not work with empty string/list/dict
     def get_index_query(self):
-        # Note: "is None" does not work with empty string/list/dict
         # print(f"{self.query_dict =}")
 
         # Case where query is None (not empty string), for tags without 'q' as url parameters.
@@ -62,10 +62,10 @@ class BaseSearcher:
             self.set_searcher()
             return self.searcher.get_index_query()
 
-        # Case where query exists (and empty string)
+        # Case where query exists
         for each_tag, each_query in self.query_dict.items():
             if not each_query:
-                continue  # Skip if query is empty
+                continue  # Skip if query is an empty string
 
             self.tag = each_tag
             self.set_searcher()
@@ -151,7 +151,7 @@ class PopularSearcher(BaseSearcher):
 
 class RecentSearcher(BaseSearcher):
     def get_index_query(self):
-        now = timezone.datetime.now()
+        now = timezone.now()
         delay = timezone.timedelta(days=7)
         activities = Activity.objects.order_by('-pub_date')
         return activities.filter(pub_date__range=(now - delay, now))
