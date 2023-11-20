@@ -8,28 +8,28 @@ from urllib.parse import parse_qs
 from action.models import Activity, ActivityStatus
 
 
-# idk why request.GET.getlist('q') doesn't return all item in q
-# so this is helper function to get all item in q
 def get_query_dict(request: HttpRequest):
+    """
+    Custom function that return dictionary of 
+    {request.GET.get('tag'): request.GET.get('tag')}
+    """
     # print(f"{request.META['QUERY_STRING'] =}")
     params = parse_qs(request.META['QUERY_STRING'], keep_blank_values=True)
     values_q = params.get('q', [])
     values_tag = request.GET.getlist('tag')
-    # print(f"{values_q =}")
-    # print(f"{values_tag =}")
+
     return dict(zip(values_tag, values_q))
 
 
 class BaseSearcher:
     def __init__(self, request: HttpRequest):
         self.request = request
-        self.query = request.GET.get('q')
-        self.tag = request.GET.get('tag')
         self.user = request.user
+        self.query_dict = get_query_dict(request)
+        self.tag = None
 
         self.activities = Activity.objects.filter(
         pub_date__lte=timezone.now()).order_by('-pub_date')
-
 
     def set_searcher(self):
         match self.tag:
@@ -51,13 +51,31 @@ class BaseSearcher:
         self.searcher = searcher
 
     def get_index_query(self):
-        query_dict = get_query_dict(self.request)
-        print(f"{query_dict =}")
-        self.set_searcher()
+        # Note: "is None" does not work with empty string/list/dict
+        # print(f"{self.query_dict =}")
 
-        # query_query | self.searcher.get_index_query()
-        # print(f"{query_query =}")
-        return self.searcher.get_index_query()
+        # Case where query is None (not empty string), for tags without 'q' as url parameters.
+        # Tags: upcoming, popular, recent, friend_joined, registered, favorited tags.
+        if not self.query_dict:
+            # This returns the last value of tag=, assuming there's only one tag= in url
+            self.tag = self.request.GET.get('tag')
+            self.set_searcher()
+            return self.searcher.get_index_query()
+
+        # Case where query exists (and empty string)
+        for each_tag, each_query in self.query_dict.items():
+            if not each_query:
+                continue  # Skip if query is empty
+
+            self.tag = each_tag
+            self.set_searcher()
+
+            # print(f"{self.tag=}")
+            # print(f"{each_query=}")
+            # print(f"{self.searcher=}")
+
+            self.activities &= self.searcher.get_index_query()
+        return self.activities
 
 
 class IndexSearcher(BaseSearcher):
@@ -67,24 +85,25 @@ class IndexSearcher(BaseSearcher):
 
 class TitleSearcher(BaseSearcher):
     def get_index_query(self):
-        return self.activities.filter(title__icontains=self.query)
+        title_query = self.query_dict.get('title', None)
+        return self.activities.filter(title__icontains=title_query)
 
 
 class OwnerSearcher(BaseSearcher):
     def get_index_query(self):
-        return self.activities.filter(owner__username__icontains=self.query)
+        owner_query = self.query_dict.get('owner', None)
+        return self.activities.filter(owner__username__icontains=owner_query)
 
 
 class DateSearcher(BaseSearcher):
     def get_index_query(self):
-        query_dict = get_query_dict(self.request)
-        filtered_activity = self.activities
-
         # Set the value to None if not specified, using empty string
         # (default for empty url params) wil causes invalid datetime format
-        start_point = query_dict.get('date_start_point', None)
-        end_point = query_dict.get('date_end_point', None)
-        exact_point = query_dict.get('date_exact', None)
+        start_point = self.query_dict.get('date_start_point', None)
+        end_point = self.query_dict.get('date_end_point', None)
+        exact_point = self.query_dict.get('date_exact', None)
+
+        filtered_activity = self.activities
 
         if exact_point:
             exact_date = datetime.strptime(exact_point, '%Y-%m-%dT%H:%M').date()
@@ -100,14 +119,16 @@ class DateSearcher(BaseSearcher):
         return filtered_activity
 
 
-class CategoriesSearcher(BaseSearcher):
+class CategoriesSearcher(BaseSearcher):  # Currently doesn't work
     def get_index_query(self):
-        return self.activities.filter(categories__name__icontains=self.query)
+        categories_query = self.query_dict.get('categories', None)
+        return self.activities.filter(categories__name__icontains=categories_query)
 
 
 class PlaceSearcher(BaseSearcher):
     def get_index_query(self):
-        return self.activities.filter(place__icontains=self.query)
+        place_query = self.query_dict.get('place', None)
+        return self.activities.filter(place__icontains=place_query)
 
 
 class UpcomingSearcher(BaseSearcher):
