@@ -37,13 +37,14 @@ Edit
                         {% if activity.background_picture %}
                             {% for value in activity.background_picture.values %}
                                 <img class="image-Slides" src="data:image/png;base64,{{ value }}"
-                                    alt="Activity Picture" width="100%">
+                                    alt="Activity Picture" width="100%" height="auto">
                             {% endfor %}
                         {% else %}
-                            <img src="{% static 'action/images/default-image.png' %}" alt="Default Picture" width="100%">
+                            <img src="{% static 'action/images/default-image.png' %}" alt="Default Picture"
+                            width="100%" height="auto">
                         {% endif %}
                     </div>
-                    <div class="detail-slide-button">
+                    <div class="slide-button">
                         <a class="left-hover-text" onclick="plusDivs(-1)">&#10094;</a>
                         <a class="right-hover-text" onclick="plusDivs(1)">&#10095;</a>
                     </div>
