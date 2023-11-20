@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.http import HttpRequest
@@ -37,7 +38,7 @@ class BaseSearcher:
             case 'owner': searcher = OwnerSearcher(self.request)
             case 'date_start_point': searcher = DateSearcher(self.request)
             case 'date_end_point': searcher = DateSearcher(self.request)
-            case 'date_exact': searcher = DateSearcher(self.request)  # might remove
+            case 'date_exact': searcher = DateSearcher(self.request)
             case 'categories': searcher = CategoriesSearcher(self.request)
             case 'place': searcher = PlaceSearcher(self.request)
             case 'upcoming': searcher = UpcomingSearcher(self.request)
@@ -50,13 +51,6 @@ class BaseSearcher:
         self.searcher = searcher
 
     def get_index_query(self):
-        self.set_searcher()
-        return self.searcher.get_index_query()
-
-
-    def get_index_query(self):
-        query_query = self.activities
-
         query_dict = get_query_dict(self.request)
         print(f"{query_dict =}")
         self.set_searcher()
@@ -84,17 +78,25 @@ class OwnerSearcher(BaseSearcher):
 class DateSearcher(BaseSearcher):
     def get_index_query(self):
         query_dict = get_query_dict(self.request)
-        start_point = query_dict['date_start_point'] or None
-        end_point = query_dict['date_end_point'] or None
-
         filtered_activity = self.activities
-        if query_dict['date_start_point']:
-            filtered_activity &= self.activities.filter(start_date__gte=(start_point))
-        
-        if query_dict['date_end_point']:
-            filtered_activity &= self.activities.filter(start_date__lte=(end_point))
 
-        print(f"{filtered_activity =}")
+        # Set the value to None if not specified, using empty string
+        # (default for empty url params) wil causes invalid datetime format
+        start_point = query_dict.get('date_start_point', None)
+        end_point = query_dict.get('date_end_point', None)
+        exact_point = query_dict.get('date_exact', None)
+
+        if exact_point:
+            exact_date = datetime.strptime(exact_point, '%Y-%m-%dT%H:%M').date()
+            filtered_activity &= self.activities.filter(start_date__date=exact_date)
+            return filtered_activity
+
+        if start_point:
+            filtered_activity &= self.activities.filter(start_date__gte=start_point)
+        
+        if end_point:
+            filtered_activity &= self.activities.filter(start_date__lte=end_point)
+
         return filtered_activity
 
 

@@ -9,7 +9,7 @@ TAG_OPTIONS = [
     ('owner', 'Owner'),
     ('categories', 'Categories'),
     ('place', 'Place'),
-    ('exact_date', 'Exact Date'),
+    ('date_exact', 'Exact Date'),
 ]
 
 # Some tag requires login
