@@ -94,7 +94,11 @@
             {% for message in messages %}
                 <div id="alert-msg" class="alert-msg">
                     <span class="close-msg" onclick="closeMsg()">&times;</span>
-                    <p>{{ message }}</p>
+                    {% if form.errors %}
+                        {{ form.errors }}
+                    {% else %}
+                        <p>{{ message }}</p>
+                    {% endif %}
                 </div>
             {% endfor %}
         {% endif %}

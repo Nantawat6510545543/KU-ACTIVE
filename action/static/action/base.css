@@ -260,23 +260,30 @@ nav {
 
 /* alert massage */
 .alert-msg {
+    width:70%;
+    list-style: none;
     text-align:center;
-    background-color: white;
-    border-radius: 1rem;
-    height: 50px;
-    width:50%;
+    border-radius:10px;
     margin: 10px auto;
-    padding-right: 20px;
-    padding-top: 1px;
+    background-color: white;
     opacity: 1;
     transition: all 1s;
+    padding:0%;
+}
+
+.alert-msg li {
+    list-style: none;
+    font-size: 20px;
+    padding:0%;
+    margin-left: -20px;
 }
 
 .alert-msg p{
     font-family: Arial, Helvetica, sans-serif;
+    padding: 10px 0px;
     font-weight: 600;
     color: black;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .close-msg {

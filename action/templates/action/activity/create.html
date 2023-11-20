@@ -14,7 +14,6 @@ Create
         </div>
         <div class="edit-inner-detail">
             {% csrf_token %}
-            {{ form.errors }}
 
             {% for field in form %}
                 {% if field.name == 'owner' %}
