@@ -33,14 +33,13 @@
         <div class="categories-title">
             <h1>Categories :</h1>
         </div>
-        {% comment %} <div class="grid-tag">
+        <div class="grid-tag">
             {% for each_category in categories %}
                 <div>
-                    <input type="checkbox" name="q" value="{{ each_category }}">{{ each_category }}</input>
-                    <input type="hidden" name="tag" value="categories">
+                    <input type="checkbox" name="category_q" value="{{ each_category }}">{{ each_category }}</input>
                 </div>
             {% endfor %}
-        </div> {% endcomment %}
+        </div>
         <div class="advance-detail">
             <div>
                 <span><h1>Title :</h1></span>

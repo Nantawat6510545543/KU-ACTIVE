@@ -11,7 +11,7 @@ from action.models import Activity, ActivityStatus
 def get_query_dict(request: HttpRequest):
     """
     Custom function that return dictionary of 
-    {request.GET.get('tag'): request.GET.get('tag')}
+    {request.GET.get('tag'): request.GET.get('q')}
     """
     # print(f"{request.META['QUERY_STRING'] =}")
     params = parse_qs(request.META['QUERY_STRING'], keep_blank_values=True)
@@ -21,7 +21,13 @@ def get_query_dict(request: HttpRequest):
     return dict(zip(values_tag, values_q))
 
 
-class BaseSearcher:
+#  Checkbox works differently than searchbox, so custom function is needed
+def get_categories_list(request: HttpRequest):
+    values_category_q = request.GET.getlist('category_q')
+    return values_category_q
+
+
+class BaseSearcher:  # TODO Dependency Injection!!!
     def __init__(self, request: HttpRequest):
         self.request = request
         self.user = request.user
@@ -40,6 +46,7 @@ class BaseSearcher:
             case 'date_end_point': searcher = DateSearcher
             case 'date_exact': searcher = DateSearcher
             case 'categories': searcher = CategoriesSearcher
+            case 'category_list': searcher = CategoryListSearcher
             case 'place': searcher = PlaceSearcher
             case 'upcoming': searcher = UpcomingSearcher
             case 'popular': searcher = PopularSearcher
@@ -53,7 +60,10 @@ class BaseSearcher:
     # Note: "is None" does not work with empty string/list/dict
     def get_index_query(self):
         # print(f"{self.query_dict =}")
+        category_dict = get_categories_list(self.request)
 
+        if category_dict:
+            self.activities = self.get_aaa()
         # Case where query is None (not empty string), for tags without 'q' as url parameters.
         # Tags: upcoming, popular, recent, friend_joined, registered, favorited tags.
         if not self.query_dict:
@@ -74,6 +84,17 @@ class BaseSearcher:
             # print(f"{each_query=}")
             # print(f"{self.searcher=}")
 
+            self.activities &= self.searcher.get_index_query()
+
+        return self.activities
+
+
+    def get_aaa(self):
+        self.tag = 'category_list'
+        self.set_searcher()
+
+        category_list = get_categories_list(self.request)
+        for each_category in category_list:
             self.activities &= self.searcher.get_index_query()
         return self.activities
 
@@ -119,10 +140,19 @@ class DateSearcher(BaseSearcher):
         return filtered_activity
 
 
-class CategoriesSearcher(BaseSearcher):  # Currently doesn't work
+class CategoriesSearcher(BaseSearcher):
     def get_index_query(self):
         categories_query = self.query_dict.get('categories', None)
-        return self.activities.filter(categories__name__icontains=categories_query)
+        return self.activities.filter(categories__name__iexact=categories_query)
+
+
+class CategoryListSearcher(BaseSearcher):  # Currently doesn't work
+    def get_index_query(self):
+        category_list = get_categories_list(self.request)
+        for each_category in category_list:
+            if each_category:
+                self.activities &= self.activities.filter(categories__name__iexact=each_category)
+        return self.activities
 
 
 class PlaceSearcher(BaseSearcher):
