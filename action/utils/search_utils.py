@@ -13,7 +13,6 @@ def get_query_dict(request: HttpRequest):
     Custom function that return dictionary of 
     {request.GET.get('tag'): request.GET.get('q')}
     """
-    # print(f"{request.META['QUERY_STRING'] =}")
     params = parse_qs(request.META['QUERY_STRING'], keep_blank_values=True)
     values_q = params.get('q', [])
     values_tag = request.GET.getlist('tag')
@@ -60,10 +59,13 @@ class BaseSearcher:  # TODO Dependency Injection!!!
     # Note: "is None" does not work with empty string/list/dict
     def get_index_query(self):
         # print(f"{self.query_dict =}")
-        category_dict = get_categories_list(self.request)
+        category_list = get_categories_list(self.request)
 
-        if category_dict:
-            self.activities = self.get_aaa()
+        if category_list:
+            self.tag = 'category_list'
+            self.set_searcher()
+            self.activities = self.searcher.get_index_query()
+
         # Case where query is None (not empty string), for tags without 'q' as url parameters.
         # Tags: upcoming, popular, recent, friend_joined, registered, favorited tags.
         if not self.query_dict:
@@ -86,16 +88,6 @@ class BaseSearcher:  # TODO Dependency Injection!!!
 
             self.activities &= self.searcher.get_index_query()
 
-        return self.activities
-
-
-    def get_aaa(self):
-        self.tag = 'category_list'
-        self.set_searcher()
-
-        category_list = get_categories_list(self.request)
-        for each_category in category_list:
-            self.activities &= self.searcher.get_index_query()
         return self.activities
 
 
