@@ -1,8 +1,12 @@
 {% extends "action/base.html" %}
 {% load static %}
 
+{% block title %}
+Create
+{% endblock %}
+
 {% block content %}
-<h3>
+<h3 xmlns="http://www.w3.org/1999/html">
 <form method="post" enctype="multipart/form-data">
     <div class="edit-outer-detail">
         <div class="title">
@@ -10,7 +14,6 @@
         </div>
         <div class="edit-inner-detail">
             {% csrf_token %}
-            {{ form.errors }}
 
             {% for field in form %}
                 {% if field.name == 'owner' %}
@@ -21,15 +24,13 @@
                     <img id="uploadedImage" src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
                          {% else %} {% static 'action/images/default-image.png' %}
                          {% endif %}"
-                    alt="{{ activity.title }}'s Picture" width="auto" height="240">
+                    alt="{{ activity.title }}'s Picture" width="100%" height="600">
 
                 {% elif field.name == 'background_picture' %}
                     <div class="heading-detail">
                         <p>{{ field.label_tag }}</p>
                         <input id="fileInput" type="file" multiple name="{{ field.name }}">
                     </div>
-                    <a class="left-hover-text" onclick="plusDivs(-1)">&#10094;</a>
-                    <a class="right-hover-text" onclick="plusDivs(1)">&#10095;</a>
 
                     <div class="background-slide" id="backgroundSlide">
                         {% if activity.background_picture %}
@@ -38,21 +39,28 @@
                                     alt="Activity Picture" width="400" height="240">
                             {% endfor %}
                         {% else %}
-                            <img src="{% static 'action/images/default-image.png' %}" alt="Default Picture">
+                            <img src="{% static 'action/images/default-image.png' %}" alt="Default Picture"
+                            width="100%" height="600">
                         {% endif %}
+                    </div>
+                    <div class="slide-button">
+                        <a class="left-hover-text" onclick="plusDivs(-1)">&#10094;</a>
+                        <a class="right-hover-text" onclick="plusDivs(1)">&#10095;</a>
                     </div>
 
                 {% elif field.name == 'tags' %}
                     <div><p>{{ field.label_tag }}</p></div>
+                    <div class="grid-tag-name">
                     {% for tag in field.field.queryset %}
-                    <span class="tag-name">
-                        <input type="checkbox" name="{{ field.name }}" value="{{ tag.id }}"
-                            {% if tag in field.value.all %} checked {% endif %}>
-                            <p>{{ tag }}</p>
-                    </span>
+
+                        <div>
+                            <input type="checkbox" name="{{ field.name }}" value="{{ tag.id }}"
+                                {% if tag in field.value.all %} checked {% endif %}>{{ tag }}</input>
+                        </div>
                     {% empty %}
                         <p>No tag currently available.</p>
                     {% endfor %}
+                    </div>
 
                 {% else %}
                     <div class="heading-detail"><p>{{ field.label_tag }}</p>{{ field }}</div>

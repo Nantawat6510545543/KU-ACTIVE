@@ -1,6 +1,7 @@
 [run]
 source = action
 omit = *__init__.py,*apps.py, *admin.py,action/forms/* ,action/migrations/*, action/urls/*, action/tests/*, action/utils/calendar.py
+branch = True
 
 [report]
 omit = *__init__.py,*apps.py, *admin.py,action/forms/* ,action/migrations/*, action/urls/*, action/tests/*, action/utils/calendar.py

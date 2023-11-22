@@ -1,5 +1,7 @@
 from django.contrib.sites.models import Site
 from django.utils import timezone
+from django.test import RequestFactory
+from django.urls import reverse
 from allauth.socialaccount.models import SocialApp
 
 from action.models import User, Activity, ActivityStatus, FriendStatus, Category
@@ -156,4 +158,14 @@ def quick_join(participants, activity):
     """
     Given participants and activity object, automatically join an activity
     """
-    create_activity_status(create_user(participants), activity, is_participated=True)
+    create_activity_status(create_user(participants), activity,
+                           is_participated=True)
+
+
+def create_request(view, args, user=None, data=None):
+    if data is None:
+        data = {'tag': 'title', 'q': 'test'}
+    request = RequestFactory().get(reverse(view, args=args), data)
+    if user is not None:
+        request.user = user
+    return request

@@ -32,7 +32,7 @@ class User(AbstractUser):
             Q(sender__is_friend=True, sender__receiver=self) |
             Q(receiver__is_friend=True, receiver__sender=self)
         )
-        return friend_objects
+        return friend_objects.distinct()
 
     def __str__(self):
         return self.username

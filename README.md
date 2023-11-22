@@ -9,14 +9,20 @@ The web application for activity management and participation, wrote with Python
 This app was created as part of the Individual Software Process course at Kasetsart University.
 
 ## Install instructions
-Read the installation instructions at [Installation.md](./Installation.md).
+Please configure the `sample.env` file before proceeding with the installation. Refer to the detailed configuration guide in [configurations.md](Installation%2Fconfigurations.md).
+
+For a quick and efficient setup, it is recommended to use the provided script. Find instructions in [script.md](Installation%2Fscript.md).
+
+If you prefer a manual setup, follow the steps outlined in [manual.md](Installation%2Fmanual.md).
+
+If you intend to develop and debug this application, please review the instructions provided in [debug.md](Installation%2Fdebug.md)
 
 ## How to run
 
 1. To run the server
 
 ```
-python manage.py runserver --insecure
+python manage.py runserver
 ```
 
 2. To access the app at http://localhost:8000

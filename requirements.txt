@@ -1,13 +1,1 @@
-Django
-Pillow
-python-decouple
-django-allauth
-dj-database-url
-psycopg2-binary
-google_oauth2_tool
-google-api-python-client
-google-auth-httplib2
-google-auth-oauthlib
-coverage
-gunicorn
-whitenoise
+-r requirements/base.txt

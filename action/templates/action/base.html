@@ -47,7 +47,7 @@
                      {% endif %}">
             </div>
             <a class="friends" href="{% url 'action:friends' %}">Friends</a>
-            <a class="new-activity" href="{% url 'action:manage' %}">Manage Your Activity!</a>
+            <a class="manage" href="{% url 'action:manage' %}">Manage Your Activity!</a>
             <a class="calendar" href="{% url 'action:calendar' %}">Calendar</a>
             {% if user.is_superuser %}
                 <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
@@ -78,12 +78,12 @@
             {% endif %}
             <li><a class="drop-item" href="{% url 'action:manage' %}">Manage Your Activity!</a></li>
             <li><a class="drop-item" href="{% url 'action:friends' %}">Friends</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Registered Activity</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Interested Activity</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Your Friends Join!</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Upcoming</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Popular</a></li>
-            <li><a class="drop-item" href="{% url 'action:index' %}">Recent</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}?tag=registered">Registered Activity</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}?tag=favorited">Interested Activity</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}?tag=friend_joined">Your Friends Join!</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}?tag=upcoming">Upcoming</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}?tag=popular">Popular</a></li>
+            <li><a class="drop-item" href="{% url 'action:index' %}?tag=recent">Recent</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}">Category</a></li>
             <li><a class="drop-item" href="{% url 'action:calendar' %}">Calendar</a></li>
         </div>
@@ -94,7 +94,11 @@
             {% for message in messages %}
                 <div id="alert-msg" class="alert-msg">
                     <span class="close-msg" onclick="closeMsg()">&times;</span>
-                    <p>{{ message }}</p>
+                    {% if form.errors %}
+                        {{ form.errors }}
+                    {% else %}
+                        <p>{{ message }}</p>
+                    {% endif %}
                 </div>
             {% endfor %}
         {% endif %}
