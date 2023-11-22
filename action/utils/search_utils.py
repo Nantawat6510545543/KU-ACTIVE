@@ -158,12 +158,13 @@ class UpcomingSearcher(BaseSearcher):
 
 class PopularSearcher(BaseSearcher):
     def get_index_query(self):
-        activities = self.activities.filter(activity__is_participated=True)
+        self.activities = self.activities.filter(activity__is_participated=True)
+
         # Add a temporary column and filter by it (temp_participant_count), descending
-        activities = self.activities.annotate(
+        self.activities = self.activities.annotate(
             temp_participant_count=Count('activity__participants'))
-        activities = activities.order_by('-temp_participant_count')
-        return activities
+        self.activities = self.activities.order_by('-temp_participant_count')
+        return self.activities
 
 
 class RecentSearcher(BaseSearcher):

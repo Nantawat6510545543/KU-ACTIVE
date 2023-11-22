@@ -1,5 +1,4 @@
 import logging
-import unittest
 
 from django.urls import reverse
 from django.utils import timezone
@@ -86,9 +85,8 @@ class SearchUtilsTests(TestCase):
         query = searcher.get_index_query().first()
         self.assertEqual(query, upcoming_activity)
 
-    @unittest.skip("Will fix later, incorrect results")  # Don't delete this
-    def test_popular_search(self):  # TODO Wrong results
-        request = self.factory.get(reverse('action:index'), {'tag': 'recent'})
+    def test_popular_search(self):
+        request = self.factory.get(reverse('action:index'), {'tag': 'popular'})
         request.user = self.user
 
         activity1 = create_activity(owner=request.user, title="1")
@@ -104,7 +102,7 @@ class SearchUtilsTests(TestCase):
 
         searcher = BaseSearcher(request)
         query_list = list(searcher.get_index_query())
-        self.assertListEqual(query_list, [activity3, activity2, activity1])
+        self.assertListEqual(query_list, [activity1, activity2, activity3])
 
     def test_recent_search(self):
         request = self.factory.get(reverse('action:index'), {'tag': 'recent'})
