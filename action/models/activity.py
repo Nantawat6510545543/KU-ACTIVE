@@ -1,5 +1,4 @@
 from datetime import timedelta
-from unicodedata import category
 
 from django.contrib import admin
 from django.db import models
