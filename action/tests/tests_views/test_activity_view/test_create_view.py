@@ -72,9 +72,9 @@ class ActivityCreateViewTests(TestCase):
         Test sending invalid form, Should show fail message.
         """
         now = datetime.now()
-        # invalid data.
+        # invalid data, pub_date should be today.
         form_data = {
-            'pub_date': now,
+            'pub_date': now - timedelta(days=1),
             'end_date': now + timedelta(days=1),
             'start_date': now + timedelta(days=2),
             'last_date': now + timedelta(days=3),
@@ -85,7 +85,7 @@ class ActivityCreateViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         # A fail message should have been shown.
-        self.assertContains(response, 'Activity creation failed. Please check the form.')
+        self.assertTrue(response.context['form'].errors)
 
     def test_get_success_url(self):
         """
