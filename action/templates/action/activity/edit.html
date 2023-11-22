@@ -48,14 +48,14 @@ Edit
                         <a class="right-hover-text" onclick="plusDivs(1)">&#10095;</a>
                     </div>
 
-                {% elif field.name == 'tags' %}
+                {% elif field.name == 'categories' %}
                     <div><p>{{ field.label_tag }}</p></div>
                     <div class="grid-tag-name">
-                    {% for tag in field.field.queryset %}
+                    {% for category in field.field.queryset %}
 
                         <div>
-                            <input type="checkbox" name="{{ field.name }}" value="{{ tag.id }}"
-                                {% if tag in field.value.all %} checked {% endif %}>{{ tag }}</input>
+                            <input type="checkbox" name="{{ field.name }}" value="{{ category.id }}"
+                                {% if category in field.value.all %} checked {% endif %}>{{ category }}</input>
                         </div>
                     {% empty %}
                         <p>No tag currently available.</p>
