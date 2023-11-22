@@ -68,7 +68,7 @@ table.style1 a {
     cursor: pointer;
 }
 
-.tag-search {
+.category-search {
     text-align: left;
     background-color: #04AA6D;
     color: black;
@@ -194,7 +194,7 @@ table.style1 a {
     text-align:center;
 }
 
-.advance-search button{
+.advance-search button {
     text-align:center;
     width:60%;
     background-color: #04AA6D;
