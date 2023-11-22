@@ -1,5 +1,3 @@
-import time
-
 from django.urls import reverse
 from django.test import TestCase
 from django.utils import timezone
@@ -78,44 +76,78 @@ class ActivityDetailViewTests(TestCase):
 class ActivityDetailViewTestsE2E(EndToEndTestBase):
     def setUp(self):
         super().setUp()
-        self.user = create_user(username='user1', password='pass1')
-        self.login(username='user1', password='pass1')
+        self.name = 'user1'
+        self.password = 'pass1'
+        self.user = create_user(self.name, self.password)
         self.view = 'action:detail'
-        self.button_class = "Participate-btn"
 
     def participated_count(self):
         return ActivityStatus.objects.filter(
             id__in=self.user.participated_activity).count()
 
-    def test_participate(self):
+    def favorited_count(self):
+        return ActivityStatus.objects.filter(
+            id__in=self.user.favorited_activity).count()
+
+    def perform_action(self, action_button, expected_initial_text,
+                       expected_final_text, count_function):
         # Create activity
         activity = create_activity(self.user)
         self.open(self.view, activity.id)
 
-        # Ensure user is not participating initially
-        self.assertEqual(self.participated_count(), 0)
+        # Ensure user count is initially 0
+        self.assertEqual(count_function(), 0)
 
-        # Participate and check button text
-        participate_button = self.find_by_class(self.button_class)
-        self.assertEqual(participate_button.text, 'Participate')
-        participate_button.click()
+        # Click on the button and check initial text
+        button = self.find_by_class(action_button)
+        self.assertEqual(button.text, expected_initial_text)
+        button.click()
 
-        # Check if button text changes after participating
-        participate_button = self.find_by_class(self.button_class)
-        self.assertEqual(participate_button.text, 'Leave')
+        # Check if button text changes after performing the action
+        button = self.find_by_class(action_button)
+        self.assertEqual(button.text, expected_final_text)
 
-        # Check if user is now participating
-        self.assertEqual(self.participated_count(), 1)
+        # Check if user count is now 1
+        self.assertEqual(count_function(), 1)
 
-        # Leave and check button text
-        participate_button.click()
-        participate_button = self.find_by_class("Participate")
-        self.assertEqual(participate_button.text, 'Participate')
+        # Undo the action and check button text
+        button.click()
+        button = self.find_by_class(action_button)
+        self.assertEqual(button.text, expected_initial_text)
 
-        # Ensure user is no longer participating
-        self.assertEqual(self.participated_count(), 0)
+        # Ensure user count is back to 0
+        self.assertEqual(count_function(), 0)
+
+    def test_view_activity_without_login(self):
+        activity = create_activity(self.user)
+        self.open(self.view, activity.id)
+
+        # Find the 'activity-details'
+        details = self.find_by_class("activity-details")
+
+        # List of classes to check
+        classes_to_check = ["Description", "full-detail",
+                            "activity-general-information"]
+
+        # Iterate over the classes and check their presence
+        for class_name in classes_to_check:
+            element = self.find_by_class(class_name, details)
+            self.assertTrue(element, f"{class_name} class not found")
+
+    def test_participate_and_favorited(self):
+        self.login(self.name, self.password)
+
+        # Test Participate
+        self.perform_action("Participate-btn", 'Participate', 'Leave',
+                            self.participated_count)
+
+        # Test Favorited
+        self.perform_action("Favorite-btn", 'Favorite', 'Un-favorite',
+                            self.favorited_count)
 
     def test_unable_to_participate_upcoming_activity(self):
+        self.login(self.name, self.password)
+
         future_date = {
             "pub_date": timezone.now() + timezone.timedelta(days=3),
             "end_date": timezone.now() + timezone.timedelta(days=4),
@@ -125,7 +157,7 @@ class ActivityDetailViewTestsE2E(EndToEndTestBase):
         future_activity = create_activity(self.user, **future_date)
         self.open(self.view, future_activity.id)
 
-        participate_button = self.find_by_class(self.button_class)
+        participate_button = self.find_by_class("Participate-btn")
         participate_button.click()
 
         # Check the messages.
