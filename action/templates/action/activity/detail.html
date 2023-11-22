@@ -70,7 +70,11 @@ Detail
                 <p><strong>Last date of activity:</strong> {{ activity.last_date }}</p>
                 <p>
                     <strong>Place: </strong>
-                    <a href="{% url 'action:index' %}?tag=place&q={{ activity.place }}">{{ activity.place }}</a>
+                    {% if activity.place %}
+                        <a href="{% url 'action:index' %}?tag=place&q={{ activity.place }}">
+                    {% endif %}
+                        {{ activity.place }}
+                    </a>
                 </p>
                 <p><strong>Participant Limit:</strong>
                     {% if activity.participant_limit %}

@@ -18,7 +18,8 @@ KU-ACTIVE
         </select>
         <input type="search" class="search-bar" name="q"
             placeholder="{% if not request.session.query %}Search :{% endif %}"
-            value="{% if request.session.query %}{{ request.session.query }}{% endif %}">
+            value="{% if request.session.query %}{{ request.session.query }}{% endif %}"
+            required>
         <span class="categories">
             <select class="category-search" name="q">
                 {% for each_category in categories %}
