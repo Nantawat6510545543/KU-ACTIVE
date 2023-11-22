@@ -23,8 +23,10 @@ class SearchUtilsTests(TestCase):
         params = response.request['QUERY_STRING']
         self.assertEqual(params, 'tag=place&q=')
 
-        with self.assertRaises(ValueError):  # Invalid Tag Case
-            response = self.client.get(reverse('action:index'), {'tag': 'invalid'})
+        # Invalid tag case should redirect to index page
+        response = self.client.get(reverse('action:index'), {'tag': 'invalid'})
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('action:index'))
 
     def test_title_search(self):
         request = self.factory.get(reverse('action:index'), {'tag': 'title', 'q': 'ABC'})
