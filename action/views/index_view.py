@@ -1,4 +1,6 @@
-from django.shortcuts import redirect
+from django.contrib import messages
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views import generic
 
 from action.models import Category
@@ -27,8 +29,11 @@ class IndexView(generic.ListView):
         if tag in REGISTERED_TAG_LIST and not request.user.is_authenticated:
             return redirect('login')
 
-        # Continue with the regular behavior of the view
-        return super(IndexView, self).get(request, *args, **kwargs)
+        try:  # Continue with the regular behavior of the view
+            return super(IndexView, self).get(request, *args, **kwargs)
+        except ValueError:  # Invalid Tag Case
+            messages.warning(self.request, "Invalid Tag!")
+            return redirect('action:index')
 
     def get_queryset(self):
         searcher = BaseSearcher(self.request)
