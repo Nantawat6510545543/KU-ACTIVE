@@ -204,13 +204,14 @@ nav {
 .secnav a {
     padding-top:10px;
     padding-bottom:10px;
-    transition: font-size 1s;
+    transition: all 0.3s;
 }
 
 .secnav a:hover {
     text-decoration: underline;
+    color:black;
+    font-size: 22px;
 }
-
 /* Dropbox */
 .dropbox {
     display: none;
