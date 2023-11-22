@@ -37,7 +37,7 @@ def create_user(username='tester', password='password', **kwargs):
         "email": None,
         "first_name": None,
         "last_name": None,
-        "active": None
+        "active": kwargs.get("is_active", True)
     }
 
     user_fields.update(kwargs)
@@ -53,9 +53,6 @@ def create_user(username='tester', password='password', **kwargs):
     if user_fields["last_name"] is not None:
         user.last_name = user_fields["last_name"]
 
-    if user_fields["active"] is not None:
-        user.active = user_fields["active"]
-
     user.save()
     return user
 
@@ -63,44 +60,25 @@ def create_category(name):
     return Category.objects.create(name=name)
 
 def create_activity(owner, **kwargs):
-    defaults = {
-        "title": "Test",
-        "pub_date": timezone.now(),
-        "end_date": timezone.now() + timezone.timedelta(days=1),
-        "start_date": timezone.now() + timezone.timedelta(days=2),
-        "last_date": timezone.now() + timezone.timedelta(days=3),
-        "description": None,
-        "place": None,
-        "full_description": None,
-        "participant_limit": None,
-        "categories": None,
+    activity_data = {
+        "owner": owner,
+        "title": kwargs.get("title", "Test"),
+        "pub_date": kwargs.get("pub_date", timezone.now()),
+        "end_date": kwargs.get("end_date", timezone.now() + timezone.timedelta(days=1)),
+        "start_date": kwargs.get("start_date", timezone.now() + timezone.timedelta(days=2)),
+        "last_date": kwargs.get("last_date", timezone.now() + timezone.timedelta(days=3)),
+        "description": kwargs.get("description", ""),
+        "place": kwargs.get("place", None),
+        "full_description": kwargs.get("full_description", None),
+        "participant_limit": kwargs.get("participant_limit", None),
     }
 
-    defaults.update(kwargs)
+    activity = Activity.objects.create(**activity_data)
 
-    activity = Activity.objects.create(
-        owner=owner,
-        title=defaults["title"],
-        start_date=defaults["start_date"],
-        last_date=defaults["last_date"],
-        pub_date=defaults["pub_date"],
-        end_date=defaults["end_date"],
-    )
-
-    if defaults["description"] is not None:
-        activity.description = defaults["description"]
-
-    if defaults["place"] is not None:
-        activity.place = defaults["place"]
-
-    if defaults["full_description"] is not None:
-        activity.full_description = defaults["full_description"]
-
-    if defaults["participant_limit"] is not None:
-        activity.participant_limit = defaults["participant_limit"]
-
-    if defaults["categories"] is not None:
-        activity.categories.set(defaults["categories"])
+    # Set categories after activity creation
+    categories = kwargs.get("categories", None)
+    if categories:
+        activity.categories.set(categories)
 
     activity.save()
     return activity

@@ -27,8 +27,8 @@ class Activity(models.Model):
     description = models.CharField('Description', max_length=200)
     participant_limit = models.PositiveIntegerField(null=True, blank=True,
                                                     default=None)
-    place = models.CharField('Place', max_length=200, blank=True)
-    full_description = models.TextField('Full Description', blank=True)
+    place = models.CharField('Place', max_length=200, null=True, blank=True)
+    full_description = models.TextField('Full Description', null=True, blank=True)
     picture = models.TextField(blank=True, default='')
     background_picture = models.JSONField(blank=True, null=True)
     categories = models.ManyToManyField(Category, blank=True)
