@@ -1,11 +1,22 @@
 body {
-    background: linear-gradient(0deg, rgba(66,119,55,1) 0%, rgba(85,154,71,1) 36%, rgba(108,210,88,1) 65%, rgba(167,230,154,1) 100%);
-    background: #d6ef52;
+    background: rgba(167,230,154,1);
     margin: 0;
     width: 100%;
 }
 
+table.style1 a {
+    text-decoration: none;
+}
 
+a:-webkit-any-link {
+    color: black;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:-webkit-any-link:hover {
+    text-decoration: underline;
+}
 /*login.html*/
 
 .form-container {
@@ -157,8 +168,16 @@ body {
     color:purple;
 }
 
-.logo img{
+.logo {
     float:right;
-    width:62%;
     height:100%;
+    margin-right: 10%;
+}
+
+@media screen and (max-width: 1300px) {
+    .logo {
+        height:80%;
+        padding-top:50px;
+        margin-right: 5%;
+    }
 }
