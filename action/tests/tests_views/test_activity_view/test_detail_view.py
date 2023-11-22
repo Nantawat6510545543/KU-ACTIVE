@@ -78,36 +78,30 @@ class ActivityDetailViewTests(TestCase):
 class ActivityDetailViewTestsE2E(EndToEndTestBase):
     def setUp(self):
         super().setUp()
-
         self.user = create_user(username='user1', password='pass1')
         self.login(username='user1', password='pass1')
-        self.activity = create_activity(self.user)
         self.view = 'action:detail'
-
-    def open_activity(self, activity):
-        self.url = self.getUrl(self.view, (activity.id,))
-        self.browser.get(self.url)
+        self.button_class = "Participate-btn"
 
     def participated_count(self):
         return ActivityStatus.objects.filter(
             id__in=self.user.participated_activity).count()
 
-    def find_by_class(self, class_name):
-        return self.browser.find_element(self.by.CLASS_NAME, class_name)
-
     def test_participate(self):
-        self.open_activity(self.activity)
+        # Create activity
+        activity = create_activity(self.user)
+        self.open(self.view, activity.id)
 
         # Ensure user is not participating initially
         self.assertEqual(self.participated_count(), 0)
 
         # Participate and check button text
-        participate_button = self.find_by_class("Participate")
+        participate_button = self.find_by_class(self.button_class)
         self.assertEqual(participate_button.text, 'Participate')
         participate_button.click()
 
         # Check if button text changes after participating
-        participate_button = self.find_by_class("Participate")
+        participate_button = self.find_by_class(self.button_class)
         self.assertEqual(participate_button.text, 'Leave')
 
         # Check if user is now participating
@@ -129,9 +123,9 @@ class ActivityDetailViewTestsE2E(EndToEndTestBase):
             "last_date": timezone.now() + timezone.timedelta(days=6)
         }
         future_activity = create_activity(self.user, **future_date)
-        self.open_activity(future_activity)
+        self.open(self.view, future_activity.id)
 
-        participate_button = self.find_by_class("Participate")
+        participate_button = self.find_by_class(self.button_class)
         participate_button.click()
 
         # Check the messages.

@@ -6,15 +6,13 @@ from selenium.webdriver import Firefox, FirefoxOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-from action.tests.utils import create_social_app
+from action.tests.utils import create_social_app, create_user
 
 
 class EndToEndTestBase(StaticLiveServerTestCase):
     """End-to-end Base class"""
 
     browser = None
-    by = By
-    keys = Keys
 
     @classmethod
     def setUpClass(cls):
@@ -33,6 +31,13 @@ class EndToEndTestBase(StaticLiveServerTestCase):
     def setUp(self):
         create_social_app()
 
+    def open(self, view, web_id):
+        self.url = self.getUrl(view, (web_id,))
+        self.browser.get(self.url)
+
+    def find_by_class(self, class_name):
+        return self.browser.find_element(By.CLASS_NAME, class_name)
+
     def getUrl(self, view, args=None):
         if args is None:
             return self.live_server_url + reverse(view)
@@ -41,12 +46,12 @@ class EndToEndTestBase(StaticLiveServerTestCase):
     def login(self, username, password):
         self.browser.get(self.getUrl("login"))
 
-        user_field = self.browser.find_element(self.by.NAME, "username")
+        user_field = self.browser.find_element(By.NAME, "username")
         user_field.send_keys(username)
 
-        password_field = self.browser.find_element(self.by.NAME, "password")
+        password_field = self.browser.find_element(By.NAME, "password")
         password_field.send_keys(password)
-        password_field.send_keys(self.keys.RETURN)
+        password_field.send_keys(Keys.RETURN)
 
         time.sleep(1)
 
