@@ -3,7 +3,7 @@ from PIL import Image, UnidentifiedImageError
 from io import BytesIO
 
 
-def image_to_base64(image_file):  # pragma: no cover
+def image_to_base64(image_file):
     """
     Converts an image file to a base64-encoded string.
 
@@ -28,9 +28,6 @@ def image_to_base64(image_file):  # pragma: no cover
 
         FileNotFoundError and OSError occurs when image file was encoded.
         FileNotFoundError may arise on Windows, while OSError may occur on Mac.
-
-        This function has test cases covering all scenarios, but the coverage can't be recognized.
-        The '# pragma: no cover' is used to make the coverage tool ignore this file during analysis.
     """
     max_size = 1024
 

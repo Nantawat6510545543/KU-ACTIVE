@@ -24,7 +24,7 @@ def participate(request, activity_id: int):
                       "This activity can no longer be participated in.")
     elif activity_status.is_participated:
         messages.info(request, "You are already participating.")
-    else:  # pragma: no cover
+    else:
         try:
             utils.create_event(request, activity_id)
         except SocialToken.DoesNotExist:  # If user have email but not google accounts
@@ -49,11 +49,11 @@ def leave(request, activity_id: int):
         activity_status.is_participated = False
         activity_status.save()
         messages.success(request, "You have left this activity.")
-        try:  # pragma: no cover
+        try:
             utils.remove_event(request, activity_id)
-        except SocialToken.DoesNotExist:  # If user have email but not google accounts # pragma: no cover
+        except SocialToken.DoesNotExist:  # If user have email but not google accounts
             pass
-        except HttpError:  # pragma: no cover
+        except HttpError:
             messages.info(request,
                           "Calendar is not working, please Login again.")
 
