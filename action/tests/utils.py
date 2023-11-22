@@ -1,7 +1,10 @@
 from django.contrib.sites.models import Site
 from django.utils import timezone
+from django.test import RequestFactory
+from django.urls import reverse
 from allauth.socialaccount.models import SocialApp
-from action.models import User, Activity, ActivityStatus, FriendStatus, Tag
+
+from action.models import User, Activity, ActivityStatus, FriendStatus, Category
 from mysite.settings import SITE_ID, SITE_NAME, SITE_DOMAIN
 
 
@@ -34,7 +37,7 @@ def create_user(username='tester', password='password', **kwargs):
         "email": None,
         "first_name": None,
         "last_name": None,
-        "active": None
+        "active": kwargs.get("is_active", True)
     }
 
     user_fields.update(kwargs)
@@ -50,57 +53,32 @@ def create_user(username='tester', password='password', **kwargs):
     if user_fields["last_name"] is not None:
         user.last_name = user_fields["last_name"]
 
-    if user_fields["active"] is not None:
-        user.active = user_fields["active"]
-
+    user.save()
     return user
 
-
-def create_tag(name):
-    tag = Tag(name=name)
-    tag.save()
-    return tag
-
+def create_category(name):
+    return Category.objects.create(name=name)
 
 def create_activity(owner, **kwargs):
-    defaults = {
-        "title": "Test",
-        "pub_date": timezone.now(),
-        "end_date": timezone.now() + timezone.timedelta(days=1),
-        "start_date": timezone.now() + timezone.timedelta(days=2),
-        "last_date": timezone.now() + timezone.timedelta(days=3),
-        "description": None,
-        "place": None,
-        "full_description": None,
-        "participant_limit": None,
-        "tags": None,
+    activity_data = {
+        "owner": owner,
+        "title": kwargs.get("title", "Test"),
+        "pub_date": kwargs.get("pub_date", timezone.now()),
+        "end_date": kwargs.get("end_date", timezone.now() + timezone.timedelta(days=1)),
+        "start_date": kwargs.get("start_date", timezone.now() + timezone.timedelta(days=2)),
+        "last_date": kwargs.get("last_date", timezone.now() + timezone.timedelta(days=3)),
+        "description": kwargs.get("description", ""),
+        "place": kwargs.get("place", None),
+        "full_description": kwargs.get("full_description", None),
+        "participant_limit": kwargs.get("participant_limit", None),
     }
 
-    defaults.update(kwargs)
+    activity = Activity.objects.create(**activity_data)
 
-    activity = Activity.objects.create(
-        owner=owner,
-        title=defaults["title"],
-        start_date=defaults["start_date"],
-        last_date=defaults["last_date"],
-        pub_date=defaults["pub_date"],
-        end_date=defaults["end_date"],
-    )
-
-    if defaults["description"] is not None:
-        activity.description = defaults["description"]
-
-    if defaults["place"] is not None:
-        activity.place = defaults["place"]
-
-    if defaults["full_description"] is not None:
-        activity.full_description = defaults["full_description"]
-
-    if defaults["participant_limit"] is not None:
-        activity.participant_limit = defaults["participant_limit"]
-
-    if defaults["tags"] is not None:
-        activity.tags.set(defaults["tags"])
+    # Set categories after activity creation
+    categories = kwargs.get("categories", None)
+    if categories:
+        activity.categories.set(categories)
 
     activity.save()
     return activity
@@ -136,8 +114,10 @@ def create_friend_status(sender: User, receiver: User,
         - The created FriendStatus object will have an 'is_friend' field set to True if the
           request_status is 'Accepted', indicating that the users are now friends.
     """
+    STATUS_CHOICES = [choice[0] for choice in FriendStatus.STATUS_CHOICES]
+
     if (request_status is not None and
-            request_status.title() not in ['Pending', 'Accepted', 'Declined']):
+            request_status.title() not in STATUS_CHOICES):
         request_status = None
 
     friend_status = FriendStatus.objects.create(
@@ -148,10 +128,22 @@ def create_friend_status(sender: User, receiver: User,
         friend_status.request_status = request_status
         friend_status.is_friend = request_status == 'Accepted'
 
+    friend_status.save()
     return friend_status
+
 
 def quick_join(participants, activity):
     """
     Given participants and activity object, automatically join an activity
     """
-    create_activity_status(create_user(participants), activity, is_participated=True)
+    create_activity_status(create_user(participants), activity,
+                           is_participated=True)
+
+
+def create_request(view, args, user=None, data=None):
+    if data is None:
+        data = {'tag': 'title', 'q': 'test'}
+    request = RequestFactory().get(reverse(view, args=args), data)
+    if user is not None:
+        request.user = user
+    return request

@@ -1,6 +1,10 @@
 {% extends "action/base.html" %}
 {% load static %}
 
+{% block title %}
+Edit
+{% endblock %}
+
 {% comment %} reuse actiivity-form base/create_activity.html?? {% endcomment %}
 {% block content %}
 <h3>
@@ -11,7 +15,6 @@
         </div>
         <div class="edit-inner-detail">
             {% csrf_token %}
-            {{ form.errors }}
 
             {% for field in form %}
                 {% if field.name == 'owner' %}
@@ -29,31 +32,35 @@
                         <p>{{ field.label_tag }}</p>
                         <input id="fileInput" type="file" multiple name="{{ field.name }}">
                     </div>
-                    <a class="left-hover-text" onclick="plusDivs(-1)">&#10094;</a>
-                    <a class="right-hover-text" onclick="plusDivs(1)">&#10095;</a>
-
                     <div class="background-slide" id="backgroundSlide">
                         {% if activity.background_picture %}
                             {% for value in activity.background_picture.values %}
                                 <img class="image-Slides" src="data:image/png;base64,{{ value }}"
-                                    alt="Activity Picture" width="400" height="240">
+                                    alt="Activity Picture" width="100%" height="auto">
                             {% endfor %}
                         {% else %}
-                            <img src="{% static 'action/images/default-image.png' %}" alt="Default Picture">
+                            <img src="{% static 'action/images/default-image.png' %}" alt="Default Picture"
+                            width="100%" height="auto">
                         {% endif %}
                     </div>
+                    <div class="slide-button">
+                        <a class="left-hover-text" onclick="plusDivs(-1)">&#10094;</a>
+                        <a class="right-hover-text" onclick="plusDivs(1)">&#10095;</a>
+                    </div>
 
-                {% elif field.name == 'tags' %}
+                {% elif field.name == 'categories' %}
                     <div><p>{{ field.label_tag }}</p></div>
-                    {% for tag in field.field.queryset %}
-                    <span class="tag-name">
-                        <input type="checkbox" name="{{ field.name }}" value="{{ tag.id }}"
-                            {% if tag.id in field.value %} checked {% endif %}>
-                            <p>{{ tag }}</p>
-                    </span>
+                    <div class="grid-tag-name">
+                    {% for category in field.field.queryset %}
+
+                        <div>
+                            <input type="checkbox" name="{{ field.name }}" value="{{ category.id }}"
+                                {% if category in field.value.all %} checked {% endif %}>{{ category }}</input>
+                        </div>
                     {% empty %}
                         <p>No tag currently available.</p>
                     {% endfor %}
+                    </div>
 
                 {% else %}
                     <div class="heading-detail"><p>{{ field.label_tag }}</p>{{ field }}</div>

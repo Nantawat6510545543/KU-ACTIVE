@@ -1,16 +1,14 @@
 {% extends "action/base.html" %}
 {% load static %}
 
-{% comment %} TODO, use Javscript instead of manual if/else {% endcomment %}
+{% block title %}
+KU-ACTIVE
+{% endblock %}
+
 {% block content %}
 
 <div class="search-system">
     <form action="{% url 'action:index' %}">
-<!--        <select class="left-search-criteria" name="sort">-->
-<!--            <option value="upcoming">Upcoming</option>-->
-<!--            <option value="popularity">Popularity</option>-->
-<!--            <option value="recent">Recent</option>-->
-<!--        </select>-->
         <select class="search-criteria" name="tag">
         {% for tag_option, tag_label in tags %}
             <option value="{{ tag_option }}" {% if request.session.tag == tag_option %} selected {% endif %}>
@@ -21,13 +19,71 @@
         <input type="search" class="search-bar" name="q"
             placeholder="{% if not request.session.query %}Search :{% endif %}"
             value="{% if request.session.query %}{{ request.session.query }}{% endif %}">
+        <span class="categories">
+            <select class="category-search" name="q">
+                {% for each_category in categories %}
+                    <option value="{{ each_category }}"> {{ each_category }} </option>
+                {% endfor %}
+            </select>
+        </span>
         <button type="submit" class="search-button">Search</button>
+        <span class="advance-button" onclick="AdvanceFunction()">Advance</span>
     </form>
 </div>
 
+<div id="advance-search" class="advance-search" style="display:none;">
+    <form action="{% url 'action:index' %}">
+        <div class="categories-title">
+            <h1>Categories :</h1>
+        </div>
+        <div class="grid-tag">
+            {% for each_category in categories %}
+                <div>
+                    <input type="checkbox" name="category_q" value="{{ each_category }}">{{ each_category }}</input>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="advance-detail">
+            <div>
+                <span><h1>Title :</h1></span>
+                <input type="hidden" name="tag" value="title">
+                <input type="search" class="search" name="q"
+                        placeholder="{% if not request.session.query %}Title :{% endif %}">
+            </div>
+            <div>
+                <span><h1>Owner :</h1></span>
+                <input type="hidden" name="tag" value="owner">
+                <input type="search" class="search" name="q"
+                        placeholder="{% if not request.session.query %}Owner :{% endif %}">
+            </div>
+            <div>
+                <span><h1>Place :</h1></span>
+                <input type="hidden" name="tag" value="place">
+                <input type="search" class="search" name="q"
+                        placeholder="{% if not request.session.query %}Place :{% endif %}">
+            </div>
+            <h1>Sort by start date range:</h1>
+            <div>
+                <span><h1>Start Point :</h1></span>
+                <input type="hidden" name="tag" value="date_start_point">
+                <input type="datetime-local" name="q">
+            </div>
+            <div>
+                <span><h1>End Point :</h1></span>
+                <input type="hidden" name="tag" value="date_end_point">
+                <input type="datetime-local" name="q">
+            </div>
+        </div>
+        <div class="submit-advance">
+            <button type="submit">Search</button>
+        </div>
+    </form>
+</div>
+
+
 <div class="gird-box">
 {% for activity in activity_list %}
-    <div class="activity">
+    <div class="activity" onclick="location.href='{% url 'action:detail' activity.id %}';">
         <div class="activity-pics">
             <img src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
                         {% else %} {% static 'action/images/background.png' %}
@@ -47,9 +103,6 @@
         <div class="shot-detail">
             <span><strong>Owner:</strong> {{ activity.owner.username }}</span>
             <span><i class="fas fa-calendar"></i> {{ activity.start_date }}</span>
-        </div>
-        <div class="detail-button">
-            <a href="{% url 'action:detail' activity.id %}">Detail</a>
         </div>
     </div>
 {% empty %}

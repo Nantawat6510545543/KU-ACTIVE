@@ -16,7 +16,10 @@ def participate(request, activity_id: int):
     activity_status: ActivityStatus = \
         utils.fetch_activity_status(request, activity_id)
 
-    if not activity.can_participate():
+    if not activity.is_published():
+        messages.info(request,
+                      "Registration for the activity has not yet opened.")
+    elif not activity.can_participate():
         messages.info(request,
                       "This activity can no longer be participated in.")
     elif activity_status.is_participated:
@@ -28,7 +31,7 @@ def participate(request, activity_id: int):
             pass
         except HttpError:
             messages.info(request,
-                            "Calendar is not working, please Login again.")
+                          "Calendar is not working, please Login again.")
 
         activity_status.is_participated = True
         activity_status.save()
@@ -85,7 +88,7 @@ def unfavorite(request, activity_id: int):
     if activity_status.is_favorited:
         activity_status.is_favorited = False
         activity_status.save()
-        messages.success(request, "You have un-favorited this activity.")
+        messages.success(request, "You have unfavorited this activity.")
     else:
         messages.info(request,
                       "You have not currently favorite this activity.")

@@ -1,6 +1,7 @@
 from django.urls import reverse
 from django.test import TestCase
 from action.tests.utils import create_user
+from django.contrib.messages import get_messages
 
 
 class ProfileDetailViewTests(TestCase):
@@ -55,3 +56,19 @@ class ProfileDetailViewTests(TestCase):
         self.client.force_login(self.user_2)
         response = self.client.get(reverse('action:profile'), args=(self.user_2.id,))
         self.assertEqual(response.status_code, 200)
+
+    def test_profile_not_exists(self):
+        """
+        Anyone should not be able to check the unavailable profile.
+        Failed messages should be shown.
+        """
+        invalid_user_id = 999
+        self.client.force_login(self.user_1)
+        url = reverse('action:profile', kwargs={'user_id': invalid_user_id})
+        response = self.client.get(url)
+        # Check redirection.
+        self.assertRedirects(response, reverse('action:index'))
+        # Check messages.
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Invalid user id.")

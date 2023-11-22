@@ -1,13 +1,16 @@
 {% extends "action/base.html" %}
 {% load static %}
 
+{% block title %}
+Detail
+{% endblock %}
+
 {% block content %}
 <div class="outer-details">
     <div class="top-details">
         <a class="back" href="{% url 'action:index' %}">Back</a>
         <strong>{{ activity.title }}</strong>
         {% if user.is_authenticated %}
-
             {% if activity_status.is_favorited %}
                 <form action="{% url 'action:unfavorite' activity.id %}" class="Favorite">
                     <button type="submit" class="Favorite-btn">Un-favorite</button>
@@ -65,7 +68,10 @@
                 <p><strong>Application Deadline:</strong> {{ activity.end_date }}</p>
                 <p><strong>Date of Activity:</strong> {{ activity.start_date }}</p>
                 <p><strong>Last date of activity:</strong> {{ activity.last_date }}</p>
-                <p><strong>Place:</strong> {{ activity.place }}</p>
+                <p>
+                    <strong>Place: </strong>
+                    <a href="{% url 'action:index' %}?tag=place&q={{ activity.place }}">{{ activity.place }}</a>
+                </p>
                 <p><strong>Participant Limit:</strong>
                     {% if activity.participant_limit %}
                         {{ activity.participant_limit }}
@@ -85,11 +91,13 @@
                 </p>
 
             </div>
-            <div class="tags">
-                <p><strong>Tags:</strong></p>
+            <div class="category">
+                <p><strong>Categories:</strong></p>
                 <ul>
-                    {% for tag in activity.tags.all %}
-                        <li>{{ tag.name }}</li>
+                    {% for each_category in activity.categories.all %}
+                        <li><a href="{% url 'action:index' %}?tag=categories&q={{ each_category.name }}">
+                            {{ each_category.name }}</a>
+                        </li>
                     {% empty %}
                         <li>No tags available for this activity.</li>
                     {% endfor %}

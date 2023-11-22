@@ -1,6 +1,0 @@
-[run]
-source = action
-omit = *__init__.py,*apps.py, *admin.py,action/forms/* ,action/migrations/*, action/urls/*, action/tests/*
-
-[report]
-omit = *__init__.py,*apps.py, *admin.py,action/forms/* ,action/migrations/*, action/urls/*, action/tests/*

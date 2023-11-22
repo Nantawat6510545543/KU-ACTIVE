@@ -7,7 +7,6 @@ from django.views import generic
 from action.models import User
 
 
-# TODO refactor to separate file (utils.py + each views/models), especially get_queryset()
 class ProfileView(LoginRequiredMixin, generic.ListView):
     template_name = 'action/profile/detail.html'
     context_object_name = 'profile'

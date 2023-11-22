@@ -14,7 +14,7 @@ class FriendView(LoginRequiredMixin, generic.ListView):
 
         if query:
             user_friend = user_friend.filter(username__icontains=query)
-        return user_friend
+        return user_friend.distinct()
 
 
 class AddFriendView(LoginRequiredMixin, generic.ListView):
@@ -30,7 +30,7 @@ class AddFriendView(LoginRequiredMixin, generic.ListView):
 
         if query:
             add_list = add_list.filter(username__icontains=query)
-        return add_list
+        return add_list.distinct()
 
 
 class RequestView(LoginRequiredMixin, generic.ListView):
@@ -48,4 +48,4 @@ class RequestView(LoginRequiredMixin, generic.ListView):
 
         if query:
             friend_request = friend_request.filter(sender__username__icontains=query)
-        return friend_request
+        return friend_request.distinct()

@@ -1,14 +1,15 @@
 from django.shortcuts import redirect
 from django.views import generic
 
-from action.utils import search_utils
+from action.models import Category
+from action.utils.search_utils import BaseSearcher
 
 TAG_OPTIONS = [
     ('title', 'Title'),
     ('owner', 'Owner'),
-    ('tag', 'Tag'),
+    ('categories', 'Categories'),
     ('place', 'Place'),
-    ('start_date', 'Date'),
+    ('date_exact', 'Exact Date'),
 ]
 
 # Some tag requires login
@@ -22,7 +23,7 @@ class IndexView(generic.ListView):
     def get(self, request, *args, **kwargs):
         tag = request.GET.get('tag')
 
-        # Check if tag in register_tag_list and user is logged in
+        # User must log in to access registered tag list
         if tag in REGISTERED_TAG_LIST and not request.user.is_authenticated:
             return redirect('login')
 
@@ -30,11 +31,13 @@ class IndexView(generic.ListView):
         return super(IndexView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        return search_utils.get_index_queryset(self.request)
+        searcher = BaseSearcher(self.request)
+        return searcher.get_index_query()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         # Add the tag options to the context
+        context['categories'] = Category.objects.all()
         context['tags'] = TAG_OPTIONS
         return context

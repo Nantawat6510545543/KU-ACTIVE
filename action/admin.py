@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Activity, ActivityStatus, FriendStatus, Tag, User
+from .models import Activity, ActivityStatus, FriendStatus, Category, User
 from .forms import ActivityAdminForm
 
 
@@ -22,8 +22,8 @@ class ActivityAdmin(admin.ModelAdmin):
             'classes': ['wide']
         }),
 
-        ('Tags', {
-            'fields': ['tags'],
+        ('Categories', {
+            'fields': ['categories'],
             'classes': ['wide']
         }),
     ]
@@ -36,7 +36,7 @@ class ActivityAdmin(admin.ModelAdmin):
     list_filter = ['owner']
     search_fields = ['title']
     ordering = ('title',)
-    filter_horizontal = ('tags',)
+    filter_horizontal = ('categories',)
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -64,7 +64,7 @@ class ActivityStatusAdmin(admin.ModelAdmin):
     ordering = ['participants', 'activity']
 
 
-class TagAdmin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name']
     ordering = ('id',)
 
@@ -73,4 +73,4 @@ admin.site.register(Activity, ActivityAdmin)
 admin.site.register(FriendStatus, FriendStatusAdmin)
 admin.site.register(ActivityStatus, ActivityStatusAdmin)
 admin.site.register(User, UserAdmin)
-admin.site.register(Tag, TagAdmin)
+admin.site.register(Category, CategoryAdmin)

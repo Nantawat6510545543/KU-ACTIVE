@@ -10,7 +10,7 @@ class UserModelTest(TestCase):
             'email': 'test@example.com',
             'first_name': 'John',
             'last_name': 'Doe',
-            'active': True,
+            'is_active': True,
         }
         self.user = utils.create_user(**self.user_data)
 

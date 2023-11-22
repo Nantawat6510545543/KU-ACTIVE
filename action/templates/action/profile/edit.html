@@ -7,7 +7,6 @@ Edit profile
 
 {% block content %}
 <div class="profile-outer-edit">
-    {{ form.errors }}
     <div class="title">
         <h1>Edit Profile</h1>
     </div>
@@ -15,7 +14,7 @@ Edit profile
         <form method="post" action="{% url 'action:edit_profile' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <h1>
-                <img class="background-img" id="uploaded_background" src="{% if user.background_picture %} data:image/png;base64,{{ user.background_picture }} {% else %} {% static 'action/images/guest-img.png' %} {% endif %}"
+                <img class="background-img" id="uploaded_background" src="{% if user.background_picture %} data:image/png;base64,{{ user.background_picture }} {% else %} {% static 'action/images/background.png' %} {% endif %}"
                      alt="{{ user.username }}'s background_picture Profile Picture">
                 <div class="profile-img-box">
                     <img class="profile-img" id="uploaded_profile" src="{% if user.profile_picture %} data:image/png;base64,{{ user.profile_picture }} {% else %} {% static 'action/images/guest-img.png' %} {% endif %}"
@@ -30,7 +29,7 @@ Edit profile
                     {% elif field.name == 'background_picture' %}
                         <div>
                             <p>{{ field.label_tag }}</p>
-                            <input id="Input_background" type="file" name="profile_picture" onchange="display_Background()">
+                            <input id="Input_background" type="file" name="background_picture" onchange="display_Background()">
                         </div>
                     {% elif field.name == 'password' %}
                     {% else %}
