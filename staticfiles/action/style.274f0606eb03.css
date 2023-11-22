@@ -1,22 +1,11 @@
 body {
-    background: rgba(167,230,154,1);
+    background: linear-gradient(0deg, rgba(66,119,55,1) 0%, rgba(85,154,71,1) 36%, rgba(108,210,88,1) 65%, rgba(167,230,154,1) 100%);
+    background: #d6ef52;
     margin: 0;
     width: 100%;
 }
 
-table.style1 a {
-    text-decoration: none;
-}
 
-a:-webkit-any-link {
-    color: black;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-a:-webkit-any-link:hover {
-    text-decoration: underline;
-}
 /*login.html*/
 
 .form-container {
