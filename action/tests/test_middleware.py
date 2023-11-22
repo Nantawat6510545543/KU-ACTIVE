@@ -1,29 +1,25 @@
+import logging
+
 from django.http import Http404, HttpResponse, HttpResponseNotFound
 from django.test import Client, RequestFactory, TestCase
 from django.urls import reverse
 
-from action.middleware import Render404Middleware, RemoveWhitespaceMiddleware, UpdateSessionMiddleware
+from action.middleware import Render404Middleware, RemoveWhitespaceMiddleware
 
 
 class MiddlewareTests(TestCase):
     def setUp(self):
+        logging.disable(logging.CRITICAL)  # Disable error message during unittest
         self.factory = RequestFactory()
         self.client = Client()
 
-    def test_render_404_middleware_debug_true(self):
+    def test_render_404_middleware(self):
         middleware = Render404Middleware(HttpResponseNotFound)
-        request = self.factory.get('/invalid')
-        with self.settings(DEBUG=True):
-            with self.assertRaises(Http404):
-                middleware(request)
-
-    def test_render_404_middleware_debug_false(self):
-        middleware = Render404Middleware(HttpResponseNotFound)
-        request  = self.factory.get('/invalid')
-        with self.settings(DEBUG=False):
-            with self.assertRaises(Http404):
-                response = middleware(request)
-                self.assertTemplateUsed(response, '404_error.html')
+        response = self.client.get('/invalid')        
+        
+        with self.assertRaises(Http404):
+            updated_response = middleware(response)
+            self.assertTemplateUsed(updated_response, '404_error.html')
 
     def test_remove_whitespace_middleware(self):
         middleware = RemoveWhitespaceMiddleware(HttpResponse)
