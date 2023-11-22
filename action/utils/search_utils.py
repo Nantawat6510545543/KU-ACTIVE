@@ -26,7 +26,7 @@ def get_categories_list(request: HttpRequest):
     return values_category_q
 
 
-class BaseSearcher:  # TODO Dependency Injection!!!
+class BaseSearcher:
     def __init__(self, request: HttpRequest):
         self.request = request
         self.user = request.user
@@ -58,9 +58,9 @@ class BaseSearcher:  # TODO Dependency Injection!!!
 
     # Note: "is None" does not work with empty string/list/dict
     def get_index_query(self):
-        # print(f"{self.query_dict =}")
         category_list = get_categories_list(self.request)
 
+        # Case where there's a list of category
         if category_list:
             self.tag = 'category_list'
             self.set_searcher()
@@ -68,7 +68,7 @@ class BaseSearcher:  # TODO Dependency Injection!!!
 
         # Case where query is None (not empty string), for tags without 'q' as url parameters.
         # Tags: upcoming, popular, recent, friend_joined, registered, favorited tags.
-        if not self.query_dict:
+        if not self.query_dict and not category_list:
             # This returns the last value of tag=, assuming there's only one tag= in url
             self.tag = self.request.GET.get('tag')
             self.set_searcher()
@@ -81,11 +81,6 @@ class BaseSearcher:  # TODO Dependency Injection!!!
 
             self.tag = each_tag
             self.set_searcher()
-
-            # print(f"{self.tag=}")
-            # print(f"{each_query=}")
-            # print(f"{self.searcher=}")
-
             self.activities &= self.searcher.get_index_query()
 
         return self.activities
@@ -138,7 +133,7 @@ class CategoriesSearcher(BaseSearcher):
         return self.activities.filter(categories__name__iexact=categories_query)
 
 
-class CategoryListSearcher(BaseSearcher):  # Currently doesn't work
+class CategoryListSearcher(BaseSearcher):
     def get_index_query(self):
         category_list = get_categories_list(self.request)
         for each_category in category_list:
