@@ -28,33 +28,18 @@ def create_social_app():
     social_app.sites.add(site)
     return social_app
 
-
 def create_user(username='tester', password='password', **kwargs):
-    user = User.objects.create_user(username=username, password=password)
-
     user_fields = {
+        "username": username,
+        "password": password,
         "event_encoder": {},
-        "email": None,
-        "first_name": None,
-        "last_name": None,
-        "active": kwargs.get("is_active", True)
+        "email": kwargs.get("email", None),
+        "first_name": kwargs.get("first_name", ""),
+        "last_name": kwargs.get("last_name", ""),
+        "is_active": kwargs.get("is_active", True)
     }
 
-    user_fields.update(kwargs)
-
-    user.email = user_fields["event_encoder"]
-
-    if user_fields["email"] is not None:
-        user.email = user_fields["email"]
-
-    if user_fields["first_name"] is not None:
-        user.first_name = user_fields["first_name"]
-
-    if user_fields["last_name"] is not None:
-        user.last_name = user_fields["last_name"]
-
-    user.save()
-    return user
+    return User.objects.create_user(**user_fields)
 
 def create_category(name):
     return Category.objects.create(name=name)
@@ -80,7 +65,6 @@ def create_activity(owner, **kwargs):
     if categories:
         activity.categories.set(categories)
 
-    activity.save()
     return activity
 
 
@@ -122,7 +106,7 @@ def create_friend_status(sender: User, receiver: User,
 
     friend_status = FriendStatus.objects.create(
         sender=sender,
-        receiver=receiver,
+        receiver=receiver
     )
     if request_status is not None:
         friend_status.request_status = request_status
