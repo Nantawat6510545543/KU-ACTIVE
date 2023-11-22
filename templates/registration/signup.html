@@ -7,28 +7,35 @@
         <title class="form">Register</title>
     </head>
     <body>
-        {{ form.errors }}
-        <form method="POST" class="form-container" enctype="multipart/form-data">
-            <h2>Register</h2>
-            {% csrf_token %}
-            <table class="form-table">
-                {% for field in form %}
-                    {% if field.name == "profile_picture" %}
-                        <h4>{{ field.label_tag }}</h4>
-                        <input type="file" name="profile_picture">
-                    {% else %}
-                        <h4>{{ field.label_tag }} {{ field }}</h4>
-                        {{ field.help_text }}<br>
-                    {% endif %}
+        <div class="signup">
+            <form method="POST" class="signup-form" enctype="multipart/form-data">
+                <h1>Register</h1>
+                {% for field, error_messages in form.errors.items %}
+                    {% for error_message in error_messages %}
+                        <h3 style="color:red;">{{ error_message }}</h3>
+                    {% endfor %}
                 {% endfor %}
-                <tr>
-                    <td colspan="2" class="form-submit">
-                        <button type="submit" class="submit-button">Register</button>
-                    </td>
-                </tr>
-            </table>
-            <p>Already have an account? <a href="{% url 'login' %}">Login here.</a></p>
-            <p>Want to visit our page first? <a href="{% url 'action:index' %}">Click here.</a></p>
-        </form>
+                {% csrf_token %}
+                <table class="form-table">
+                    {% for field in form %}
+                        {% if field.name == "profile_picture" %}
+                        {% elif field.name == "background_picture" %}
+                        {% elif field.name == "bio" %}
+                        {% else %}
+                            <h4>{{ field.label_tag }}</h4>
+                            {{ field }}
+                            <p style="color:red;">{{ field.help_text }}</p>
+                        {% endif %}
+                    {% endfor %}
+                    <tr>
+                        <td colspan="2" class="form-submit">
+                            <button type="submit" class="submit-button">Register</button>
+                        </td>
+                    </tr>
+                </table>
+                <p>Already have an account? <a href="{% url 'login' %}">Login here.</a></p>
+                <p>Want to visit our page first? <a href="{% url 'action:index' %}">Click here.</a></p>
+            </form>
+        </div>
     </body>
 </html>

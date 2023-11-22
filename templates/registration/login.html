@@ -8,21 +8,29 @@
         <title>Login</title>
     </head>
     <body>
-        <div class="form-container">
-            <h2>Login</h2>
-            <form method="POST">
-                {% csrf_token %}
-                <div class="form-table">
-                    {{ form.as_table }}
+        <div class="outer-form-container">
+            <div class="form-container">
+                <h1>Login</h1>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-table">
+                        {{ form.as_table }}
+                    </div>
+                    <p class="form-submit">
+                        <button type="submit">Login</button>
+                    </p>
+                    <input type="hidden" name="next" value="{{next}}"/>
+                </form>
+                <div>
+                    <a href="{% provider_login_url 'google' %}" class="login-with-google-btn">Sign in with Google</a>
                 </div>
-                <p class="form-submit">
-                    <button type="submit">Login</button>
-                </p>
-                <input type="hidden" name="next" value="{{next}}"/>
-            </form>
-            <p><a href="{% provider_login_url 'google' %}" class="btn btn-google">Login with Google</a></p>
-            <p>Don't have an account? <a href="/signup">Sign up</a></p>
-            <p>Want to visit our page first? <a href="{% url 'action:index' %}">Click here.</a></p>
+                <div>
+                    <p>Don't have an account? <a href="/signup">Sign up</a></p>
+                </div>
+                <div>
+                    <p>Want to visit our page first? <a href="{% url 'action:index' %}">Click here.</a></p>
+                </div>
+            </div>
         </div>
     </body>
 </html>
