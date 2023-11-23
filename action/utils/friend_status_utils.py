@@ -13,7 +13,6 @@ def fetch_friend_status(request, friend_id: int) -> FriendStatus:
         friend_status = FriendStatus.objects.get(
             Q(sender=user1, receiver=user2) | Q(sender=user2, receiver=user1))
 
-    # This might cause bug idk
     except FriendStatus.DoesNotExist:
         friend_status = FriendStatus.objects. \
             create(sender=user1, receiver=user2)

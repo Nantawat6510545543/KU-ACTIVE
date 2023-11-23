@@ -28,10 +28,18 @@ class AddFriendView(LoginRequiredMixin, generic.ListView):
         # Exclude yourself from the list and people you are already friends with
         add_list = User.objects.exclude(id=user.id).exclude(id__in=user.friends)
 
-        if query:
-            add_list = add_list.filter(username__icontains=query)
+        add_list = add_list.filter(username__icontains=query)
         return add_list.distinct()
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pending_request = FriendStatus.objects.filter(
+            sender=self.request.user, request_status='Pending')
+        
+        pending_request_user_list = User.objects.filter(receiver__id__in=pending_request)
+        context['pending_request_user_list'] = pending_request_user_list
+
+        return context
 
 class RequestView(LoginRequiredMixin, generic.ListView):
     template_name = 'action/friends/request.html'
@@ -46,6 +54,5 @@ class RequestView(LoginRequiredMixin, generic.ListView):
             request_status='Pending'
         )
 
-        if query:
-            friend_request = friend_request.filter(sender__username__icontains=query)
+        friend_request = friend_request.filter(sender__username__icontains=query)
         return friend_request.distinct()

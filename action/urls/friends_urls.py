@@ -12,4 +12,5 @@ friends_patterns = [
     path('requests/', views.RequestView.as_view(), name='request_view'),
     path('requests/accept/<int:friend_id>', views.accept_request, name='accept_request'),
     path('requests/decline/<int:friend_id>', views.decline_request, name='decline_request'),
+    path('requests/cancel/<int:friend_id>', views.cancel_request, name='cancel_request'),
 ]

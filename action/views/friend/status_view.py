@@ -6,22 +6,26 @@ from django.urls import reverse
 from action import utils
 
 
-# TODO add check to not allow user to add themselves as friend
 @login_required
 def add_friend(request, friend_id: int):
     friend_status = utils.fetch_friend_status(request, friend_id)
 
+    # Can't use (friend_status.receiver is request.user)
+    # Ex: A -> B, A -> C; these two A's are not the same user instances
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
+    elif friend_status.sender == request.user and friend_status.request_status == "Pending":
+        messages.warning(request, "You have already sent a friend request to that person.")
+    elif friend_status.receiver == request.user and friend_status.request_status == "Pending":
+        messages.warning(request, "That person have already sent a friend request to you.")
     else:
-        friend_status.request_status = 'Pending'
+        friend_status.request_status = "Pending"
         friend_status.save()
         messages.success(request, "Request Sent.")
 
     return redirect(reverse("action:add_view"))
 
 
-# TODO add check to not allow user to remove themselves as friend
 @login_required
 def remove_friend(request, friend_id: int):
     friend_status = utils.fetch_friend_status(request, friend_id)
@@ -64,3 +68,16 @@ def decline_request(request, friend_id: int):
         messages.success(request, "You have declined this person.")
 
     return redirect(reverse("action:request_view"))
+
+
+@login_required
+def cancel_request(request, friend_id: int):
+    friend_status = utils.fetch_friend_status(request, friend_id)
+
+    if friend_status.request_status == 'Pending':
+        friend_status.delete()
+        messages.success(request, "Request cancelled.")
+    else:
+        messages.warning(request, "You have not sent a friend request to that person.")
+
+    return redirect(reverse("action:add_view"))
