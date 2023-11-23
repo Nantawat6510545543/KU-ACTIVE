@@ -35,7 +35,9 @@ class EndToEndTestBase(StaticLiveServerTestCase):
         self.url = self.getUrl(view, (web_id,))
         self.browser.get(self.url)
 
-    def find_by_class(self, class_name):
+    def find_by_class(self, class_name, element=None):
+        if element is not None:
+            return element.find_element(By.CLASS_NAME, class_name)
         return self.browser.find_element(By.CLASS_NAME, class_name)
 
     def getUrl(self, view, args=None):
