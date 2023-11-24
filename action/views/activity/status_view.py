@@ -9,7 +9,6 @@ from action.models import ActivityStatus, Activity
 from action import utils
 
 
-# TODO modify so it fits open/closed principle using State pattern
 @login_required
 def participate(request, activity_id: int):
     activity = get_object_or_404(Activity, pk=activity_id)

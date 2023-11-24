@@ -50,7 +50,6 @@ class UpdateSessionMiddleware(BaseMiddleware):
 
         request.session['query'] = query or None
 
-        # TODO This is a quick fix, will fix in detail later
         if tag not in [None, 'upcoming', 'popular', 'recent']:
             request.session['tag'] = tag
 
