@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.http import HttpRequest
 from django.shortcuts import redirect
 from django.views import generic
 
@@ -14,8 +15,11 @@ TAG_OPTIONS = [
 ]
 
 # Some tag requires login
-REGISTERED_TAG_LIST = ['registered', 'favorited', 'friend_joined']
+LOGIN_REQUIRED_TAG_LIST = ['registered', 'favorited', 'friend_joined']
 
+def guest_access_login_tag(request: HttpRequest) -> bool:
+    tag = request.GET.get('tag')
+    return tag in LOGIN_REQUIRED_TAG_LIST and not request.user.is_authenticated
 
 class IndexView(generic.ListView):
     """
@@ -40,10 +44,8 @@ class IndexView(generic.ListView):
             Redirects to the login page if a registered user attempts to access tags that
             require login without being authenticated.
         """
-        tag = request.GET.get('tag')
-
         # User must log in to access registered tag list
-        if tag in REGISTERED_TAG_LIST and not request.user.is_authenticated:
+        if guest_access_login_tag(request):
             return redirect('login')
 
         try:  # Continue with the regular behavior of the view
