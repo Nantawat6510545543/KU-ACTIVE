@@ -181,3 +181,9 @@ a:-webkit-any-link:hover {
         margin-right: 5%;
     }
 }
+
+@media screen and (max-width: 1060px) {
+    .logo {
+        display:none;
+    }
+}
