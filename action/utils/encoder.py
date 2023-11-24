@@ -29,11 +29,11 @@ def image_to_base64(image_file):
         FileNotFoundError and OSError occurs when image file was encoded.
         FileNotFoundError may arise on Windows, while OSError may occur on Mac.
     """
-    max_size = 1024
+    MAX_SIZE = 1024
 
     try:
         img = Image.open(image_file)
-        img = img.resize((max_size, max_size))
+        img = img.resize((MAX_SIZE, MAX_SIZE))
         img = img.convert('RGB')
 
         img_byte_array = BytesIO()
@@ -50,3 +50,21 @@ def image_to_base64(image_file):
     except (FileNotFoundError, OSError):
         # If the image_file is already encoded or other file-related errors
         return image_file
+
+# TODO rewrite
+def background_image_to_base64(background_file: list):
+    """
+    Input: background_file (list) -> a list of background file
+    Output: background_image_data (dict) -> Key = Background i, Value = encoded image
+    """
+    background_image_data = {}
+    num = 1
+
+    for image in background_file:
+        encoded = image_to_base64(image)
+        if encoded != '':
+            image_key = f'background {num}'
+            background_image_data.update({image_key: encoded})
+            num += 1
+
+    return background_image_data

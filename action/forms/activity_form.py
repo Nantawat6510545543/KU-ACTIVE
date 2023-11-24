@@ -5,6 +5,39 @@ from django.utils import timezone
 from action.models import Activity
 from action import utils
 
+def not_datetime(cleaned_data):
+    pub_date = cleaned_data.get('pub_date')
+    end_date = cleaned_data.get('end_date')
+    start_date = cleaned_data.get('start_date')
+    last_date = cleaned_data.get('last_date')
+
+    return not isinstance(pub_date, datetime) or not isinstance(end_date, datetime) or \
+        not isinstance(start_date, datetime) or not isinstance(last_date, datetime)
+
+def activity_is_newly_created(activity_id):
+    return not Activity.objects.filter(id=activity_id).exists()
+
+def pub_date_is_less_than_today(cleaned_data):
+    pub_date = cleaned_data.get('pub_date')
+    return pub_date.date() < timezone.now().date()
+
+def end_date_and_pub_date_difference_less_than_1_hour(cleaned_data):
+    pub_date = cleaned_data.get('pub_date')
+    end_date = cleaned_data.get('end_date')
+
+    time_difference = end_date - pub_date
+    return time_difference.total_seconds() < 3600
+
+def get_background_data(cleaned_data, activity_id):
+    # Set the activity's background picture attribute
+    background_file = cleaned_data.get('background_picture')
+    existing_activity = Activity.objects.filter(id=activity_id)
+
+    if background_file is None and existing_activity.exists():
+        return existing_activity[0].background_picture
+
+    return utils.background_image_to_base64(background_file)
+
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
@@ -54,52 +87,26 @@ class ActivityForm(forms.ModelForm):
         start_date = cleaned_data.get('start_date')
         last_date = cleaned_data.get('last_date')
 
-        if not isinstance(pub_date, datetime) or \
-            not isinstance(end_date, datetime) or \
-            not isinstance(start_date, datetime) or \
-            not isinstance(last_date, datetime):
+        if not_datetime(cleaned_data):
             return cleaned_data
 
-        activity_is_created = Activity.objects.filter(id=self.instance.id)
+        if activity_is_newly_created(self.instance.id) and pub_date_is_less_than_today(cleaned_data):
+            self.add_error('pub_date', "Publication Date must be at least today.")
 
-        if not activity_is_created:
-            if pub_date.date() < timezone.now().date():
-                self.add_error('pub_date',
-                               "Publication Date must be at least today.")
-
-        time_difference = end_date - pub_date
-        if time_difference.total_seconds() < 3600:
-            self.add_error('end_date',
-                           "Application Deadline must be at least 1 hour "
+        if end_date_and_pub_date_difference_less_than_1_hour(cleaned_data):
+            self.add_error('end_date', "Application Deadline must be at least 1 hour "
                            "after Publication Date.")
 
         if start_date < end_date:
-            self.add_error('start_date',
-                           "Date of Activity must be after "
+            self.add_error('start_date', "Date of Activity must be after "
                            "Application Deadline.")
 
         if last_date < start_date:
             self.add_error('last_date', "Last Date must be after Start Date.")
 
-        # # Set the activity's picture attribute
+        # Set the activity's picture attribute
         picture_file = self.cleaned_data.get('picture')
         cleaned_data['picture'] = utils.image_to_base64(picture_file)
-
-        # # Set the activity's background picture attribute
-        background_file = self.cleaned_data.get('background_picture')
-        background_data = {}
-
-        if not background_file and activity_is_created:
-            background_data = activity_is_created[0].background_picture
-        else:
-            num = 1
-            for image in background_file:
-                encoded = utils.image_to_base64(image)
-                if encoded != '':
-                    image_key = f'background {num}'
-                    background_data[image_key] = encoded
-                    num += 1
-
-        cleaned_data['background_picture'] = background_data
+        cleaned_data['background_picture'] = get_background_data(cleaned_data, self.instance.id)
 
         return cleaned_data
