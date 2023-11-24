@@ -1,3 +1,4 @@
+from datetime import datetime
 from django import forms
 from django.utils import timezone
 
@@ -52,6 +53,12 @@ class ActivityForm(forms.ModelForm):
         end_date = cleaned_data.get('end_date')
         start_date = cleaned_data.get('start_date')
         last_date = cleaned_data.get('last_date')
+
+        if not isinstance(pub_date, datetime) or \
+            not isinstance(end_date, datetime) or \
+            not isinstance(start_date, datetime) or \
+            not isinstance(last_date, datetime):
+            raise forms.ValidationError("")
 
         activity_is_created = Activity.objects.filter(id=self.instance.id)
 
