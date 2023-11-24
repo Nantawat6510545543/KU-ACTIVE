@@ -11,8 +11,11 @@ from .category import Category
 
 class Activity(models.Model):
     """
-    Represents an activity in the application.
+    Represents an activity within the KU-ACTIVE application.
+
+    This model is for users to post, favorite, and participate in various events.
     """
+
     owner = models.ForeignKey(User, related_name='owner',
                               on_delete=models.CASCADE)
     title = models.CharField(max_length=22)
@@ -34,6 +37,12 @@ class Activity(models.Model):
 
     @property
     def participants(self) -> QuerySet[User]:
+        """
+        Participants of the activity.
+
+        Returns:
+            QuerySet[User]: Participants of the activity.
+        """
         participants = User.objects.filter(participants__activity=self,
                                            participants__is_participated=True)
         return participants
@@ -68,26 +77,29 @@ class Activity(models.Model):
     @admin.display(description='Remaining')
     def remaining_space(self) -> int | None:
         """
-       Calculate the number of remaining participant spaces in the activity.
+        Calculate the number of remaining participant spaces in the activity.
 
-       Returns:
-           int: The number of remaining spaces if there is a limit,
-                    or None if there's no limit.
-       """
+        Returns:
+            int: The number of remaining spaces if there is a limit,
+                     or None if there's no limit.
+        """
         if self.participant_limit:
             return self.participant_limit - self.participant_count  # Normal case
         return None  # If no limit is set
 
     def __str__(self):
         """
-        Returns a string of activity name.
+        Return a string of activity name.
+
+        Returns:
+            str: String representation of the activity name.
         """
         return self.title
 
     @admin.display(boolean=True, description='Published recently?')
     def was_published_recently(self) -> bool:
         """
-        Checks if the activity was published recently.
+        Check if the activity was published recently.
 
         Returns:
             bool: True if the activity was published within the last day,
@@ -99,7 +111,7 @@ class Activity(models.Model):
     @admin.display(boolean=True, description='Is published?')
     def is_published(self) -> bool:
         """
-        Checks if the activity is published.
+        Check if the activity is published.
 
         Returns:
             bool: True if the current date is on or after the activity's
@@ -111,7 +123,7 @@ class Activity(models.Model):
     @admin.display(boolean=True, description='Can participate?')
     def can_participate(self) -> bool:
         """
-        checks if participation is allowed for this activity.
+        Check if participation is allowed for this activity.
 
         Returns:
             bool: True if the current date are within the activity's time range
@@ -120,4 +132,3 @@ class Activity(models.Model):
         if self.remaining_space is None or self.remaining_space > 0:
             return self.pub_date <= timezone.now() <= self.end_date
         return False
-

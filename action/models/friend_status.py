@@ -3,6 +3,13 @@ from .user import User
 
 
 class FriendStatus(models.Model):
+    """
+    Represents the friendship status between two users.
+
+    Note:
+        This model is used to track the friendship status between users.
+    """
+
     STATUS_CHOICES = (
         ('Pending', 'Pending'),
         ('Accepted', 'Accepted'),
