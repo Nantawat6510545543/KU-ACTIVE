@@ -58,7 +58,7 @@ class ActivityForm(forms.ModelForm):
             not isinstance(end_date, datetime) or \
             not isinstance(start_date, datetime) or \
             not isinstance(last_date, datetime):
-            raise forms.ValidationError("")
+            return cleaned_data
 
         activity_is_created = Activity.objects.filter(id=self.instance.id)
 
