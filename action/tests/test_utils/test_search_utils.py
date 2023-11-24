@@ -179,7 +179,7 @@ class SearchUtilsTests(TestCase):
         activity2 = create_activity(owner=create_user("New User 2"),
                         title="Test Multiple Categories 2", categories=activity_categories[2:7])
         activity3 = create_activity(owner=create_user("New User 3"),
-                title="Test Multiple Categories 2", categories=activity_categories[5:10])
+                title="Test Multiple Categories 3", categories=activity_categories[5:10])
 
         # Case 1: Category 1-2 in activity1
         request = self.factory.get(reverse('action:index'), {
@@ -264,3 +264,23 @@ class SearchUtilsTests(TestCase):
         searcher = BaseSearcher(request)
         query = list(searcher.get_index_query())
         self.assertListEqual(query, [activity2])
+
+    def test_multiple_tags_search(self):
+        user = create_user("Test User 1")
+        activity1 = create_activity(owner=user,
+                        title="Test Tag", place="Test Place",
+                        start_date=timezone.now() - timezone.timedelta(days=1))
+        activity2 = create_activity(owner=user,
+                        title="Test Tag", place="Test Place", 
+                        start_date=timezone.now() - timezone.timedelta(days=10))
+
+        last_week_string = (timezone.now() - timezone.timedelta(days=7)).strftime('%Y-%m-%dT%H:%M')
+        request = self.factory.get(reverse('action:index'), {
+            'tag': ['title', 'owner', 'place', 'date_start_point'],
+            'q': ['Test Tag', 'Test User 1', 'Test place', last_week_string]
+        })
+        request.user = self.user
+
+        searcher = BaseSearcher(request)
+        query = list(searcher.get_index_query())
+        self.assertListEqual(query, [activity1])
