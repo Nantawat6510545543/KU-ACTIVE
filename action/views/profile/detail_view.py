@@ -7,10 +7,23 @@ from action.models import User
 
 
 class ProfileView(generic.ListView):
+    """View for displaying user profiles."""
+
     template_name = 'action/profile/detail.html'
     context_object_name = 'profile'
 
     def get(self, request: HttpRequest, user_id=None):
+        """
+        Handle HTTP GET requests to display the user profile.
+
+        Returns:
+            HttpResponse: The HTTP response to be returned.
+
+        Notes:
+            If the user ID is not provided, the profile of the currently authenticated user is displayed.
+            Redirects to the login page if the user is not logged in and attempts to view their own profile.
+            Redirects to the index page with a warning message if the user ID is invalid.
+        """
         if user_id is None:  # Set default value to current user
             user_id = request.user.id
 
