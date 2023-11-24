@@ -45,13 +45,11 @@ profile
                 <h1>Participated Activities: {{ profile.participated_activity.count }}</h1>
             </div>
             <div class="scroll">
-                {% if profile.participated_activity %}
-                    {% for participated in profile.participated_activity  %}
-                        <li><a href="{% url 'action:detail' participated.id %}">{{ participated }}</a></li>
-                    {% endfor %}
-                {% else %}
-                    <p>You do not have any participated activity</p>
-                {% endif%}
+                {% for participated in profile.participated_activity  %}
+                    <li><a href="{% url 'action:detail' participated.id %}">{{ participated }}</a></li>
+                {% empty %}
+                    <p>No participated activity.</p>
+                {% endfor %}
             </div>
       </div>
       <div class="favorite-activity">
@@ -59,13 +57,11 @@ profile
                 <h1>Favorite Activity Count: {{ user.favorited_activity.count }} </h1>
           </div>
           <div class="scroll">
-            {% if user.favorited_activity %}
-              {% for favorited in user.favorited_activity  %}
-                  <li class="Participated-box"><a href="{% url 'action:detail' favorited.id %}">{{ favorited }}</a></li>
-              {% endfor %}
-            {% else %}
-              <p>You do not have any favorited activity</p>
-            {% endif%}
+            {% for favorited in user.favorited_activity  %}
+                <li class="Participated-box"><a href="{% url 'action:detail' favorited.id %}">{{ favorited }}</a></li>
+            {% empty %}
+                <p>You do not have any favorited activity</p>
+            {% endfor %}
           </div>
       </div>
 
@@ -74,15 +70,15 @@ profile
   <div class="right-box">
       <div class="right-detail">
           <div>
-          <h1 class="First-Name">First Name: </h1><span> {{ profile.first_name }}</span>
+            <h1 class="First-Name">First Name: </h1><span> {{ profile.first_name }}</span>
           </div>
           <div>
-          <h1 class="Last-Name">Last Name: </h1><span> {{ profile.last_name }}</span>
+            <h1 class="Last-Name">Last Name: </h1><span> {{ profile.last_name }}</span>
           </div>
           <div>
-          <h1 class="Email">Email: </h1> <span> {{ profile.email }}</span>
+            <h1 class="Email">Email: </h1> <span> {{ profile.email }}</span>
           </div>
-          <h1 class="Count">Friend Count: </h1> <span> {{ profile.friends.count }}</span>
+            <h1 class="Count">Friend Count: </h1> <span> {{ profile.friends.count }}</span>
           <div class="bio">
                 <h1>Bio:</h1>
                 <p> {{ profile.bio }}</p>
