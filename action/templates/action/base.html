@@ -89,20 +89,20 @@
 
     {% block message %}
         {% if messages %}
-            {% for message in messages %}
-                <div id="alert-msg" class="alert-msg">
-                    <span class="close-msg" onclick="closeMsg()">&times;</span>
-                    {% if form.errors %}
-                        {% for field, error_messages in form.errors.items %}
-                            {% for error_message in error_messages %}
-                                <p>{{ error_message }}</p>
+            <div id="alert-msg" class="alert-msg">
+                <span class="close-msg" onclick="closeMsg()">&times;</span>
+                {% for message in messages %}
+                        {% if form.errors %}
+                            {% for field, error_messages in form.errors.items %}
+                                {% for error_message in error_messages %}
+                                    <p>{{ error_message }}</p>
+                                {% endfor %}
                             {% endfor %}
-                        {% endfor %}
-                    {% else %}
-                        <p>{{ message }}</p>
-                    {% endif %}
-                </div>
-            {% endfor %}
+                        {% else %}
+                            <p>{{ message }}</p>
+                        {% endif %}
+                {% endfor %}
+            </div>
         {% endif %}
     {% endblock %}
 
