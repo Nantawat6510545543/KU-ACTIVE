@@ -5,20 +5,23 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import generic
 
-
 from action.models import Activity
 
 
 class ActivityManageView(LoginRequiredMixin, generic.ListView):
+    """View for managing and displaying a list of activities owned by the current user."""
+
     template_name = 'action/activity/manage.html'
     context_object_name = 'activity_manage_list'
 
     def get_queryset(self):
+        """Return the queryset of activities owned by the current user."""
         return Activity.objects.filter(owner=self.request.user)
 
 
 @login_required
 def delete_activity(request, activity_id: int):
+    """View for deleting a specific activity owned by the user."""
     try:
         activity = Activity.objects.get(id=activity_id)
     except Activity.DoesNotExist:

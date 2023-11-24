@@ -8,6 +8,16 @@ from action import utils
 
 @login_required
 def add_friend(request, friend_id: int):
+    """
+    Send a friend request to the specified user.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        friend_id (int): The ID of the user to whom the friend request is sent.
+
+    Returns:
+        HttpResponse: The HTTP response to be returned.
+    """
     friend_status = utils.fetch_friend_status(request, friend_id)
 
     # Can't use (friend_status.receiver is request.user)
@@ -28,6 +38,16 @@ def add_friend(request, friend_id: int):
 
 @login_required
 def remove_friend(request, friend_id: int):
+    """
+    Remove the specified user from the friend list.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        friend_id (int): The ID of the user to be removed from the friend list.
+
+    Returns:
+        HttpResponse: The HTTP response to be returned.
+    """
     friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
@@ -43,6 +63,16 @@ def remove_friend(request, friend_id: int):
 
 @login_required
 def accept_request(request, friend_id: int):
+    """
+    Accept a friend request from the specified user.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        friend_id (int): The ID of the user who sent the friend request.
+
+    Returns:
+        HttpResponse: The HTTP response to be returned.
+    """
     friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
@@ -58,6 +88,16 @@ def accept_request(request, friend_id: int):
 
 @login_required
 def decline_request(request, friend_id: int):
+    """
+    Decline a friend request from the specified user.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        friend_id (int): The ID of the user who sent the friend request.
+
+    Returns:
+        HttpResponse: The HTTP response to be returned.
+    """
     friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.is_friend:
@@ -72,6 +112,16 @@ def decline_request(request, friend_id: int):
 
 @login_required
 def cancel_request(request, friend_id: int):
+    """
+    Cancel a friend request sent to the specified user.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        friend_id (int): The ID of the user to whom the friend request was sent.
+
+    Returns:
+        HttpResponse: The HTTP response to be returned.
+    """
     friend_status = utils.fetch_friend_status(request, friend_id)
 
     if friend_status.request_status == 'Pending':

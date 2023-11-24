@@ -10,11 +10,13 @@ from action.forms import ActivityForm
 
 
 class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
+    """View for creating a new activity."""
+
     form_class = ActivityForm
     template_name = 'action/activity/create.html'
 
     def get_initial(self):
-        # Set the initial value for the field
+        """Set the initial values for the form fields."""
         initial = super().get_initial()
         initial['owner'] = self.request.user
         initial['pub_date'] = timezone.now()
@@ -24,15 +26,15 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
         return initial
 
     def form_valid(self, form):
+        """Render the form with success messages if it's valid."""
         messages.success(self.request, 'Activity created successfully.')
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        # Render the form with errors if it's invalid
-        messages.error(self.request,
-                       'Activity creation failed. Please check the form.')
+        """Render the form with errors if it's invalid."""
+        messages.error(self.request, 'Activity creation failed. Please check the form.')
         return self.render_to_response(self.get_context_data(form=form))
 
     def get_success_url(self):
-        # Define the URL to redirect to on form success
+        """Define the URL to redirect to on form success."""
         return reverse('action:index')
