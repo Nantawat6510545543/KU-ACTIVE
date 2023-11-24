@@ -46,7 +46,9 @@ profile
             </div>
             <div class="scroll">
                 {% for participated in profile.participated_activity  %}
-                    <li><a href="{% url 'action:detail' participated.id %}">{{ participated }}</a></li>
+                    <a href="{% url 'action:detail' participated.id %}">
+                        <li>{{ participated }}</li>
+                    </a>
                 {% empty %}
                     <p>No participated activity.</p>
                 {% endfor %}
@@ -57,11 +59,13 @@ profile
                 <h1>Favorite Activity Count: {{ user.favorited_activity.count }} </h1>
           </div>
           <div class="scroll">
-            {% for favorited in user.favorited_activity  %}
-                <li class="Participated-box"><a href="{% url 'action:detail' favorited.id %}">{{ favorited }}</a></li>
-            {% empty %}
-                <p>You do not have any favorited activity</p>
-            {% endfor %}
+              {% for favorited in user.favorited_activity  %}
+                  <a href="{% url 'action:detail' favorited.id %}">
+                      <li>{{ favorited }}</li>
+                  </a>
+              {% empty %}
+                  <p>You do not have any favorited activity</p>
+              {% endfor %}
           </div>
       </div>
 

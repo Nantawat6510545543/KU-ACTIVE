@@ -123,6 +123,12 @@
     0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.left-box .scroll{
+    max-height: 210px;
+    overflow-y: scroll;
+    overflow-x: scroll;
+}
+
 .left-box .scroll li{
     list-style-type:none;
     background:white;
@@ -131,13 +137,6 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19);
     padding:10px 0px;
-}
-
-.left-box .scroll{
-    max-height: 210px;
-    overflow-y: scroll;
-    overflow-y: scroll;
-
 }
 
 .left-box .scroll a{
