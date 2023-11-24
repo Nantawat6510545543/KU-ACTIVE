@@ -6,9 +6,8 @@ from .activity import Activity
 
 
 class ActivityStatus(models.Model):
-    """
-    Represents a participation for each user.
-    """
+    """Represents the participation status of a user in a specific activity."""
+
     participants = models.ForeignKey(User, related_name='participants',
                                      on_delete=models.CASCADE)
     activity = models.ForeignKey(Activity, related_name='activity',
