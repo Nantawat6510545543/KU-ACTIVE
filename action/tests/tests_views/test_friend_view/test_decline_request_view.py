@@ -11,9 +11,7 @@ class DeclineRequestViewTests(FriendStatusViewSetup):
         Should be able to decline requests from users who are not yet friend.
         success messages should be shown.
         """
-        already_friend_status = create_friend_status(self.user_1, self.user_2)
-        self.assertEqual(already_friend_status.request_status, None)
-        self.assertFalse(already_friend_status.is_friend)
+        create_friend_status(self.user_1, self.user_2)  # no friend status
 
         self.client.force_login(self.user_2)
         response = self.client.get(reverse('action:decline_request', args=[self.user_1.id]))
@@ -34,9 +32,7 @@ class DeclineRequestViewTests(FriendStatusViewSetup):
         Should not be able to accept requests from users who are already friend.
         Failed messages should be shown.
         """
-        already_friend_status = create_friend_status(self.user_1, self.user_2, 'Accepted')
-        self.assertEqual(already_friend_status.request_status, 'Accepted')
-        self.assertTrue(already_friend_status.is_friend)
+        create_friend_status(self.user_1, self.user_2, 'Accepted')  # already friend status
 
         self.client.force_login(self.user_2)
         response = self.client.get(reverse('action:decline_request', args=[self.user_1.id]))

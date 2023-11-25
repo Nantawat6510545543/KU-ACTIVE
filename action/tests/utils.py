@@ -32,6 +32,11 @@ SOCIAL_APP_DEFAULT_DATA = {
     'secret': "",
 }
 
+REQUEST_DEFAULT_DATA = {
+    'tag': 'title',
+    'q': 'test'
+}
+
 class FriendStatusViewSetup(ABC, TestCase):
     def setUp(self) -> None:
         self.user_1 = create_user(**USER_DATA_1)
@@ -86,7 +91,6 @@ def create_activity(owner, **kwargs):
 
     return activity
 
-
 def create_activity_status(participants, activity, is_participated=True,
                            is_favorited=False):
     activity_status = ActivityStatus.objects.create(
@@ -96,7 +100,6 @@ def create_activity_status(participants, activity, is_participated=True,
         is_favorited=is_favorited
     )
     return activity_status
-
 
 def create_friend_status(sender: User, receiver: User,
                          request_status: str = None) -> FriendStatus:
@@ -134,19 +137,14 @@ def create_friend_status(sender: User, receiver: User,
     friend_status.save()
     return friend_status
 
-
 def quick_join(participants, activity):
     """
-    Given participants and activity object, automatically join an activity
+    Given participants name and activity object, automatically join an activity
     """
     create_activity_status(create_user(participants), activity,
                            is_participated=True)
 
-
-def create_request(view, args, user=None, data=None):
-    if data is None:
-        data = {'tag': 'title', 'q': 'test'}
+def create_request(view, args, user=None, data=REQUEST_DEFAULT_DATA):
     request = RequestFactory().get(reverse(view, args=args), data)
-    if user is not None:
-        request.user = user
+    request.user = user
     return request

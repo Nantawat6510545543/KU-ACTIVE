@@ -11,9 +11,7 @@ class RemoveViewTests(FriendStatusViewSetup):
         Should be able to remove friends.
         Success messages should be shown.
         """
-        already_friend_status = create_friend_status(self.user_1, self.user_2, 'Accepted')
-        self.assertEqual(already_friend_status.request_status, 'Accepted')
-        self.assertTrue(already_friend_status.is_friend)
+        create_friend_status(self.user_1, self.user_2, 'Accepted')  # already friend status
 
         self.client.force_login(self.user_1)
         response = self.client.get(reverse('action:remove_friend', args=[self.user_2.id]))
@@ -33,9 +31,7 @@ class RemoveViewTests(FriendStatusViewSetup):
         Should not be able to remove users who are not friend.
         Fail messages should be shown.
         """
-        already_friend_status = create_friend_status(self.user_1, self.user_2, None)
-        self.assertEqual(already_friend_status.request_status, None)
-        self.assertFalse(already_friend_status.is_friend)
+        create_friend_status(self.user_1, self.user_2)  # no friend status
 
         self.client.force_login(self.user_1)
         response = self.client.get(reverse('action:remove_friend', args=[self.user_2.id]))

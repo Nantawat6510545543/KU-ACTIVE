@@ -10,6 +10,7 @@ from action.views.activity.create_view import ActivityCreateView
 class ActivityCreateViewTests(TestCase):
     def setUp(self) -> None:
         self.user = create_user(**USER_DATA_1)
+
     def test_access_activity_create_guest(self):
         """
         Unauthenticated users are not allowed to access this function.
