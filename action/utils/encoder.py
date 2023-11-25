@@ -7,7 +7,7 @@ MAX_SIZE = 1024
 
 def image_to_base64(image_file):
     """
-    Converts an image file to a base64-encoded string.
+    Convert an image file to a base64-encoded string.
 
     Args:
         image_file (django.core.files.uploadedfile.InMemoryUploadedFile):
@@ -31,7 +31,6 @@ def image_to_base64(image_file):
         FileNotFoundError and OSError occur when image file was encoded.
         FileNotFoundError may arise on Windows, while OSError may occur on Mac.
     """
-
     try:
         img = Image.open(image_file)
     except (ValueError, AttributeError, UnidentifiedImageError):

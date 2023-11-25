@@ -10,8 +10,13 @@ from action.models import Activity, ActivityStatus
 
 def get_query_dict(request: HttpRequest):
     """
-    Custom function that return dictionary of 
-    {request.GET.get('tag'): request.GET.get('q')}
+    Custom function that returns a dictionary of {request.GET.get('tag'): request.GET.get('q')}.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        dict: A dictionary mapping tag values to their corresponding query values.
     """
     params = parse_qs(request.META['QUERY_STRING'], keep_blank_values=True)
     values_q = params.get('q', [])
@@ -20,13 +25,33 @@ def get_query_dict(request: HttpRequest):
     return dict(zip(values_tag, values_q))
 
 
-#  Checkbox works differently than searchbox, so custom function is needed
 def get_categories_list(request: HttpRequest):
+    """
+    Get a list of category values from the request.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        list: A list of category values.
+    """
     values_category_q = request.GET.getlist('category_q')
     return values_category_q
 
 
 class BaseSearcher:
+    """
+    Base class for searching activities based on various criteria.
+
+    Attributes:
+        request (HttpRequest): The HTTP request object.
+        user (action.User): The authenticated user.
+        query_dict (dict): A dictionary of tag values to query values.
+        tag (str): The current tag being processed.
+        activities (QuerySet): The base queryset of activities.
+        searcher (BaseSearcher): The searcher instance for the current tag.
+    """
+
     def __init__(self, request: HttpRequest):
         self.request = request
         self.user = request.user
@@ -37,6 +62,12 @@ class BaseSearcher:
         pub_date__lte=timezone.now()).order_by('-pub_date')
 
     def set_searcher(self):
+        """
+        Set the searcher instance based on the current tag.
+
+        Raises:
+            ValueError: If an invalid tag is encountered.
+        """
         match self.tag:
             case None: searcher = IndexSearcher
             case 'title': searcher = TitleSearcher
@@ -56,8 +87,13 @@ class BaseSearcher:
             case _: raise ValueError(f"Invalid Tag: {self.tag}")
         self.searcher = searcher(self.request)
 
-    # Note: "is None" does not work with empty string/list/dict
     def get_index_query(self):
+        """
+        Get the final queryset based on the applied filters.
+
+        Returns:
+            QuerySet: The final queryset of activities.
+        """
         category_list = get_categories_list(self.request)
 
         # Case where there's a list of category
@@ -87,23 +123,44 @@ class BaseSearcher:
 
 
 class IndexSearcher(BaseSearcher):
+    """
+    Searcher for the default index view.
+
+    Returns the base queryset of activities.
+    """
     def get_index_query(self):
         return self.activities
 
 
 class TitleSearcher(BaseSearcher):
+    """
+    Searcher for filtering activities by title.
+
+    Returns activities that contain the specified title query.
+    """
     def get_index_query(self):
         title_query = self.query_dict.get('title', None)
         return self.activities.filter(title__icontains=title_query)
 
 
 class OwnerSearcher(BaseSearcher):
+    """
+    Searcher for filtering activities by owner.
+
+    Returns activities owned by the specified owner query.
+    """
     def get_index_query(self):
         owner_query = self.query_dict.get('owner', None)
         return self.activities.filter(owner__username__icontains=owner_query)
 
 
 class DateSearcher(BaseSearcher):
+    """
+    Searcher for filtering activities by date.
+
+    Returns activities based on date-related queries such as start_point, end_point, and exact_point.
+    """
+
     def get_index_query(self):
         # Set the value to None if not specified, using empty string
         # (default for empty url params) wil causes invalid datetime format
@@ -120,7 +177,7 @@ class DateSearcher(BaseSearcher):
 
         if start_point:
             filtered_activity &= self.activities.filter(start_date__gte=start_point)
-        
+
         if end_point:
             filtered_activity &= self.activities.filter(start_date__lte=end_point)
 
@@ -128,12 +185,23 @@ class DateSearcher(BaseSearcher):
 
 
 class CategoriesSearcher(BaseSearcher):
+    """
+    Searcher for filtering activities by categories.
+
+    Returns activities that belong to the specified category query.
+    """
+
     def get_index_query(self):
         categories_query = self.query_dict.get('categories', None)
         return self.activities.filter(categories__name__iexact=categories_query)
 
 
 class CategoryListSearcher(BaseSearcher):
+    """
+    Searcher for filtering activities by a list of categories.
+
+    Returns activities that belong to any category in the specified category list.
+    """
     def get_index_query(self):
         category_list = get_categories_list(self.request)
         for each_category in category_list:
@@ -143,12 +211,24 @@ class CategoryListSearcher(BaseSearcher):
 
 
 class PlaceSearcher(BaseSearcher):
+    """
+    Searcher for filtering activities by place.
+
+    Returns activities that match the specified place query.
+    """
+
     def get_index_query(self):
         place_query = self.query_dict.get('place', None)
         return self.activities.filter(place__icontains=place_query)
 
 
 class UpcomingSearcher(BaseSearcher):
+    """
+    Searcher for retrieving upcoming activities.
+
+    Returns activities with publication dates within the next 7 days.
+    """
+
     def get_index_query(self):
         now = timezone.now()
         delay = timezone.timedelta(days=7)
@@ -157,6 +237,12 @@ class UpcomingSearcher(BaseSearcher):
 
 
 class PopularSearcher(BaseSearcher):
+    """
+    Searcher for retrieving popular activities.
+
+    Returns activities ordered by the number of participants in descending order.
+    """
+
     def get_index_query(self):
         self.activities = self.activities.filter(activity__is_participated=True)
 
@@ -168,6 +254,12 @@ class PopularSearcher(BaseSearcher):
 
 
 class RecentSearcher(BaseSearcher):
+    """
+    Searcher for retrieving recent activities.
+
+    Returns activities with publication dates within the last 7 days.
+    """
+
     def get_index_query(self):
         now = timezone.now()
         delay = timezone.timedelta(days=7)
@@ -176,6 +268,12 @@ class RecentSearcher(BaseSearcher):
 
 
 class FriendJoinedSearcher(LoginRequiredMixin, BaseSearcher):
+    """
+    Searcher for retrieving activities joined by friends.
+
+    Returns activities in which the authenticated user's friends have participated.
+    """
+
     def get_index_query(self):
         # Can't directly call activity__participants_is_participated,
         # not supported by Django ManyToOneRel. So it's broken into two queries
@@ -189,10 +287,22 @@ class FriendJoinedSearcher(LoginRequiredMixin, BaseSearcher):
 
 
 class RegisteredSearcher(LoginRequiredMixin, BaseSearcher):
+    """
+    Searcher for retrieving registered activities.
+
+    Returns activities in which the authenticated user has participated.
+    """
+
     def get_index_query(self):
         return self.activities.filter(id__in=self.user.participated_activity)
 
 
 class FavoritedSearcher(LoginRequiredMixin, BaseSearcher):
+    """
+    Searcher for retrieving favorited activities.
+
+    Returns activities favorited by the authenticated user.
+    """
+
     def get_index_query(self):
         return self.activities.filter(id__in=self.user.favorited_activity)
