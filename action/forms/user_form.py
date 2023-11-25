@@ -6,9 +6,17 @@ from action import utils
 
 
 def changed_username_is_not_unique(cleaned_data, user_id):
-    """Check if the username is unique among existing users or not."""
-    user_account = User.objects.filter(
-        username=cleaned_data.get('username'))
+    """
+    Check if the changed username is already used by another existing user.
+
+    Args:
+        cleaned_data (dict): A dictionary containing form field values.
+        user_id (int): The ID of the user being edited.
+
+    Returns:
+        bool: True if the changed username is not unique, False otherwise.
+    """
+    user_account = User.objects.filter(username=cleaned_data.get('username'))
 
     # If the username has been changed, check if it's unique
     return user_account.exclude(pk=user_id).exists()
