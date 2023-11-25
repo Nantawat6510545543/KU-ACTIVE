@@ -4,6 +4,8 @@ from django.test import TestCase
 from action.tests.utils import create_activity, create_user
 from action.tests.end_to_end_base import EndToEndTestBase
 
+from selenium.webdriver.support.ui import Select
+
 
 class ActivityIndexViewTests(TestCase):
     def setUp(self) -> None:
@@ -128,4 +130,71 @@ class ActivityIndexViewTests(TestCase):
 
 
 class ActivityIndexViewTestsE2E(EndToEndTestBase):
-    pass
+    def setUp(self):
+        self.name = 'user1'
+        self.password = 'pass1'
+        self.user = create_user(self.name, self.password)
+        self.view = 'action:index'
+
+    def test_search_activity_by_title(self):
+        """
+        Search by title should show correctly.
+        """
+        activity_1_data = {"title": "activity 1"}
+        create_activity(self.user, **activity_1_data)
+
+        # Navigate to the index page
+        url = self.getUrl(self.view)
+        self.browser.get(url)
+
+        # Select "Title" as the search criteria
+        search_criteria_dropdown_class_name = "search-criteria"
+        search_criteria_dropdown = Select(self.find_by_class(search_criteria_dropdown_class_name))
+        search_criteria_dropdown.select_by_visible_text("Title")
+
+        # Find the search bar element by class name
+        search_bar_class_name = "search-bar"
+        search_bar = self.find_by_class(search_bar_class_name)
+        # Input the activity name into the search bar
+        search_bar.send_keys(activity_1_data["title"])
+
+        # Find the submit button element by class name
+        submit_button_class_name = "search-button"
+        submit_button = self.find_by_class(submit_button_class_name)
+        # Click the submit button
+        submit_button.click()
+
+        activity_element = self.find_by_class("activity")
+        self.assertIn(activity_1_data["title"], activity_element.text)
+
+    def test_search_activity_by_owner(self):
+        """
+        Search by Owner name should show correctly.
+        """
+        # Create an activity
+        activity_1_data = {"title": "activity 1"}
+        create_activity(self.user, **activity_1_data)
+
+        # Navigate to the index page
+        url = self.getUrl(self.view)
+        self.browser.get(url)
+
+        # Select "Owner" as the search criteria
+        search_criteria_dropdown_class_name = "search-criteria"
+        search_criteria_dropdown = Select(self.find_by_class(search_criteria_dropdown_class_name))
+        search_criteria_dropdown.select_by_visible_text("Owner")
+
+        # Find the search bar element by class name
+        search_bar_class_name = "search-bar"
+        search_bar = self.find_by_class(search_bar_class_name)
+        # Input the owner's name into the search bar
+        search_bar.send_keys(self.user.username)
+
+        # Find the submit button element by class name
+        submit_button_class_name = "search-button"
+        submit_button = self.find_by_class(submit_button_class_name)
+        # Click the submit button
+        submit_button.click()
+
+        activity_element = self.find_by_class("activity")
+        self.assertIn(self.user.username, activity_element.text)
