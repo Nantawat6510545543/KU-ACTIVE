@@ -27,12 +27,28 @@ def not_datetime(cleaned_data):
 
 
 def activity_is_newly_created(activity_id):
-    """Check if the activity with the given ID exists in the database."""
+    """
+    Check if the activity with the given ID exists in the database.
+
+    Args:
+        activity_id (int): The ID of the activity to check.
+
+    Returns:
+        bool: True if the activity with the given ID does not exist, False otherwise.
+    """
     return not Activity.objects.filter(id=activity_id).exists()
 
 
 def pub_date_is_less_than_today(cleaned_data):
-    """Check if the Publication Date is earlier than today."""
+    """
+    Check if the Publication Date is earlier than today.
+
+    Args:
+        cleaned_data (dict): A dictionary containing form field values.
+
+    Returns:
+        bool: True if the Publication Date is earlier than today, False otherwise.
+    """
     pub_date = cleaned_data.get('pub_date')
     return pub_date.date() < timezone.now().date()
 
