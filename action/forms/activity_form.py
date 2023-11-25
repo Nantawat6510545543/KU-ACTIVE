@@ -6,13 +6,13 @@ from action.models import Activity
 from action import utils
 
 def not_datetime(cleaned_data):
-    pub_date = cleaned_data.get('pub_date')
-    end_date = cleaned_data.get('end_date')
-    start_date = cleaned_data.get('start_date')
-    last_date = cleaned_data.get('last_date')
+    date_type_list = ['pub_date', 'end_date', 'start_date', 'last_date']
 
-    return not isinstance(pub_date, datetime) or not isinstance(end_date, datetime) or \
-        not isinstance(start_date, datetime) or not isinstance(last_date, datetime)
+    for each_date_type in date_type_list:
+        date = cleaned_data.get(each_date_type)
+        if not isinstance(date, datetime):
+            return True
+    return False
 
 def activity_is_newly_created(activity_id):
     return not Activity.objects.filter(id=activity_id).exists()
@@ -21,10 +21,7 @@ def pub_date_is_less_than_today(cleaned_data):
     pub_date = cleaned_data.get('pub_date')
     return pub_date.date() < timezone.now().date()
 
-def end_date_and_pub_date_difference_less_than_1_hour(cleaned_data):
-    pub_date = cleaned_data.get('pub_date')
-    end_date = cleaned_data.get('end_date')
-
+def end_date_and_pub_date_difference_less_than_1_hour(pub_date, end_date):
     time_difference = end_date - pub_date
     return time_difference.total_seconds() < 3600
 
@@ -93,7 +90,7 @@ class ActivityForm(forms.ModelForm):
         if activity_is_newly_created(self.instance.id) and pub_date_is_less_than_today(cleaned_data):
             self.add_error('pub_date', "Publication Date must be at least today.")
 
-        if end_date_and_pub_date_difference_less_than_1_hour(cleaned_data):
+        if end_date_and_pub_date_difference_less_than_1_hour(pub_date, end_date):
             self.add_error('end_date', "Application Deadline must be at least 1 hour "
                            "after Publication Date.")
 

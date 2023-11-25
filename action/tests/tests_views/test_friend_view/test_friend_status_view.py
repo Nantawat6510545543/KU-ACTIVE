@@ -1,18 +1,19 @@
+from abc import ABC
 from django.urls import reverse
 from django.test import TestCase
 from django.contrib.messages import get_messages
 
 from action.models import FriendStatus
-from action.tests.utils import create_friend_status, create_user
+from action.tests.utils import create_friend_status, create_user, USER_DATA_1, USER_DATA_2
 
 
-class FriendStatusViewTests(TestCase):
+class FriendStatusViewSetup(ABC, TestCase):
     def setUp(self) -> None:
-        user_data_1 = {"email": "test1@example.com"}
-        user_data_2 = {"email": "test2@example.com"}
-        self.user_1 = create_user(username="John", password="abc", **user_data_1)
-        self.user_2 = create_user(username="Jane", password="abc", **user_data_2)
+        self.user_1 = create_user(**USER_DATA_1)
+        self.user_2 = create_user(**USER_DATA_2)
 
+
+class AddViewTests(FriendStatusViewSetup):
     def test_add_new_friend(self):
         """
         Should be able to send friend requests to other users.
@@ -57,6 +58,8 @@ class FriendStatusViewTests(TestCase):
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "You are already friend with this person.")
 
+
+class RemoveViewTests(FriendStatusViewSetup):
     def test_remove_friend(self):
         """
         Should be able to remove friends.
@@ -101,12 +104,14 @@ class FriendStatusViewTests(TestCase):
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "This person is not friend with you.")
 
+
+class AcceptRequestViewTests(FriendStatusViewSetup):
     def test_accept_not_friend(self):
         """
         Should be able to accept requests from users who are not yet friend.
         success messages should be shown.
         """
-        already_friend_status = create_friend_status(self.user_1, self.user_2, None)
+        already_friend_status = create_friend_status(self.user_1, self.user_2)
         self.assertEqual(already_friend_status.request_status, None)
         self.assertFalse(already_friend_status.is_friend)
 
@@ -147,12 +152,14 @@ class FriendStatusViewTests(TestCase):
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "You are already friend with this person.")
 
+
+class DeclineRequestViewTests(FriendStatusViewSetup):
     def test_decline_not_friend(self):
         """
         Should be able to decline requests from users who are not yet friend.
         success messages should be shown.
         """
-        already_friend_status = create_friend_status(self.user_1, self.user_2, None)
+        already_friend_status = create_friend_status(self.user_1, self.user_2)
         self.assertEqual(already_friend_status.request_status, None)
         self.assertFalse(already_friend_status.is_friend)
 
@@ -192,3 +199,8 @@ class FriendStatusViewTests(TestCase):
         messages = list(storage)
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "You are already friend with this person.")
+
+
+class CancelRequestViewTests(FriendStatusViewSetup):
+    def test_cancel_request(self):
+        no_friend_status = create_friend_status(self.user_1, self.user_2)

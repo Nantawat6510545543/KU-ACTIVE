@@ -9,7 +9,7 @@ def changed_username_is_not_unique(cleaned_data, user_id):
         username=cleaned_data.get('username'))
 
     # If the username has been changed, check if it's unique
-    return user_account.exclude(pk=user_id.instance.pk).exists()
+    return user_account.exclude(pk=user_id).exists()
 
 
 class UserForm(UserCreationForm):

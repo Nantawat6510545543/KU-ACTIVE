@@ -8,23 +8,36 @@ from action.models import User, Activity, ActivityStatus, FriendStatus, Category
 from mysite.settings import SITE_ID, SITE_NAME, SITE_DOMAIN
 
 
+USER_DATA_1 = {
+    "username": "John",
+    "password": "abc",
+    "email": "test1@example.com"
+}
+
+USER_DATA_2 = {
+    "username": "Jane",
+    "password": "abc",
+    "email": "test2@example.com"
+}
+
+SITE_DEFAULT_DATA = {
+    'name': SITE_NAME,
+    'domain': SITE_DOMAIN
+}
+
+SOCIAL_APP_DEFAULT_DATA = {
+    'name': 'Login with Google OAuth',
+    'client_id': "",
+    'secret': "",
+}
+
 def create_social_app():
     site, _ = Site.objects.get_or_create(
-        id=SITE_ID,
-        defaults={
-            'name': SITE_NAME,
-            'domain': SITE_DOMAIN,
-        },
-    )
+        id=SITE_ID, defaults=SITE_DEFAULT_DATA)
 
     social_app, _ = SocialApp.objects.get_or_create(
-        provider='google',
-        defaults={
-            'name': 'Login with Google OAuth',
-            'client_id': "",
-            'secret': "",
-        },
-    )
+        provider='google', defaults=SOCIAL_APP_DEFAULT_DATA)
+
     social_app.sites.add(site)
     return social_app
 
