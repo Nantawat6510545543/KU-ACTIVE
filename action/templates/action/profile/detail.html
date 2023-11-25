@@ -80,9 +80,12 @@
                 <h1 class="Last-Name">Last Name: </h1><span> {{ profile.last_name }}</span>
             </div>
             <div>
-                <h1 class="Email">Email: </h1> <span> {{ profile.email }}</span>
+                <h1 class="Email">Email: </h1><span> {{ profile.email }}</span>
             </div>
-            <h1 class="Count">Friend Count: </h1> <span> {{ profile.friends.count }}</span>
+            <h1 class="Count">Friend Count: </h1><span> {{ profile.friends.count }}</span>
+            {% if user.id == profile.id %}
+                <a href="{% url 'action:friends' %}">Friend list</a>
+            {% endif %}
             <div class="bio">
                 <h1>Bio:</h1>
                 <p> {{ profile.bio }}</p>
