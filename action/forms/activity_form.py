@@ -1,7 +1,7 @@
 from datetime import datetime
 from django import forms
 from django.utils import timezone
-from action.forms import MultipleFileField
+from action.forms.multiple_file import MultipleFileField
 
 from action.models import Activity
 from action import utils
