@@ -1,12 +1,8 @@
 from django.urls import reverse
-from django.test import TestCase
-from action.tests.utils import create_user, create_friend_status, USER_DATA_1, USER_DATA_2
+from action.tests.utils import create_friend_status, FriendStatusViewSetup
 
 
-class ActivityStatusViewTests(TestCase):
-    def setUp(self) -> None:
-        self.user_1 = create_user(**USER_DATA_1)
-        self.user_2 = create_user(**USER_DATA_2)
+class DetailViewTest(FriendStatusViewSetup):
 
     def test_friend_view_guest(self):
         """

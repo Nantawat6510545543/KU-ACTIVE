@@ -1,6 +1,7 @@
+from abc import ABC
 from django.contrib.sites.models import Site
 from django.utils import timezone
-from django.test import RequestFactory
+from django.test import RequestFactory, TestCase
 from django.urls import reverse
 from allauth.socialaccount.models import SocialApp
 
@@ -30,6 +31,11 @@ SOCIAL_APP_DEFAULT_DATA = {
     'client_id': "",
     'secret': "",
 }
+
+class FriendStatusViewSetup(ABC, TestCase):
+    def setUp(self) -> None:
+        self.user_1 = create_user(**USER_DATA_1)
+        self.user_2 = create_user(**USER_DATA_2)
 
 def create_social_app():
     site, _ = Site.objects.get_or_create(
