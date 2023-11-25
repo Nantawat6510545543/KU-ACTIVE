@@ -53,7 +53,7 @@ class ActivityEditViewTests(TestCase):
         self.client.force_login(self.user_1)
         url = reverse('action:edit', args=(self.activity_1.id,))
         form_data = {
-            'owner': self.user_1.pk,
+            "owner": self.user_1.pk,
             "title": "Change",
             "pub_date": timezone.now(),
             "end_date": timezone.now() + timezone.timedelta(days=1),

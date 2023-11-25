@@ -1,5 +1,7 @@
 from abc import ABC
+from django.contrib.messages import get_messages
 from django.contrib.sites.models import Site
+from django.http import HttpResponse
 from django.utils import timezone
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
@@ -121,21 +123,25 @@ def create_friend_status(sender: User, receiver: User,
           request_status is 'Accepted', indicating that the users are now friends.
     """
     STATUS_CHOICES = [choice[0] for choice in FriendStatus.STATUS_CHOICES]
+    IS_FRIEND = (request_status == 'Accepted')
 
-    if (request_status is not None and
-            request_status.title() not in STATUS_CHOICES):
+    if request_status and request_status.title() not in STATUS_CHOICES:
         request_status = None
 
     friend_status = FriendStatus.objects.create(
         sender=sender,
-        receiver=receiver
+        receiver=receiver,
+        request_status=request_status,
+        is_friend=IS_FRIEND
     )
-    if request_status is not None:
-        friend_status.request_status = request_status
-        friend_status.is_friend = request_status == 'Accepted'
 
-    friend_status.save()
     return friend_status
+
+
+def create_request(view, args, user=None, data=REQUEST_DEFAULT_DATA):
+    request = RequestFactory().get(reverse(view, args=args), data)
+    request.user = user
+    return request
 
 def quick_join(participants, activity):
     """
@@ -143,8 +149,3 @@ def quick_join(participants, activity):
     """
     create_activity_status(create_user(participants), activity,
                            is_participated=True)
-
-def create_request(view, args, user=None, data=REQUEST_DEFAULT_DATA):
-    request = RequestFactory().get(reverse(view, args=args), data)
-    request.user = user
-    return request
