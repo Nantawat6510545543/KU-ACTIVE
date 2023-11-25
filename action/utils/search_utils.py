@@ -10,7 +10,7 @@ from action.models import Activity, ActivityStatus
 
 def get_query_dict(request: HttpRequest):
     """
-    Custom function that returns a dictionary of {request.GET.get('tag'): request.GET.get('q')}.
+    Extract and return a dictionary mapping tag names to their corresponding query values.
 
     Args:
         request (HttpRequest): The HTTP request object.
@@ -40,26 +40,29 @@ def get_categories_list(request: HttpRequest):
 
 
 class BaseSearcher:
-    """
-    Base class for searching activities based on various criteria.
-
-    Attributes:
-        request (HttpRequest): The HTTP request object.
-        user (action.User): The authenticated user.
-        query_dict (dict): A dictionary of tag values to query values.
-        tag (str): The current tag being processed.
-        activities (QuerySet): The base queryset of activities.
-        searcher (BaseSearcher): The searcher instance for the current tag.
-    """
+    """Base class for searching activities based on various criteria."""
 
     def __init__(self, request: HttpRequest):
+        """
+        Initialize a BaseSearcher instance with the given HTTP request.
+
+        Args:
+            request (HttpRequest): The HTTP request object.
+
+        Attributes:
+            request (HttpRequest): The HTTP request object associated with the instance.
+            user (User): The authenticated user associated with the request.
+            query_dict (dict): A dictionary mapping tag names to their corresponding query values.
+            tag (str): The current tag being processed, initially set to None.
+            activities (QuerySet): The base queryset of activities filtered by publication date.
+        """
         self.request = request
         self.user = request.user
         self.query_dict = get_query_dict(request)
         self.tag = None
 
         self.activities = Activity.objects.filter(
-        pub_date__lte=timezone.now()).order_by('-pub_date')
+            pub_date__lte=timezone.now()).order_by('-pub_date')
 
     def set_searcher(self):
         """
@@ -123,47 +126,58 @@ class BaseSearcher:
 
 
 class IndexSearcher(BaseSearcher):
-    """
-    Searcher for the default index view.
+    """Searcher for the default index view."""
 
-    Returns the base queryset of activities.
-    """
     def get_index_query(self):
+        """
+        Return the base queryset of activities.
+
+        Returns:
+            QuerySet: The base queryset of activities.
+        """
         return self.activities
 
 
 class TitleSearcher(BaseSearcher):
-    """
-    Searcher for filtering activities by title.
+    """Searcher for filtering activities by title."""
 
-    Returns activities that contain the specified title query.
-    """
     def get_index_query(self):
+        """
+        Return the queryset of activities filtered by title.
+
+        Returns:
+            QuerySet: The filtered queryset of activities.
+        """
         title_query = self.query_dict.get('title', None)
         return self.activities.filter(title__icontains=title_query)
 
 
 class OwnerSearcher(BaseSearcher):
-    """
-    Searcher for filtering activities by owner.
+    """Searcher for filtering activities by owner."""
 
-    Returns activities owned by the specified owner query.
-    """
     def get_index_query(self):
+        """
+        Return the queryset of activities filtered by owner.
+
+        Returns:
+            QuerySet: The filtered queryset of activities.
+        """
         owner_query = self.query_dict.get('owner', None)
         return self.activities.filter(owner__username__icontains=owner_query)
 
 
 class DateSearcher(BaseSearcher):
-    """
-    Searcher for filtering activities by date.
-
-    Returns activities based on date-related queries such as start_point, end_point, and exact_point.
-    """
+    """Searcher for filtering activities by date."""
 
     def get_index_query(self):
-        # Set the value to None if not specified, using empty string
-        # (default for empty url params) wil causes invalid datetime format
+        """
+        Return the queryset of activities filtered by date.
+
+        Returns:
+            QuerySet: The filtered queryset of activities.
+        """
+        # Set the value to None if not specified, using an empty string
+        # (default for empty URL params) will cause an invalid datetime format
         start_point = self.query_dict.get('date_start_point', None)
         end_point = self.query_dict.get('date_end_point', None)
         exact_point = self.query_dict.get('date_exact', None)
@@ -185,24 +199,29 @@ class DateSearcher(BaseSearcher):
 
 
 class CategoriesSearcher(BaseSearcher):
-    """
-    Searcher for filtering activities by categories.
-
-    Returns activities that belong to the specified category query.
-    """
+    """Searcher for filtering activities by categories."""
 
     def get_index_query(self):
+        """
+        Return the queryset of activities filtered by categories.
+
+        Returns:
+            QuerySet: The filtered queryset of activities.
+        """
         categories_query = self.query_dict.get('categories', None)
         return self.activities.filter(categories__name__iexact=categories_query)
 
 
 class CategoryListSearcher(BaseSearcher):
-    """
-    Searcher for filtering activities by a list of categories.
+    """Searcher for filtering activities by a list of categories."""
 
-    Returns activities that belong to any category in the specified category list.
-    """
     def get_index_query(self):
+        """
+        Return the queryset of activities filtered by a list of categories.
+
+        Returns:
+            QuerySet: The filtered queryset of activities.
+        """
         category_list = get_categories_list(self.request)
         for each_category in category_list:
             if each_category:
@@ -211,25 +230,29 @@ class CategoryListSearcher(BaseSearcher):
 
 
 class PlaceSearcher(BaseSearcher):
-    """
-    Searcher for filtering activities by place.
-
-    Returns activities that match the specified place query.
-    """
+    """Searcher for filtering activities by place."""
 
     def get_index_query(self):
+        """
+        Return the queryset of activities filtered by place.
+
+        Returns:
+            QuerySet: The filtered queryset of activities.
+        """
         place_query = self.query_dict.get('place', None)
         return self.activities.filter(place__icontains=place_query)
 
 
 class UpcomingSearcher(BaseSearcher):
-    """
-    Searcher for retrieving upcoming activities.
-
-    Returns activities with publication dates within the next 7 days.
-    """
+    """Searcher for retrieving upcoming activities."""
 
     def get_index_query(self):
+        """
+        Return the queryset of upcoming activities.
+
+        Returns:
+            QuerySet: The queryset of upcoming activities.
+        """
         now = timezone.now()
         delay = timezone.timedelta(days=7)
         activities = Activity.objects.order_by('-pub_date')
@@ -237,13 +260,15 @@ class UpcomingSearcher(BaseSearcher):
 
 
 class PopularSearcher(BaseSearcher):
-    """
-    Searcher for retrieving popular activities.
-
-    Returns activities ordered by the number of participants in descending order.
-    """
+    """Searcher for retrieving popular activities."""
 
     def get_index_query(self):
+        """
+        Return the queryset of popular activities.
+
+        Returns:
+            QuerySet: The queryset of popular activities.
+        """
         self.activities = self.activities.filter(activity__is_participated=True)
 
         # Add a temporary column and filter by it (temp_participant_count), descending
@@ -254,13 +279,15 @@ class PopularSearcher(BaseSearcher):
 
 
 class RecentSearcher(BaseSearcher):
-    """
-    Searcher for retrieving recent activities.
-
-    Returns activities with publication dates within the last 7 days.
-    """
+    """Searcher for retrieving recent activities."""
 
     def get_index_query(self):
+        """
+        Return the queryset of recent activities.
+
+        Returns:
+            QuerySet: The queryset of recent activities.
+        """
         now = timezone.now()
         delay = timezone.timedelta(days=7)
         activities = Activity.objects.order_by('-pub_date')
@@ -268,13 +295,15 @@ class RecentSearcher(BaseSearcher):
 
 
 class FriendJoinedSearcher(LoginRequiredMixin, BaseSearcher):
-    """
-    Searcher for retrieving activities joined by friends.
-
-    Returns activities in which the authenticated user's friends have participated.
-    """
+    """Searcher for retrieving activities joined by friends."""
 
     def get_index_query(self):
+        """
+        Return the queryset of activities joined by friends.
+
+        Returns:
+            QuerySet: The queryset of activities joined by friends.
+        """
         # Can't directly call activity__participants_is_participated,
         # not supported by Django ManyToOneRel. So it's broken into two queries
         # First call participants_is_participate, then filter by activity
@@ -287,22 +316,26 @@ class FriendJoinedSearcher(LoginRequiredMixin, BaseSearcher):
 
 
 class RegisteredSearcher(LoginRequiredMixin, BaseSearcher):
-    """
-    Searcher for retrieving registered activities.
-
-    Returns activities in which the authenticated user has participated.
-    """
+    """Searcher for retrieving registered activities."""
 
     def get_index_query(self):
+        """
+        Return the queryset of registered activities.
+
+        Returns:
+            QuerySet: The queryset of registered activities.
+        """
         return self.activities.filter(id__in=self.user.participated_activity)
 
 
 class FavoritedSearcher(LoginRequiredMixin, BaseSearcher):
-    """
-    Searcher for retrieving favorited activities.
-
-    Returns activities favorited by the authenticated user.
-    """
+    """Searcher for retrieving favorited activities."""
 
     def get_index_query(self):
+        """
+        Return the queryset of favorited activities.
+
+        Returns:
+            QuerySet: The queryset of favorited activities.
+        """
         return self.activities.filter(id__in=self.user.favorited_activity)
