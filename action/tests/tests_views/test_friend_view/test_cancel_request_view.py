@@ -13,6 +13,7 @@ class CancelRequestViewTests(FriendStatusViewSetup):
         self.client.force_login(self.user_1)
         response = self.client.get(reverse('action:cancel_request', args=[self.user_2.id]))
         self.assertRedirects(response, reverse('action:add_view'))
+
         # Check the messages.
         storage = get_messages(response.wsgi_request)
         messages = list(storage)

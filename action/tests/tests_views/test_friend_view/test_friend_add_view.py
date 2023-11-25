@@ -16,9 +16,11 @@ class AddViewTests(FriendStatusViewSetup):
         response = self.client.get(reverse('action:add_friend', args=[self.user_2.id]))
         # Should be redirected.
         self.assertRedirects(response, reverse('action:add_view'))
+
         # Check the status again.
         friends_status = FriendStatus.objects.get(sender=self.user_1, receiver=self.user_2)
         self.assertEqual(friends_status.request_status, 'Pending')
+
         # Check the messages.
         storage = get_messages(response.wsgi_request)
         messages = list(storage)
@@ -36,9 +38,11 @@ class AddViewTests(FriendStatusViewSetup):
         response = self.client.get(reverse('action:add_friend', args=[self.user_2.id]))
         # Should be redirected.
         self.assertRedirects(response, reverse('action:add_view'))
+
         # Check the status again.
         friends_status = FriendStatus.objects.get(sender=self.user_1, receiver=self.user_2)
         self.assertEqual(friends_status.request_status, 'Accepted')
+
         # Check the messages.
         storage = get_messages(response.wsgi_request)
         messages = list(storage)

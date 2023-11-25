@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.utils import timezone
-from django.urls import reverse
 
 from .utils import create_user, create_category, create_activity, \
     create_activity_status, create_friend_status, quick_join, create_request
@@ -43,8 +42,9 @@ class TestUtilsTest(TestCase):
         self.assertIsNone(friend_status1.request_status)
         self.assertFalse(friend_status1.is_friend)
 
-        friend_status2 = create_friend_status(sender=sender, receiver=receiver, request_status='Pending')
-        self.assertEqual(friend_status2.request_status, 'Pending')
+        friend_status2 = create_friend_status(sender=sender, receiver=receiver, request_status='Accepted')
+        self.assertEqual(friend_status2.request_status, 'Accepted')
+        self.assertTrue(friend_status2.is_friend)
 
     def test_quick_join(self):
         quick_join(participants="Test Quick Join", activity=self.activity)
