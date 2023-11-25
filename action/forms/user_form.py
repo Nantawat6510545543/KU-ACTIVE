@@ -4,7 +4,9 @@ from django.contrib.auth.forms import UserCreationForm
 from action.models import User
 from action import utils
 
+
 def changed_username_is_not_unique(cleaned_data, user_id):
+    """Check if the username is unique among existing users or not."""
     user_account = User.objects.filter(
         username=cleaned_data.get('username'))
 
@@ -13,6 +15,8 @@ def changed_username_is_not_unique(cleaned_data, user_id):
 
 
 class UserForm(UserCreationForm):
+    """Form for creating user accounts."""
+
     profile_picture = background_picture = forms.ImageField(required=False)
 
     class Meta:
@@ -30,6 +34,7 @@ class UserForm(UserCreationForm):
         ]
 
     def clean(self):
+        """Clean and validate the form data."""
         cleaned_data = super().clean()
 
         if changed_username_is_not_unique(cleaned_data, self.instance.id):

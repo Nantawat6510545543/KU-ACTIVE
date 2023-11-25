@@ -1,11 +1,22 @@
 from datetime import datetime
 from django import forms
 from django.utils import timezone
+from action.forms import MultipleFileField
 
 from action.models import Activity
 from action import utils
 
+
 def not_datetime(cleaned_data):
+    """
+    Check if any of the specified date fields in cleaned_data are not instances of datetime.
+
+    Args:
+        cleaned_data (dict): A dictionary containing form field values.
+
+    Returns:
+        bool: True if any specified date field is not an instance of datetime, False otherwise.
+    """
     date_type_list = ['pub_date', 'end_date', 'start_date', 'last_date']
 
     for each_date_type in date_type_list:
@@ -14,19 +25,44 @@ def not_datetime(cleaned_data):
             return True
     return False
 
+
 def activity_is_newly_created(activity_id):
+    """Check if the activity with the given ID exists in the database."""
     return not Activity.objects.filter(id=activity_id).exists()
 
+
 def pub_date_is_less_than_today(cleaned_data):
+    """Check if the Publication Date is earlier than today."""
     pub_date = cleaned_data.get('pub_date')
     return pub_date.date() < timezone.now().date()
 
+
 def end_date_and_pub_date_difference_less_than_1_hour(pub_date, end_date):
+    """
+    Check if the difference between Application Deadline and Publication Date is less than 1 hour.
+
+    Args:
+        pub_date (datetime): Publication Date.
+        end_date (datetime): Application Deadline.
+
+    Returns:
+        bool: True if the time difference is less than 1 hour, False otherwise.
+    """
     time_difference = end_date - pub_date
     return time_difference.total_seconds() < 3600
 
+
 def get_background_data(cleaned_data, activity_id):
-    # Set the activity's background picture attribute
+    """
+    Get background data based on the cleaned_data and activity_id.
+
+    Args:
+        cleaned_data (dict): A dictionary containing form field values.
+        activity_id (int): ID of the activity.
+
+    Returns:
+        dict: base64-encoded background data.
+    """
     background_file = cleaned_data.get('background_picture')
     existing_activity = Activity.objects.filter(id=activity_id)
 
@@ -36,25 +72,9 @@ def get_background_data(cleaned_data, activity_id):
     return utils.background_image_to_base64(background_file)
 
 
-class MultipleFileInput(forms.ClearableFileInput):
-    allow_multiple_selected = True
-
-
-class MultipleFileField(forms.FileField):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("widget", MultipleFileInput())
-        super().__init__(*args, **kwargs)
-
-    def clean(self, data, initial=None):
-        single_file_clean = super().clean
-        if isinstance(data, (list, tuple)):
-            result = [single_file_clean(d, initial) for d in data]
-        else:
-            result = single_file_clean(data, initial)
-        return result
-
-
 class ActivityForm(forms.ModelForm):
+    """Form for creating and updating activities."""
+
     date_fields = {
         'pub_date': 'Publication Date',
         'end_date': 'Application Deadline',
@@ -77,6 +97,7 @@ class ActivityForm(forms.ModelForm):
         fields = '__all__'
 
     def clean(self):
+        """Clean and validate the form data."""
         cleaned_data = super().clean()
 
         pub_date = cleaned_data.get('pub_date')
@@ -87,16 +108,17 @@ class ActivityForm(forms.ModelForm):
         if not_datetime(cleaned_data):
             return cleaned_data
 
-        if activity_is_newly_created(self.instance.id) and pub_date_is_less_than_today(cleaned_data):
+        if activity_is_newly_created(self.instance.id) and pub_date_is_less_than_today(
+                cleaned_data):
             self.add_error('pub_date', "Publication Date must be at least today.")
 
         if end_date_and_pub_date_difference_less_than_1_hour(pub_date, end_date):
             self.add_error('end_date', "Application Deadline must be at least 1 hour "
-                           "after Publication Date.")
+                                       "after Publication Date.")
 
         if start_date < end_date:
             self.add_error('start_date', "Date of Activity must be after "
-                           "Application Deadline.")
+                                         "Application Deadline.")
 
         if last_date < start_date:
             self.add_error('last_date', "Last Date must be after Start Date.")

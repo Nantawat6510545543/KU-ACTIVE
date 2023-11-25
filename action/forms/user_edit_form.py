@@ -7,6 +7,8 @@ from action import utils
 
 
 class UserEditForm(UserChangeForm):
+    """Form for editing user profile information."""
+
     profile_picture = background_picture = forms.ImageField(required=False)
 
     class Meta:
@@ -22,6 +24,7 @@ class UserEditForm(UserChangeForm):
         ]
 
     def clean(self):
+        """Clean and validate the form data."""
         cleaned_data = super().clean()
 
         if changed_username_is_not_unique(cleaned_data, self.instance.id):
