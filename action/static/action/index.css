@@ -225,6 +225,8 @@ table.style1 a {
     gap: 20px;
     margin-top:30px;
     margin-bottom:30px;
+
+    justify-items: center;
 }
 
 
