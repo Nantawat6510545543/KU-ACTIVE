@@ -21,7 +21,17 @@ class ActivityManageView(LoginRequiredMixin, generic.ListView):
 
 @login_required
 def delete_activity(request, activity_id: int):
-    """View for deleting a specific activity owned by the user."""
+    """
+    View for deleting a specific activity owned by the user.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        activity_id (int): The ID of the activity to delete.
+
+
+    Returns:
+        HttpResponse: Redirect response to the activity manage view.
+    """
     try:
         activity = Activity.objects.get(id=activity_id)
     except Activity.DoesNotExist:
