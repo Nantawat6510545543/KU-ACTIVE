@@ -187,15 +187,23 @@
 .activity-general-information p {
     font-size: 20px;
     font-family: Arial, Helvetica, sans-serif;
+    text-align: left;
+}
+
+.activity-general-information p.participant {
+    max-height: 100px;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .activity-general-information {
     margin: 2% 2% 0% 2%;
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 50% 50%;
     text-align: center;
     border: 2px solid black;
     border-radius: 5px;
+    padding: 0px 10px 0px 10px;
 }
 
 .activity-details li {
@@ -260,6 +268,9 @@
     border: 2px solid black;
     font-size: 20px;
     border-radius: 5px;
+    max-height: 300px;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 @media screen and (max-width: 1000px) {
@@ -272,7 +283,7 @@
         row-gap: 10px;
     }
 
-    .top-details .login-required{
+    .top-details .login-required {
         margin: 0px;
     }
 
