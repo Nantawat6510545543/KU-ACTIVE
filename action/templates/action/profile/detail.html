@@ -82,10 +82,12 @@
             <div>
                 <h1 class="Email">Email: </h1><span> {{ profile.email }}</span>
             </div>
-            <h1 class="Count">Friend Count: </h1><span> {{ profile.friends.count }}</span>
+            <div>
+            <h1 class="Count">Friend Count: </h1><span> {{ profile.friends.count }} </span>
             {% if user.id == profile.id %}
-                    <a href="{% url 'action:friends' %}">Friend list</a>
+                <a href="{% url 'action:friends' %}" class="friend-list-button">Friend list</a>
             {% endif %}
+            </div>
             <div class="bio">
                 <h1>Bio:</h1>
                 <p> {{ profile.bio }}</p>
