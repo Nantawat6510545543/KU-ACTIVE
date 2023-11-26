@@ -6,6 +6,12 @@ class UserModelTest(TestCase):
     """Test case for the User model."""
 
     def setUp(self):
+        """
+        Set up common attributes for the test methods.
+
+        1. Create a user_data dictionary with user details.
+        2. Create a user instance using utils.create_user.
+        """
         self.user_data = {
             'username': 'testuser',
             'password': 'testpassword',

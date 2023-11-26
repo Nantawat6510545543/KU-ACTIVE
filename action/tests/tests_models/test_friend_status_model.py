@@ -3,6 +3,8 @@ from action.tests import utils
 
 
 class FriendStatusTestCase(TestCase):
+    """Test case for the FriendStatus model."""
+
     def setUp(self):
         """
         Set up common attributes for the test methods.
