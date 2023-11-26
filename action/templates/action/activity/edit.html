@@ -21,7 +21,7 @@ Edit
                     <h2><strong>{{ field.label_tag }}</strong> {{ field.as_hidden }} {{ user }}</h2>
 
                 {% elif field.name == 'picture' %}
-                    <div class="heading-detail"><p>{{ field.label_tag }}</p> <input id="imageInput" type="file" name="{{ field.name }}" onchange="displayImage()"></div>
+                    <div class="heading-detail"><p>{{ field.label_tag }}</p> <input id="imageInput" type="file" name="{{ field.name }}" onchange="displayImage()" accept=".png,.jpg,.jpeg"></div>
                     <img id="uploadedImage" src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
                          {% else %} {% static 'action/images/default-image.png' %}
                          {% endif %}"
@@ -30,7 +30,7 @@ Edit
                 {% elif field.name == 'background_picture' %}
                     <div class="heading-detail">
                         <p>{{ field.label_tag }}</p>
-                        <input id="fileInput" type="file" multiple name="{{ field.name }}">
+                        <input id="fileInput" type="file" multiple name="{{ field.name }}" accept=".png,.jpg,.jpeg">
                     </div>
                     <div class="background-slide" id="backgroundSlide">
                         {% if activity.background_picture %}
