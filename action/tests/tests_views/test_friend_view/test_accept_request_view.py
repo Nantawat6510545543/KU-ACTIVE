@@ -6,10 +6,13 @@ from action.tests.utils import create_friend_status, FriendStatusViewSetup
 
 
 class AcceptRequestViewTests(FriendStatusViewSetup):
+    """Test cases for accepting friend requests."""
+
     def test_accept_not_friend(self):
         """
-        Should be able to accept requests from users who are not yet friend.
-        success messages should be shown.
+        Test whether users can accept requests from users who are not yet friended.
+
+        Users should be redirected to the request view with a success message.
         """
         create_friend_status(self.user_1, self.user_2)  # no friend status
 
@@ -29,8 +32,9 @@ class AcceptRequestViewTests(FriendStatusViewSetup):
 
     def test_accept_already_friend(self):
         """
-        Should not be able to accept requests from users who are already friend.
-        Failed messages should be shown.
+        Test whether users cannot accept requests from users who are already friends.
+
+        Users should be redirected to the request view with a failed message.
         """
         create_friend_status(self.user_1, self.user_2, 'Accepted')  # already friend status
 

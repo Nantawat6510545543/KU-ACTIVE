@@ -6,10 +6,13 @@ from action.tests.utils import create_friend_status, FriendStatusViewSetup
 
 
 class DeclineRequestViewTests(FriendStatusViewSetup):
+    """Test cases for declining friend requests."""
+
     def test_decline_not_friend(self):
         """
-        Should be able to decline requests from users who are not yet friend.
-        success messages should be shown.
+        Test whether users can decline friend requests from those who are not yet friends.
+
+        Users should be redirected to the request view with a success message.
         """
         create_friend_status(self.user_1, self.user_2)  # no friend status
 
@@ -19,7 +22,7 @@ class DeclineRequestViewTests(FriendStatusViewSetup):
         self.assertRedirects(response, reverse('action:request_view'))
 
         # Check the status again.
-        with self.assertRaises(FriendStatus.DoesNotExist): 
+        with self.assertRaises(FriendStatus.DoesNotExist):
             FriendStatus.objects.get(sender=self.user_1, receiver=self.user_2)
 
         # Check the messages.
@@ -30,8 +33,9 @@ class DeclineRequestViewTests(FriendStatusViewSetup):
 
     def test_decline_already_friend(self):
         """
-        Should not be able to accept requests from users who are already friend.
-        Failed messages should be shown.
+        Test whether users cannot decline requests from those who are already friends.
+
+        Users should be redirected to the request view with a corresponding failed message.
         """
         create_friend_status(self.user_1, self.user_2, 'Accepted')  # already friend status
 

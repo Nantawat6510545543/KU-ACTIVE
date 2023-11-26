@@ -4,11 +4,16 @@ from django.contrib.messages import get_messages
 from action.models import FriendStatus
 from action.tests.utils import create_friend_status, FriendStatusViewSetup
 
+
 class AddViewTests(FriendStatusViewSetup):
+    """Test cases for sending friend request."""
+
     def test_add_new_friend(self):
         """
-        Should be able to send friend requests to other users.
-        And the messages should be shown.
+        Test whether users can send friend requests to other users successfully.
+
+        Users should be redirected to the add_view with a success message,
+        and the friend status should be set to 'Pending'.
         """
         create_friend_status(self.user_1, self.user_2)  # no friend status
 
@@ -29,8 +34,10 @@ class AddViewTests(FriendStatusViewSetup):
 
     def test_add_current_friend(self):
         """
-        Should not be able to send friend requests to users who are already friends.
-        Failed messages should be shown.
+        Test whether users cannot send friend requests to those who are already friends.
+
+        Users should be redirected to the add_view with a corresponding failed message,
+        and the friend status should remain as 'Accepted'.
         """
         create_friend_status(self.user_1, self.user_2, 'Accepted')  # already friend status
 

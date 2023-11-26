@@ -6,10 +6,14 @@ from action.tests.utils import create_friend_status, FriendStatusViewSetup
 
 
 class RemoveViewTests(FriendStatusViewSetup):
+    """Test cases for a remove friend."""
+
     def test_remove_friend(self):
         """
-        Should be able to remove friends.
-        Success messages should be shown.
+        Ensure that users can successfully remove friends.
+
+        After removal, users should be redirected to the friends page, and the friendship status
+        should be updated accordingly. Success messages should be displayed.
         """
         create_friend_status(self.user_1, self.user_2, 'Accepted')  # already friend status
 
@@ -28,8 +32,10 @@ class RemoveViewTests(FriendStatusViewSetup):
 
     def test_remove_not_friend(self):
         """
-        Should not be able to remove users who are not friend.
-        Fail messages should be shown.
+        Ensure that users cannot remove users who are not friends.
+
+        Users should be redirected to the friends page, and no changes should be made to the friendship status.
+        Failure messages should be displayed.
         """
         create_friend_status(self.user_1, self.user_2)  # no friend status
 
