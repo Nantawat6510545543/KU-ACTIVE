@@ -32,7 +32,9 @@ Detail
             {% endif %}
 
         {% else %}
-            <p class="login-required">Login to participate in this activity.</p>
+            <a href="{% url 'action:participate' activity.id %}" class="login-required">
+                Login to participate in this activity.
+            </a>
         {% endif %}
     </div>
 
