@@ -160,7 +160,7 @@
     border-radius:20px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    min-width:400px;
+    min-width: 400px;
 }
 
 .right-box .right-detail {
@@ -190,13 +190,30 @@
     color:black;
     font-size:30px;
     transition: all .3s;
-
 }
 
 .right-box a:hover {
     font-size: 32px;
     color:white;
     text-shadow: 1px 1px 4px #000000;
+}
+
+.right-box a.friend-list-button {
+    background: white;
+    color: black;
+    font-size: 30px;
+    text-decoration: none;
+    transition: all .3s;
+    cursor: pointer;
+    padding: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 5px;
+    margin-left: 50px;
+}
+
+.right-box a.friend-list-button:hover {
+    font-size: 30px;
+    text-shadow: none;
 }
 
 .grid-container {
