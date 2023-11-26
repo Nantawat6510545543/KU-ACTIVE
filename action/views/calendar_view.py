@@ -2,7 +2,7 @@ from allauth.socialaccount.models import SocialAccount
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import render
 from django.views import generic
 
 
@@ -18,7 +18,6 @@ class CalendarView(LoginRequiredMixin, generic.TemplateView):
         except SocialAccount.DoesNotExist:
             # If the user doesn't have a Google social account, Redirect to the Google login page
             messages.warning(self.request, "Please login to Google to use the calendar feature.")
-            return redirect(self.request.META.get('HTTP_REFERER')) # Redirect to the page before
 
             # return render(self.request, 'socialaccount/login.html', {'provider': 'google'})
 
