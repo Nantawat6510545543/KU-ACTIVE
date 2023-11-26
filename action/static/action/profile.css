@@ -186,6 +186,19 @@
     font-size: 30px;
 }
 
+.right-box a {
+    color:black;
+    font-size:30px;
+    transition: all .3s;
+
+}
+
+.right-box a:hover {
+    font-size: 32px;
+    color:white;
+    text-shadow: 1px 1px 4px #000000;
+}
+
 .grid-container {
     display: grid;
     grid-template-areas:

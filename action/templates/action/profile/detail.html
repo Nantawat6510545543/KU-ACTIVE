@@ -84,7 +84,7 @@
             </div>
             <h1 class="Count">Friend Count: </h1><span> {{ profile.friends.count }}</span>
             {% if user.id == profile.id %}
-                <a href="{% url 'action:friends' %}">Friend list</a>
+                    <a href="{% url 'action:friends' %}">Friend list</a>
             {% endif %}
             <div class="bio">
                 <h1>Bio:</h1>
