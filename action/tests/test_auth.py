@@ -6,11 +6,16 @@ from action.tests import utils
 
 
 class UserAuthTest(TestCase):
-    """
-    Tests user authentication.
-    """
+    """Tests user authentication."""
 
     def setUp(self):
+        """
+        Set up common attributes for the test methods.
+
+        1. Create a social app.
+        2. Create a user.
+        3. Create an activity with the user.
+        """
         self.social_app = utils.create_social_app()
         self.username = "testuser"
         self.password = "testpass"
@@ -18,12 +23,13 @@ class UserAuthTest(TestCase):
         self.activity = utils.create_activity(self.user)
 
     def test_logout(self):
-        """A user can log out using the logout url.
+        """
+        Test user logout functionality.
 
-        As an authenticated user,
-        when I visit /accounts/logout/
-        then I am logged out
-        and then redirected to the login page.
+        1. Log in the user.
+        2. Visit the logout URL.
+        3. Assert that the response status code is 302 (redirect).
+        4. Assert that the response redirects to the logout redirect URL.
         """
         logout_url = reverse("logout")
         self.assertTrue(
@@ -34,7 +40,15 @@ class UserAuthTest(TestCase):
         self.assertRedirects(response, reverse(settings.LOGOUT_REDIRECT_URL))
 
     def test_login_view(self):
-        """A user can log in using the login view."""
+        """
+        Test user login through the login view.
+
+        1. Visit the login URL.
+        2. Assert that the response status code is 200.
+        3. Provide valid login form data.
+        4. Assert that the response status code is 302 (redirect).
+        5. Assert that the response redirects to the login redirect URL.
+        """
         login_url = reverse("login")
         response = self.client.get(login_url)
         self.assertEqual(200, response.status_code)
@@ -46,12 +60,12 @@ class UserAuthTest(TestCase):
         self.assertRedirects(response, reverse(settings.LOGIN_REDIRECT_URL))
 
     def test_auth_required_to_participation(self):
-        """Authentication is required to submit a vote.
+        """
+        Test authentication requirement for participation.
 
-        As an unauthenticated user,
-        when I submit a vote for a question,
-        then I am redirected to the login page,
-        or I receive a 403 response (FORBIDDEN)
+        1. Visit the participate URL for an activity.
+        2. Assert that the response status code is 302 (redirect).
+        3. Assert that the response redirects to the login URL with the participate URL as the next parameter.
         """
         participate_url = reverse('action:participate',
                                   args=[self.activity.id])
@@ -62,7 +76,12 @@ class UserAuthTest(TestCase):
 
     def test_login_with_nonexistent_username(self):
         """
-        Make sure a user cannot log in using a username that doesn't exist.
+        Test login with a nonexistent username.
+
+        1. Visit the login URL.
+        2. Provide form data with a nonexistent username and an unknown password.
+        3. Assert that the response status code is 200.
+        4. Assert that the response contains a message about entering correct username and password.
         """
         login_url = reverse("login")
         form_data = {"username": "nonexistent", "password": "UnknownPassword"}
@@ -73,7 +92,12 @@ class UserAuthTest(TestCase):
 
     def test_login_with_invalid_password(self):
         """
-        Make sure a user cannot log in with an invalid password.
+        Test login with an invalid password.
+
+        1. Visit the login URL.
+        2. Provide form data with a valid username and an invalid password.
+        3. Assert that the response status code is 200.
+        4. Assert that the response contains a message about entering correct username and password.
         """
         login_url = reverse("login")
         form_data = {"username": self.username, "password": "InvalidPassword"}
