@@ -1,14 +1,16 @@
-import secrets
-
 from allauth.socialaccount.models import SocialApp, SocialToken
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from decouple import config
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+from django.utils.crypto import get_random_string
 
 from action.models.activity import Activity
 
+
+CHARSET = "0123456789abcdefghijklmnopqrstuv"
 
 @login_required
 def build_service(request):
@@ -34,20 +36,6 @@ def build_service(request):
                                                   scopes=scope)
     return build('calendar', 'v3', credentials=creds)
 
-
-def generate_random_id():
-    """
-    Generate a random alphanumeric string to be used as an event ID.
-
-    Returns:
-        str: Random alphanumeric string.
-    """
-    CHARSET = "0123456789abcdefghijklmnopqrstuv"
-    random_indices = [secrets.randbelow(32) for _ in range(100)]
-    random_string = ''.join([CHARSET[i] for i in random_indices])
-    return random_string
-
-
 def get_json_data(activity_id):
     """
     Get JSON data for creating a Google Calendar event based on the activity details.
@@ -71,7 +59,7 @@ def get_json_data(activity_id):
             'dateTime': activity.last_date.strftime('%Y-%m-%dT%H:%M:%S'),
             'timeZone': config('TIME_ZONE', default='UTC'),
         },
-        'id': generate_random_id()  # new event code
+        'id': get_random_string(length=100, allowed_chars=CHARSET)  # new event code
     }
 
 

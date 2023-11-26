@@ -19,9 +19,8 @@ class DeclineRequestViewTests(FriendStatusViewSetup):
         self.assertRedirects(response, reverse('action:request_view'))
 
         # Check the status again.
-        friends_status = FriendStatus.objects.get(sender=self.user_1, receiver=self.user_2)
-        self.assertEqual(friends_status.request_status, 'Declined')
-        self.assertFalse(friends_status.is_friend)
+        with self.assertRaises(FriendStatus.DoesNotExist): 
+            FriendStatus.objects.get(sender=self.user_1, receiver=self.user_2)
 
         # Check the messages.
         storage = get_messages(response.wsgi_request)

@@ -103,8 +103,7 @@ def decline_request(request, friend_id: int):
     if friend_status.is_friend:
         messages.warning(request, "You are already friend with this person.")
     else:
-        friend_status.request_status = 'Declined'
-        friend_status.save()
+        friend_status.delete()
         messages.success(request, "You have declined this person.")
 
     return redirect(reverse("action:request_view"))
