@@ -38,6 +38,7 @@ def get_categories_list(request: HttpRequest):
     values_category_q = request.GET.getlist('category_q')
     return values_category_q
 
+
 # TODO refactor
 class BaseSearcher:
     """Base class for searching activities based on various criteria."""
@@ -72,22 +73,38 @@ class BaseSearcher:
             ValueError: If an invalid tag is encountered.
         """
         match self.tag:
-            case None: searcher = IndexSearcher
-            case 'title': searcher = TitleSearcher
-            case 'owner': searcher = OwnerSearcher
-            case 'date_start_point': searcher = DateSearcher
-            case 'date_end_point': searcher = DateSearcher
-            case 'date_exact': searcher = DateSearcher
-            case 'categories': searcher = CategoriesSearcher
-            case 'category_list': searcher = CategoryListSearcher
-            case 'place': searcher = PlaceSearcher
-            case 'upcoming': searcher = UpcomingSearcher
-            case 'popular': searcher = PopularSearcher
-            case 'recent': searcher = RecentSearcher
-            case 'friend_joined': searcher = FriendJoinedSearcher
-            case 'registered': searcher = RegisteredSearcher
-            case 'favorited': searcher = FavoritedSearcher
-            case _: raise ValueError(f"Invalid Tag: {self.tag}")
+            case None:
+                searcher = IndexSearcher
+            case 'title':
+                searcher = TitleSearcher
+            case 'owner':
+                searcher = OwnerSearcher
+            case 'date_start_point':
+                searcher = DateSearcher
+            case 'date_end_point':
+                searcher = DateSearcher
+            case 'date_exact':
+                searcher = DateSearcher
+            case 'categories':
+                searcher = CategoriesSearcher
+            case 'category_list':
+                searcher = CategoryListSearcher
+            case 'place':
+                searcher = PlaceSearcher
+            case 'upcoming':
+                searcher = UpcomingSearcher
+            case 'popular':
+                searcher = PopularSearcher
+            case 'recent':
+                searcher = RecentSearcher
+            case 'friend_joined':
+                searcher = FriendJoinedSearcher
+            case 'registered':
+                searcher = RegisteredSearcher
+            case 'favorited':
+                searcher = FavoritedSearcher
+            case _:
+                raise ValueError(f"Invalid Tag: {self.tag}")
         self.searcher = searcher(self.request)
 
     def get_index_query(self):

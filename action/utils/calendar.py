@@ -13,6 +13,7 @@ API_NAME = 'calendar'
 API_VERSION = 'v3'
 CHARSET = "0123456789abcdefghijklmnopqrstuv"
 
+
 @login_required
 def build_service(request):
     """
@@ -66,13 +67,21 @@ def get_json_data(activity_id):
 
 
 def user_is_login_with_google(request):
+    """
+    Check if the user is logged in with a Google social account.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        bool: True if the user is logged in with Google, False otherwise.
+    """
     try:
         # Check if the user has a Google social account
         SocialAccount.objects.get(user=request.user, provider='google')
         return True
     except SocialAccount.DoesNotExist:
         return False
-
 
 # def calendar_is_working(request):
 #     pass

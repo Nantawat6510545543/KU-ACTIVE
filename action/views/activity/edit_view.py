@@ -6,6 +6,8 @@ from django.views import generic
 
 from action.forms import ActivityForm
 from action.models import Activity
+
+
 # from action.utils import update_event
 
 class ActivityEditView(LoginRequiredMixin, generic.UpdateView):
