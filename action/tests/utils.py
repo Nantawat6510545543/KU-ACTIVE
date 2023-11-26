@@ -10,7 +10,6 @@ from allauth.socialaccount.models import SocialApp
 from action.models import User, Activity, ActivityStatus, FriendStatus, Category
 from mysite.settings import SITE_ID, SITE_NAME, SITE_DOMAIN
 
-
 USER_DATA_1 = {
     "username": "John",
     "password": "abc",
@@ -39,10 +38,12 @@ REQUEST_DEFAULT_DATA = {
     'q': 'test'
 }
 
+
 class FriendStatusViewSetup(ABC, TestCase):
     def setUp(self) -> None:
         self.user_1 = create_user(**USER_DATA_1)
         self.user_2 = create_user(**USER_DATA_2)
+
 
 def create_social_app():
     site, _ = Site.objects.get_or_create(
@@ -53,6 +54,7 @@ def create_social_app():
 
     social_app.sites.add(site)
     return social_app
+
 
 def create_user(username='tester', password='password', **kwargs):
     user_fields = {
@@ -67,8 +69,10 @@ def create_user(username='tester', password='password', **kwargs):
 
     return User.objects.create_user(**user_fields)
 
+
 def create_category(name):
     return Category.objects.create(name=name)
+
 
 def create_activity(owner, **kwargs):
     activity_data = {
@@ -93,6 +97,7 @@ def create_activity(owner, **kwargs):
 
     return activity
 
+
 def create_activity_status(participants, activity, is_participated=True,
                            is_favorited=False):
     activity_status = ActivityStatus.objects.create(
@@ -102,6 +107,7 @@ def create_activity_status(participants, activity, is_participated=True,
         is_favorited=is_favorited
     )
     return activity_status
+
 
 def create_friend_status(sender: User, receiver: User,
                          request_status: str = None) -> FriendStatus:
@@ -142,6 +148,7 @@ def create_request(view, args, user=None, data=REQUEST_DEFAULT_DATA):
     request = RequestFactory().get(reverse(view, args=args), data)
     request.user = user
     return request
+
 
 def quick_join(participants, activity):
     """
