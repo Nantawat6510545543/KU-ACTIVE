@@ -81,7 +81,7 @@ Detail
                     {% endif %}
                 </p>
                 <p><strong>Participant Counts:</strong> {{ activity.participants.count }}</p>
-                <p><strong>Participants:</strong>
+                <p class="participant"><strong>Participants:</strong>
                     {% for participants in activity.participants %}
                         <a href="{% url 'action:profile' participants.id %}">
                             {{ participants }}{% if not forloop.last %}, {% endif %}
@@ -90,7 +90,6 @@ Detail
                         None
                     {% endfor %}
                 </p>
-
             </div>
             <div class="category">
                 <p><strong>Categories:</strong></p>
