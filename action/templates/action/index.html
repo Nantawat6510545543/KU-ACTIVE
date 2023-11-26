@@ -98,7 +98,13 @@ KU-ACTIVE
             {{ activity.description }}
         </div>
         <div class="Participant">
-            <span><strong>Participant Limit:</strong> {{ activity.participant_limit }}</span>
+            <p><strong>Participant Limit:</strong>
+                    {% if activity.participant_limit %}
+                        {{ activity.participant_limit }}
+                    {% else %}
+                        None
+                    {% endif %}
+                </p>
             <span><strong>Participant Count:</strong> {{ activity.participants.count }}</span>
         </div>
         <div class="shot-detail">
