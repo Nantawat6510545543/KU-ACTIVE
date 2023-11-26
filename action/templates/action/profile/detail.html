@@ -57,10 +57,10 @@
 
         <div class="favorite-activity">
             <div class="title">
-                <h1>Favorite Activity Count: {{ user.favorited_activity.count }} </h1>
+                <h1>Favorite Activities: {{ profile.favorited_activity.count }} </h1>
             </div>
             <div class="scroll">
-                {% for favorited in user.favorited_activity  %}
+                {% for favorited in profile.favorited_activity  %}
                     <a href="{% url 'action:detail' favorited.id %}">
                         <li>{{ favorited }}</li>
                     </a>

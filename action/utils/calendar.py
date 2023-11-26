@@ -42,9 +42,9 @@ def generate_random_id():
     Returns:
         str: Random alphanumeric string.
     """
-    charset = "0123456789abcdefghijklmnopqrstuv"
+    CHARSET = "0123456789abcdefghijklmnopqrstuv"
     random_indices = [secrets.randbelow(32) for _ in range(100)]
-    random_string = ''.join([charset[i] for i in random_indices])
+    random_string = ''.join([CHARSET[i] for i in random_indices])
     return random_string
 
 
@@ -74,7 +74,7 @@ def get_json_data(activity_id):
         'id': generate_random_id()  # new event code
     }
 
- 
+
 # TODO add update function + make a decorator 
 @login_required
 def create_event(request, activity_id):
