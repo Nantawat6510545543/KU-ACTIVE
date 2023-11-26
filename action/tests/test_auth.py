@@ -6,9 +6,7 @@ from action.tests import utils
 
 
 class UserAuthTest(TestCase):
-    """
-    Tests user authentication.
-    """
+    """Tests user authentication."""
 
     def setUp(self):
         self.social_app = utils.create_social_app()
@@ -18,7 +16,8 @@ class UserAuthTest(TestCase):
         self.activity = utils.create_activity(self.user)
 
     def test_logout(self):
-        """A user can log out using the logout url.
+        """
+        A user can log out using the logout url.
 
         As an authenticated user,
         when I visit /accounts/logout/
@@ -46,7 +45,8 @@ class UserAuthTest(TestCase):
         self.assertRedirects(response, reverse(settings.LOGIN_REDIRECT_URL))
 
     def test_auth_required_to_participation(self):
-        """Authentication is required to submit a vote.
+        """
+        Authentication is required to submit a vote.
 
         As an unauthenticated user,
         when I submit a vote for a question,
@@ -61,9 +61,7 @@ class UserAuthTest(TestCase):
         self.assertRedirects(response, login_with_next)
 
     def test_login_with_nonexistent_username(self):
-        """
-        Make sure a user cannot log in using a username that doesn't exist.
-        """
+        """Make sure a user cannot log in using a username that doesn't exist."""
         login_url = reverse("login")
         form_data = {"username": "nonexistent", "password": "UnknownPassword"}
         response = self.client.post(login_url, form_data)
@@ -72,9 +70,7 @@ class UserAuthTest(TestCase):
                             "Please enter a correct username and password.")
 
     def test_login_with_invalid_password(self):
-        """
-        Make sure a user cannot log in with an invalid password.
-        """
+        """Make sure a user cannot log in with an invalid password."""
         login_url = reverse("login")
         form_data = {"username": self.username, "password": "InvalidPassword"}
         response = self.client.post(login_url, form_data)
