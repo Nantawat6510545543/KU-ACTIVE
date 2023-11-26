@@ -4,9 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from googleapiclient.errors import HttpError
+from action.calendar import create_event, remove_event
 
 from action.models import ActivityStatus, Activity
-from action.utils import fetch_activity_status, create_event, remove_event
+from action.utils import fetch_activity_status
+from action.utils.calendar import user_is_login_with_google
 
 
 @login_required
@@ -31,16 +33,15 @@ def participate(request, activity_id: int):
     elif activity_status.is_participated:
         messages.info(request, "You are already participating.")
     else:
-        try:
-            create_event(request, activity_id)  # Add activity to user calendar
-        except SocialToken.DoesNotExist:  # If user have email but not google accounts
-            pass
-        except HttpError:
-            messages.info(request, "Calendar is not working, please Login again.")
+        if user_is_login_with_google(request):
+            try:
+                create_event(request, activity_id)  # Add activity to user calendar
+            except HttpError:
+                messages.info(request, "Calendar is not working, please Login again.")
 
-        activity_status.is_participated = True
-        activity_status.save()
-        messages.success(request, "You have successfully participated.")
+    activity_status.is_participated = True
+    activity_status.save()
+    messages.success(request, "You have successfully participated.")
 
     return redirect(reverse("action:detail", args=(activity_id,)))
 
@@ -63,12 +64,12 @@ def leave(request, activity_id: int):
         activity_status.is_participated = False
         activity_status.save()
         messages.success(request, "You have left this activity.")
-        try:
-            remove_event(request, activity_id)  # Remove activity from user calendar
-        except SocialToken.DoesNotExist:  # If user have email but not google accounts
-            pass
-        except HttpError:
-            messages.info(request, "Calendar is not working, please Login again.")
+
+        if user_is_login_with_google(request):
+            try:
+                remove_event(request, activity_id)  # Remove activity from user calendar
+            except HttpError:
+                messages.info(request, "Calendar is not working, please Login again.")
 
     else:
         messages.info(request, "You are not currently participating in this activity.")
