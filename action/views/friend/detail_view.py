@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models.query import QuerySet
 from django.views import generic
 
 from action.models import FriendStatus, User
@@ -18,10 +19,8 @@ class FriendView(LoginRequiredMixin, generic.ListView):
             QuerySet: The queryset of friends.
         """
         query = self.request.GET.get('q')
-        user_friend = self.request.user.friends
+        user_friend: QuerySet[User] = self.request.user.friends.filter(username__icontains=query)
 
-        if query:
-            user_friend = user_friend.filter(username__icontains=query)
         return user_friend.distinct()
 
 
