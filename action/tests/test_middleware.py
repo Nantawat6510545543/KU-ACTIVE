@@ -31,7 +31,7 @@ class MiddlewareTests(TestCase):
         3. Assert that accessing the middleware raises Http404 and uses the '404_error.html' template.
         """
         middleware = Render404Middleware(HttpResponseNotFound)
-        response = self.client.get('/invalid')        
+        response = self.client.get('/invalid')
         
         with self.assertRaises(Http404):
             updated_response = middleware(response)

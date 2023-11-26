@@ -40,12 +40,20 @@ REQUEST_DEFAULT_DATA = {
 
 
 class FriendStatusViewSetup(ABC, TestCase):
+    """Abstract base class for setting up test cases related to FriendStatus views."""
+
     def setUp(self) -> None:
         self.user_1 = create_user(**USER_DATA_1)
         self.user_2 = create_user(**USER_DATA_2)
 
 
 def create_social_app():
+    """
+    Create a social app instance.
+
+    Returns:
+        SocialApp: The created SocialApp instance.
+    """
     site, _ = Site.objects.get_or_create(
         id=SITE_ID, defaults=SITE_DEFAULT_DATA)
 
@@ -57,6 +65,17 @@ def create_social_app():
 
 
 def create_user(username='tester', password='password', **kwargs):
+    """
+    Create a user instance.
+
+    Args:
+        username (str): The username for the new user.
+        password (str): The password for the new user.
+        **kwargs: Additional keyword arguments for customizing the user object.
+
+    Returns:
+        User: The created User instance.
+    """
     user_fields = {
         "username": username,
         "password": password,
@@ -71,10 +90,29 @@ def create_user(username='tester', password='password', **kwargs):
 
 
 def create_category(name):
+    """
+    Create a category instance.
+
+    Args:
+        name (str): The name of the category.
+
+    Returns:
+        Category: The created Category instance.
+    """
     return Category.objects.create(name=name)
 
 
 def create_activity(owner, **kwargs):
+    """
+    Create an activity instance.
+
+    Args:
+        owner (User): The owner of the activity.
+        **kwargs: Additional keyword arguments for customizing the activity object.
+
+    Returns:
+        Activity: The created Activity instance.
+    """
     activity_data = {
         "owner": owner,
         "title": kwargs.get("title", "Test"),
@@ -100,6 +138,18 @@ def create_activity(owner, **kwargs):
 
 def create_activity_status(participants, activity, is_participated=True,
                            is_favorited=False):
+    """
+    Create an activity status instance.
+
+    Args:
+        participants (User): The user participating in the activity.
+        activity (Activity): The activity object.
+        is_participated (bool): Whether the user has participated in the activity. Default is True.
+        is_favorited (bool): Whether the user has favorited the activity. Default is False.
+
+    Returns:
+        ActivityStatus: The created ActivityStatus instance.
+    """
     activity_status = ActivityStatus.objects.create(
         participants=participants,
         activity=activity,
@@ -144,7 +194,21 @@ def create_friend_status(sender: User, receiver: User,
     return friend_status
 
 
-def create_request(view, args, user=None, data=REQUEST_DEFAULT_DATA):
+def create_request(view, args, user=None, data=None):
+    """
+    Create a request instance for testing views.
+
+    Args:
+        view (str): The view name or URL pattern for which the request is intended.
+        args (list): The positional arguments for the view.
+        user (User, optional): The user associated with the request. Defaults to None.
+        data (dict): The request data. Defaults to REQUEST_DEFAULT_DATA.
+
+    Returns:
+        HttpRequest: The created HttpRequest instance.
+    """
+    if data is None:
+        data = REQUEST_DEFAULT_DATA
     request = RequestFactory().get(reverse(view, args=args), data)
     request.user = user
     return request
@@ -152,7 +216,11 @@ def create_request(view, args, user=None, data=REQUEST_DEFAULT_DATA):
 
 def quick_join(participants, activity):
     """
-    Given participants name and activity object, automatically join an activity
+    Given participants name and activity object, automatically join an activity.
+
+    Args:
+        participants (str): The name of the participant.
+        activity (Activity): The activity object.
     """
     create_activity_status(create_user(participants), activity,
                            is_participated=True)
