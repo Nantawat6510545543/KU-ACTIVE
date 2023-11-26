@@ -6,6 +6,18 @@ from action.models import FriendStatus, User
 
 @login_required
 def fetch_friend_status(request, friend_id: int) -> FriendStatus:
+    """
+    Fetch the friendship status between the authenticated user and the specified friend.
+
+    If a friendship status does not exist, it will be created.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        friend_id (int): The user ID of the friend.
+
+    Returns:
+        FriendStatus: The friendship status between the authenticated user and the friend.
+    """
     user1 = request.user
     user2 = User.objects.get(id=friend_id)
 

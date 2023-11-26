@@ -1,14 +1,13 @@
 from django.urls import reverse
 from django.test import TestCase
-from action.tests.utils import create_user
+from action.tests.utils import create_user, USER_DATA_1
 from django.contrib.messages import get_messages
 from action.views import EditProfileView
 
 
 class ProfileEditViewTests(TestCase):
     def setUp(self) -> None:
-        user_data_1 = {"email": "test1@example.com"}
-        self.user_1 = create_user(username="John", password="abc", **user_data_1)
+        self.user_1 = create_user(**USER_DATA_1)
 
     def test_guest_view_profile_edit(self):
         """

@@ -5,13 +5,12 @@ from django.contrib.messages import get_messages
 
 from action.models import ActivityStatus
 from action.tests.end_to_end_base import EndToEndTestBase
-from action.tests.utils import create_user, create_activity
+from action.tests.utils import create_user, create_activity, USER_DATA_1
 
 
 class ActivityDetailViewTests(TestCase):
     def setUp(self) -> None:
-        user_data = {"email": "test@example.com"}
-        self.user = create_user(username="John", password="abc", **user_data)
+        self.user = create_user(**USER_DATA_1)
         self.activity = create_activity(self.user)
 
     def test_view_activity_detail_guest(self):

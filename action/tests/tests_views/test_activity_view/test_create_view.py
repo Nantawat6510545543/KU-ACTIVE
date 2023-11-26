@@ -2,15 +2,14 @@ from datetime import timedelta, datetime
 
 from django.urls import reverse
 from django.test import TestCase
-from action.tests.utils import create_user
+from action.tests.utils import create_user, USER_DATA_1
 from django.utils import timezone
 from action.views.activity.create_view import ActivityCreateView
 
 
 class ActivityCreateViewTests(TestCase):
     def setUp(self) -> None:
-        user_data = {"email": "test@example.com"}
-        self.user = create_user(username="John", password="abc", **user_data)
+        self.user = create_user(**USER_DATA_1)
 
     def test_access_activity_create_guest(self):
         """
@@ -64,7 +63,7 @@ class ActivityCreateViewTests(TestCase):
         response = self.client.post(reverse('action:create'), data=form_data, follow=True)
 
         self.assertEqual(response.status_code, 200)
-        # A successful message should have been shown.
+        # A successful message should be shown.
         self.assertContains(response, 'Activity created successfully.')
 
     def test_form_invalid_create(self):
@@ -74,7 +73,7 @@ class ActivityCreateViewTests(TestCase):
         now = datetime.now()
         # invalid data, pub_date should be today.
         form_data = {
-            'pub_date': now - timedelta(days=1),
+            'pub_date': now - timedelta(days=2),
             'end_date': now + timedelta(days=1),
             'start_date': now + timedelta(days=2),
             'last_date': now + timedelta(days=3),
@@ -84,7 +83,7 @@ class ActivityCreateViewTests(TestCase):
         response = self.client.post(reverse('action:create'), data=form_data, follow=True)
 
         self.assertEqual(response.status_code, 200)
-        # A fail message should have been shown.
+        # A fail message should be shown.
         self.assertTrue(response.context['form'].errors)
 
     def test_get_success_url(self):

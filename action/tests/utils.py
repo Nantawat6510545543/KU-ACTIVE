@@ -1,6 +1,9 @@
+from abc import ABC
+from django.contrib.messages import get_messages
 from django.contrib.sites.models import Site
+from django.http import HttpResponse
 from django.utils import timezone
-from django.test import RequestFactory
+from django.test import RequestFactory, TestCase
 from django.urls import reverse
 from allauth.socialaccount.models import SocialApp
 
@@ -8,23 +11,46 @@ from action.models import User, Activity, ActivityStatus, FriendStatus, Category
 from mysite.settings import SITE_ID, SITE_NAME, SITE_DOMAIN
 
 
+USER_DATA_1 = {
+    "username": "John",
+    "password": "abc",
+    "email": "test1@example.com"
+}
+
+USER_DATA_2 = {
+    "username": "Jane",
+    "password": "abc",
+    "email": "test2@example.com"
+}
+
+SITE_DEFAULT_DATA = {
+    'name': SITE_NAME,
+    'domain': SITE_DOMAIN
+}
+
+SOCIAL_APP_DEFAULT_DATA = {
+    'name': 'Login with Google OAuth',
+    'client_id': "",
+    'secret': "",
+}
+
+REQUEST_DEFAULT_DATA = {
+    'tag': 'title',
+    'q': 'test'
+}
+
+class FriendStatusViewSetup(ABC, TestCase):
+    def setUp(self) -> None:
+        self.user_1 = create_user(**USER_DATA_1)
+        self.user_2 = create_user(**USER_DATA_2)
+
 def create_social_app():
     site, _ = Site.objects.get_or_create(
-        id=SITE_ID,
-        defaults={
-            'name': SITE_NAME,
-            'domain': SITE_DOMAIN,
-        },
-    )
+        id=SITE_ID, defaults=SITE_DEFAULT_DATA)
 
     social_app, _ = SocialApp.objects.get_or_create(
-        provider='google',
-        defaults={
-            'name': 'Login with Google OAuth',
-            'client_id': "",
-            'secret': "",
-        },
-    )
+        provider='google', defaults=SOCIAL_APP_DEFAULT_DATA)
+
     social_app.sites.add(site)
     return social_app
 
@@ -67,7 +93,6 @@ def create_activity(owner, **kwargs):
 
     return activity
 
-
 def create_activity_status(participants, activity, is_participated=True,
                            is_favorited=False):
     activity_status = ActivityStatus.objects.create(
@@ -77,7 +102,6 @@ def create_activity_status(participants, activity, is_participated=True,
         is_favorited=is_favorited
     )
     return activity_status
-
 
 def create_friend_status(sender: User, receiver: User,
                          request_status: str = None) -> FriendStatus:
@@ -99,35 +123,29 @@ def create_friend_status(sender: User, receiver: User,
           request_status is 'Accepted', indicating that the users are now friends.
     """
     STATUS_CHOICES = [choice[0] for choice in FriendStatus.STATUS_CHOICES]
+    IS_FRIEND = (request_status == 'Accepted')
 
-    if (request_status is not None and
-            request_status.title() not in STATUS_CHOICES):
+    if request_status and request_status.title() not in STATUS_CHOICES:
         request_status = None
 
     friend_status = FriendStatus.objects.create(
         sender=sender,
-        receiver=receiver
+        receiver=receiver,
+        request_status=request_status,
+        is_friend=IS_FRIEND
     )
-    if request_status is not None:
-        friend_status.request_status = request_status
-        friend_status.is_friend = request_status == 'Accepted'
 
-    friend_status.save()
     return friend_status
 
 
+def create_request(view, args, user=None, data=REQUEST_DEFAULT_DATA):
+    request = RequestFactory().get(reverse(view, args=args), data)
+    request.user = user
+    return request
+
 def quick_join(participants, activity):
     """
-    Given participants and activity object, automatically join an activity
+    Given participants name and activity object, automatically join an activity
     """
     create_activity_status(create_user(participants), activity,
                            is_participated=True)
-
-
-def create_request(view, args, user=None, data=None):
-    if data is None:
-        data = {'tag': 'title', 'q': 'test'}
-    request = RequestFactory().get(reverse(view, args=args), data)
-    if user is not None:
-        request.user = user
-    return request

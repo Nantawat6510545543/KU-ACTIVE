@@ -12,6 +12,15 @@ from action.models.activity import Activity
 
 @login_required
 def build_service(request):
+    """
+    Build and return a Google Calendar API service instance for the authenticated user.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+         Google Calendar API service instance.
+    """
     app = SocialApp.objects.get(provider="google")
     token = SocialToken.objects.get(app=app, account__user=request.user)
     refresh_token = token.token_secret
@@ -22,11 +31,17 @@ def build_service(request):
         "refresh_token": str(refresh_token),
     }
     creds = Credentials.from_authorized_user_info(info=user_info,
-                                                    scopes=scope)
+                                                  scopes=scope)
     return build('calendar', 'v3', credentials=creds)
 
 
 def generate_random_id():
+    """
+    Generate a random alphanumeric string to be used as an event ID.
+
+    Returns:
+        str: Random alphanumeric string.
+    """
     charset = "0123456789abcdefghijklmnopqrstuv"
     random_indices = [secrets.randbelow(32) for _ in range(100)]
     random_string = ''.join([charset[i] for i in random_indices])
@@ -34,6 +49,15 @@ def generate_random_id():
 
 
 def get_json_data(activity_id):
+    """
+    Get JSON data for creating a Google Calendar event based on the activity details.
+
+    Args:
+        activity_id (int): ID of the activity.
+
+    Returns:
+        dict: JSON data for creating a Google Calendar event.
+    """
     activity = get_object_or_404(Activity, pk=activity_id)
     return {
         'summary': activity.title,
@@ -50,9 +74,17 @@ def get_json_data(activity_id):
         'id': generate_random_id()  # new event code
     }
 
-# TODO add update function + make a decorator
+ 
+# TODO add update function + make a decorator 
 @login_required
 def create_event(request, activity_id):
+    """
+    Create a Google Calendar event for the specified activity.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        activity_id (int): ID of the activity.
+    """
     service = build_service(request)
 
     if service:
@@ -64,6 +96,13 @@ def create_event(request, activity_id):
 
 @login_required
 def remove_event(request, activity_id):
+    """
+    Remove the Google Calendar event associated with the specified activity.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        activity_id (int): ID of the activity.
+    """
     event_id = str(activity_id)
     user = request.user
     service = build_service(request)

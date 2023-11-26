@@ -1,15 +1,13 @@
 from django.urls import reverse
 from django.test import TestCase
-from action.tests.utils import create_user
+from action.tests.utils import create_user, USER_DATA_1, USER_DATA_2
 from django.contrib.messages import get_messages
 
 
 class ProfileDetailViewTests(TestCase):
     def setUp(self) -> None:
-        user_data_1 = {"email": "test1@example.com"}
-        self.user_1 = create_user(username="John", password="abc", **user_data_1)
-        user_data_2 = {"email": "test2@example.com"}
-        self.user_2 = create_user(username="Jane", password="abc", **user_data_2)
+        self.user_1 = create_user(**USER_DATA_1)
+        self.user_2 = create_user(**USER_DATA_2)
 
     def test_guest_view_profile(self):
         """
@@ -42,6 +40,7 @@ class ProfileDetailViewTests(TestCase):
         self.client.force_login(self.user_1)
         response = self.client.get(reverse('action:profile'), args=(self.user_2.id,))
         self.assertEqual(response.status_code, 200)
+
         self.client.force_login(self.user_2)
         response = self.client.get(reverse('action:profile'), args=(self.user_1.id,))
         self.assertEqual(response.status_code, 200)
@@ -53,6 +52,7 @@ class ProfileDetailViewTests(TestCase):
         self.client.force_login(self.user_1)
         response = self.client.get(reverse('action:profile'), args=(self.user_1.id,))
         self.assertEqual(response.status_code, 200)
+
         self.client.force_login(self.user_2)
         response = self.client.get(reverse('action:profile'), args=(self.user_2.id,))
         self.assertEqual(response.status_code, 200)
@@ -68,6 +68,7 @@ class ProfileDetailViewTests(TestCase):
         response = self.client.get(url)
         # Check redirection.
         self.assertRedirects(response, reverse('action:index'))
+
         # Check messages.
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)

@@ -124,10 +124,12 @@ def cancel_request(request, friend_id: int):
     """
     friend_status = utils.fetch_friend_status(request, friend_id)
 
-    if friend_status.request_status == 'Pending':
+    if friend_status.request_status == 'Pending' and request.user == friend_status.sender:
         friend_status.delete()
         messages.success(request, "Request cancelled.")
+    elif friend_status.is_friend:
+        messages.warning(request, "You are already friend with that person.")
     else:
-        messages.warning(request, "You have not sent a friend request to that person.")
+        messages.warning(request, "There is no friend request for that person.")
 
     return redirect(reverse("action:add_view"))

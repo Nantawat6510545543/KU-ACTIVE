@@ -4,15 +4,15 @@ from django.utils import timezone
 from django.contrib.messages import get_messages
 
 from action.models import ActivityStatus
-from action.tests.utils import create_user, create_activity, create_activity_status, create_social_app
+from action.tests.utils import create_user, create_activity, \
+    create_activity_status, create_social_app, USER_DATA_1, USER_DATA_2
 
 
 class ActivityStatusViewTests(TestCase):
     def setUp(self) -> None:
-        user_data_1 = {"email": "test1@example.com"}
-        user_data_2 = {"email": "test2@example.com"}
-        self.user_1 = create_user(username="John", password="abc", **user_data_1)
-        self.user_2 = create_user(username="Jane", password="abc", **user_data_2)
+        self.user_1 = create_user(**USER_DATA_1)
+        self.user_2 = create_user(**USER_DATA_2)
+
         self.activity_1 = create_activity(self.user_1)
         self.activity_2 = create_activity(self.user_2)
         self.social_app = create_social_app()
