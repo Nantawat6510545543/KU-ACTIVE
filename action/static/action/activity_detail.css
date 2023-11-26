@@ -165,6 +165,9 @@
     background: white;
     padding: 1%;
     margin: 0px 2% 0px 2%;
+    max-height: 300px;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .activity-details .Description p {
