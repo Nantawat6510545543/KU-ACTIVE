@@ -5,7 +5,7 @@
 Edit
 {% endblock %}
 
-{% comment %} reuse actiivity-form base/create_activity.html?? {% endcomment %}
+{% comment %} reuse activity-form base/create_activity.html?? {% endcomment %}
 {% block content %}
 <h3>
 <form method="post" enctype="multipart/form-data">
@@ -25,7 +25,7 @@ Edit
                     <img id="uploadedImage" src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
                          {% else %} {% static 'action/images/default-image.png' %}
                          {% endif %}"
-                    alt="{{ activity.title }}'s Picture" width="240" height="240">
+                    alt="{{ activity.title }}'s Picture" width="100%" height="600">
 
                 {% elif field.name == 'background_picture' %}
                     <div class="heading-detail">
@@ -40,7 +40,7 @@ Edit
                             {% endfor %}
                         {% else %}
                             <img src="{% static 'action/images/default-image.png' %}" alt="Default Picture"
-                            width="100%" height="auto">
+                            width="100%" height="600">
                         {% endif %}
                     </div>
                     <div class="slide-button">
