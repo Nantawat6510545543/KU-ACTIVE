@@ -8,13 +8,19 @@ from selenium.webdriver.support.ui import Select
 
 
 class ActivityIndexViewTests(TestCase):
+    """Test cases for the activity index view."""
+
     def setUp(self) -> None:
+        """Set up test user."""
         self.user = create_user()
 
     def test_no_activity_available(self):
         """
-        There should not be any activity on the index page
-        if it has not yet been created.
+        Test that there are no activities on the index page if none have been created.
+
+        1. Attempt to access the index page.
+        2. Assert that the response status code is 200.
+        3. Assert that the 'activity_list' in the context is an empty list.
         """
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
@@ -22,8 +28,12 @@ class ActivityIndexViewTests(TestCase):
 
     def test_view_available_activity(self):
         """
-        There should be an activity on the index page
-        if that activity was created and is available.
+        Test that an activity is shown on the index page if it is available.
+
+        1. Create a new activity.
+        2. Attempt to access the index page.
+        3. Assert that the response status code is 200.
+        4. Assert that the 'activity_list' in the context contains the newly created activity.
         """
         new_activity = create_activity(self.user)
         response = self.client.get(reverse('action:index'))
@@ -33,8 +43,12 @@ class ActivityIndexViewTests(TestCase):
 
     def test_not_published_activity(self):
         """
-        The new activity that has not been published yet
-        should not be shown.
+        Test that a new activity that has not been published is not shown on the index page.
+
+        1. Create a new activity with a future publication date.
+        2. Attempt to access the index page.
+        3. Assert that the response status code is 200.
+        4. Assert that the 'activity_list' in the context is an empty list.
         """
         update_date = {
             "pub_date": timezone.now() + timezone.timedelta(days=3),
@@ -49,7 +63,13 @@ class ActivityIndexViewTests(TestCase):
 
     def test_activity_published_and_yet(self):
         """
-        Only published activity that should be shown.
+        Test that only published activities are shown on the index page.
+
+        1. Create a new activity with a future publication date.
+        2. Create an old activity.
+        3. Attempt to access the index page.
+        4. Assert that the response status code is 200.
+        5. Assert that the 'activity_list' in the context contains only the old activity.
         """
         update_date = {
             "pub_date": timezone.now() + timezone.timedelta(days=3),
@@ -66,7 +86,12 @@ class ActivityIndexViewTests(TestCase):
 
     def test_multiple_available_activity(self):
         """
-        All published activity from a should be shown.
+        Test that all published activities are shown on the index page.
+
+        1. Create multiple activities with different titles.
+        2. Attempt to access the index page.
+        3. Assert that the response status code is 200.
+        4. Assert that the 'activity_list' in the context contains all activities in descending order based on their titles.
         """
         activity_1 = create_activity(self.user, title="Football")
         activity_2 = create_activity(self.user, title="Run")
@@ -79,7 +104,12 @@ class ActivityIndexViewTests(TestCase):
 
     def test_multiple_available_activity_and_owner(self):
         """
-        All published activity from any user should be shown.
+        Test that all published activities from any user are shown on the index page.
+
+        1. Create activities from different users.
+        2. Attempt to access the index page.
+        3. Assert that the response status code is 200.
+        4. Assert that the 'activity_list' in the context contains all activities in descending order based on their titles.
         """
         activity_1 = create_activity(self.user, title="Football")
 
@@ -96,8 +126,10 @@ class ActivityIndexViewTests(TestCase):
 
     def test_index_with_tag_guest(self):
         """
-        Guest should not be able to view pages with tag.
-        Should be redirected.
+        Test that guests are redirected when attempting to view pages with tags.
+
+        1. Attempt to access the index page with the tags 'registered', 'favorited' and 'friend_joined'.
+        2. Assert that all response status code is 302 (redirected).
         """
         # Try to access registered page.
         response = self.client.get(reverse('action:index') + "?tag=registered")
@@ -112,7 +144,11 @@ class ActivityIndexViewTests(TestCase):
 
     def test_index_with_tag_authenticated(self):
         """
-        Authenticated users should be able to view pages with tag.
+        Test that authenticated users can view pages with tags.
+
+        1. Log in the user.
+        2. Attempt to access the index page with the tags 'registered', 'favorited' and 'friend_joined'.
+        3. Assert that all response status code is 200.
         """
         self.client.force_login(self.user)
         # Try to access registered page.
@@ -128,7 +164,16 @@ class ActivityIndexViewTests(TestCase):
 
 
 class ActivityIndexViewTestsE2E(EndToEndTestBase):
+    """End-to-end tests for the activity index view."""
+
     def setUp(self):
+        """
+        Set up common attributes for the test methods.
+
+        1. Define a username and password.
+        2. Create a user with the defined username and password.
+        3. Define the view name.
+        """
         self.name = 'user1'
         self.password = 'pass1'
         self.user = create_user(self.name, self.password)
@@ -136,7 +181,14 @@ class ActivityIndexViewTestsE2E(EndToEndTestBase):
 
     def test_search_activity_by_title(self):
         """
-        Search by title should show correctly.
+        Test searching for an activity by title.
+
+        1. Create an activity.
+        2. Navigate to the index page.
+        3. Select "Title" as the search criteria.
+        4. Input the activity title into the search bar.
+        5. Click the submit button.
+        6. Find the activity element and assert that the title is present in its text.
         """
         activity_1_data = {"title": "activity 1"}
         create_activity(self.user, **activity_1_data)
@@ -167,7 +219,14 @@ class ActivityIndexViewTestsE2E(EndToEndTestBase):
 
     def test_search_activity_by_owner(self):
         """
-        Search by Owner name should show correctly.
+        Test searching for an activity by owner name.
+
+        1. Create an activity.
+        2. Navigate to the index page.
+        3. Select "Owner" as the search criteria.
+        4. Input the owner's name into the search bar.
+        5. Click the submit button.
+        6. Find the activity element and assert that the owner's name is present in its text.
         """
         # Create an activity
         activity_1_data = {"title": "activity 1"}
