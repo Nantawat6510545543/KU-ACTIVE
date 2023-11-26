@@ -38,7 +38,7 @@ def get_categories_list(request: HttpRequest):
     values_category_q = request.GET.getlist('category_q')
     return values_category_q
 
-
+# TODO refactor
 class BaseSearcher:
     """Base class for searching activities based on various criteria."""
 

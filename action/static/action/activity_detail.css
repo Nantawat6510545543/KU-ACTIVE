@@ -28,7 +28,7 @@
     font-size: 30px;
     font-family: Arial, Helvetica, sans-serif;
     word-wrap: break-word;
-    height: 48px;
+    height: 46px;
     line-height: 50px;
     padding-left: 5%;
     padding-right: 5%;
@@ -52,6 +52,24 @@
     height: 50px;
     line-height: 50px;
     margin-left: 5%;
+}
+
+.top-details .login-required{
+    grid-column: span 2;
+    border-radius: 15px;
+    border: 2px solid #145A32;
+    text-decoration: none;
+    text-align: center;
+    background: white;
+    color: black;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    word-wrap: break-word;
+    height: 46px;
+    line-height: 50px;
+    padding-left: 5%;
+    padding-right: 5%;
+    margin: 0px 0px 0px 5%;
 }
 
 .top-details .Favorite{
@@ -251,11 +269,13 @@
         row-gap: 10px;
     }
 
+    .top-details .login-required{
+        margin: 0px;
+    }
+
     .top-details .Favorite-btn {
         border-radius: 15px;
         border: 2px solid #145A32;
-        cursor: pointer;
-
         text-decoration: none;
         background: white;
         color: black;

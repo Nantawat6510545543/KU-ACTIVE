@@ -6,7 +6,7 @@ from selenium.webdriver import Firefox, FirefoxOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-from action.tests.utils import create_social_app, create_user
+from action.tests.utils import create_social_app
 
 
 class EndToEndTestBase(StaticLiveServerTestCase):
@@ -56,15 +56,3 @@ class EndToEndTestBase(StaticLiveServerTestCase):
         password_field.send_keys(Keys.RETURN)
 
         time.sleep(1)
-
-        # self.client.login(username=self.username, password=self.password)
-        # cookie = self.client.cookies["sessionid"]
-        # self.browser.add_cookie(
-        #     {
-        #         "name": "sessionid",
-        #         "value": cookie.value,
-        #         "secure": False,
-        #         "path": "/",
-        #     }
-        # )
-        # self.browser.refresh()

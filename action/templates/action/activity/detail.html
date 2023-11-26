@@ -32,7 +32,7 @@ Detail
             {% endif %}
 
         {% else %}
-            <p>Login to participate in this activity.</p>
+            <p class="login-required">Login to participate in this activity.</p>
         {% endif %}
     </div>
 
@@ -47,7 +47,7 @@ Detail
                 ALT="{{ activity.title }}'s Picture" width="100%" height="auto">
             {% empty %}
                 <img src="{% static 'action/images/default-image.png' %}"
-                ALT="{{ activity.title }}'s Picture" width="100%" height="auto">
+                ALT="{{ activity.title }}'s Picture" width="100%" height="600">
             {% endfor %}
         </div>
         <div class="slide-button">

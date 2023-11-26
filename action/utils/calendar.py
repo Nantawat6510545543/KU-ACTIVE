@@ -74,7 +74,8 @@ def get_json_data(activity_id):
         'id': generate_random_id()  # new event code
     }
 
-
+ 
+# TODO add update function + make a decorator 
 @login_required
 def create_event(request, activity_id):
     """
