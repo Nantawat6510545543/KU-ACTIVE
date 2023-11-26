@@ -20,7 +20,7 @@ Friend
         </div>
         {% block friend %}
             <div class="friend-list-box">
-                {% for each_friend in user.friends %}
+                {% for each_friend in friend_list %}
                     <div class="each-friend">
                         <div class="friend-image">
                           <img src="{% if each_friend.profile_picture %} data:image/png;base64,{{ each_friend.profile_picture }}
