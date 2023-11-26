@@ -32,7 +32,7 @@ class MiddlewareTests(TestCase):
         """
         middleware = Render404Middleware(HttpResponseNotFound)
         response = self.client.get('/invalid')
-        
+
         with self.assertRaises(Http404):
             updated_response = middleware(response)
             self.assertTemplateUsed(updated_response, '404_error.html')

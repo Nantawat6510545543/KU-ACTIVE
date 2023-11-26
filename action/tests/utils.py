@@ -1,7 +1,5 @@
 from abc import ABC
-from django.contrib.messages import get_messages
 from django.contrib.sites.models import Site
-from django.http import HttpResponse
 from django.utils import timezone
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
@@ -43,6 +41,7 @@ class FriendStatusViewSetup(ABC, TestCase):
     """Abstract base class for setting up test cases related to FriendStatus views."""
 
     def setUp(self) -> None:
+        """Set up the test case by creating two user objects."""
         self.user_1 = create_user(**USER_DATA_1)
         self.user_2 = create_user(**USER_DATA_2)
 

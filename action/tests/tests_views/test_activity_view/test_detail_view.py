@@ -9,7 +9,7 @@ from action.tests.utils import create_user, create_activity, USER_DATA_1
 
 
 class ActivityDetailViewTests(TestCase):
-    """Test case for the views related to activity details"""
+    """Test case for the views related to activity details."""
 
     def setUp(self) -> None:
         """
@@ -100,7 +100,7 @@ class ActivityDetailViewTests(TestCase):
 
 
 class ActivityDetailViewTestsE2E(EndToEndTestBase):
-    """End-to-end test case for the activity detail view """
+    """End-to-end test case for the activity detail view."""
 
     def setUp(self):
         """
