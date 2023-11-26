@@ -54,7 +54,7 @@ Edit
                     {% for category in field.field.queryset %}
                         <div>
                             <input type="checkbox" name="{{ field.name }}" value="{{ category.id }}"
-                                {% if category.id in field.value %} checked {% endif %}>{{ category }}</input>
+                                {% if category.id in field.value %} checked="checked" {% endif %}>{{ category }}</input>
                         </div>
                     {% empty %}
                         <p>No tag currently available.</p>
