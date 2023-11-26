@@ -17,9 +17,12 @@ TAG_OPTIONS = [
 # Some tag requires login
 LOGIN_REQUIRED_TAG_LIST = ['registered', 'favorited', 'friend_joined']
 
+
 def guest_access_login_tag(request: HttpRequest) -> bool:
+    """Check if the user has guest access to a tag that requires login."""
     tag = request.GET.get('tag')
     return tag in LOGIN_REQUIRED_TAG_LIST and not request.user.is_authenticated
+
 
 class IndexView(generic.ListView):
     """
@@ -38,7 +41,7 @@ class IndexView(generic.ListView):
         Handle HTTP GET requests to display the list of activities.
 
         Returns:
-            HttpResponse: The HTTP response to be returned.
+            HttpResponse: The HTTP response to index.
 
         Notes:
             Redirects to the login page if a registered user attempts to access tags that

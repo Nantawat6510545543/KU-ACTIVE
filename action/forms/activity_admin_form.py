@@ -1,4 +1,3 @@
-from unicodedata import category
 from django import forms
 from action.models import Activity, Category
 

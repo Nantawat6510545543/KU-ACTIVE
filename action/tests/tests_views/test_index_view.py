@@ -42,7 +42,7 @@ class ActivityIndexViewTests(TestCase):
             "start_date": timezone.now() + timezone.timedelta(days=5),
             "last_date": timezone.now() + timezone.timedelta(days=6)
         }
-        new_activity = create_activity(self.user, **update_date)
+        create_activity(self.user, **update_date)  # new activity
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
         self.assertCountEqual(response.context['activity_list'], [])
@@ -68,12 +68,10 @@ class ActivityIndexViewTests(TestCase):
         """
         All published activity from a should be shown.
         """
-        activity_1_data = {"title": "Football"}
-        activity_1 = create_activity(self.user, **activity_1_data)
-        activity_2_data = {"title": "Run"}
-        activity_2 = create_activity(self.user, **activity_2_data)
-        activity_3_data = {"title": "Walk"}
-        activity_3 = create_activity(self.user, **activity_3_data)
+        activity_1 = create_activity(self.user, title="Football")
+        activity_2 = create_activity(self.user, title="Run")
+        activity_3 = create_activity(self.user, title="Walk")
+
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
         self.assertCountEqual(response.context['activity_list'],
@@ -83,14 +81,14 @@ class ActivityIndexViewTests(TestCase):
         """
         All published activity from any user should be shown.
         """
-        activity_1_data = {"title": "Football"}
-        activity_1 = create_activity(self.user, **activity_1_data)
-        activity_2_data = {"title": "Run"}
+        activity_1 = create_activity(self.user, title="Football")
+
         jane = create_user(username="Jane")
-        activity_2 = create_activity(jane, **activity_2_data)
-        activity_3_data = {"title": "Walk"}
+        activity_2 = create_activity(jane, title="Run")
+
         john = create_user(username="John")
-        activity_3 = create_activity(john, **activity_3_data)
+        activity_3 = create_activity(john, title="Walk")
+
         response = self.client.get(reverse('action:index'))
         self.assertEqual(response.status_code, 200)
         self.assertCountEqual(response.context['activity_list'],

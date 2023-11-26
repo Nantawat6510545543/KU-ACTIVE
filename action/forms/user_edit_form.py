@@ -1,11 +1,14 @@
 from django import forms
 from django.contrib.auth.forms import UserChangeForm
+from action.forms.user_form import changed_username_is_not_unique
 
 from action.models import User
 from action import utils
 
 
 class UserEditForm(UserChangeForm):
+    """Form for editing user profile information."""
+
     profile_picture = background_picture = forms.ImageField(required=False)
 
     class Meta:
@@ -21,18 +24,16 @@ class UserEditForm(UserChangeForm):
         ]
 
     def clean(self):
+        """Clean and validate the form data."""
         cleaned_data = super().clean()
-        user_account = User.objects.filter(
-            username=cleaned_data.get('username'))
 
-        # If the username has been changed, apply validation
-        if user_account.exclude(pk=self.instance.pk).exists():
+        if changed_username_is_not_unique(cleaned_data, self.instance.id):
             raise forms.ValidationError('Username already exists.')
 
         # Handle the picture
         image_file = self.cleaned_data.get('profile_picture')
         cleaned_data['profile_picture'] = utils.image_to_base64(image_file)
 
-        image_file2 = self.cleaned_data.get('background_picture')
-        cleaned_data['background_picture'] = utils.image_to_base64(image_file2)
+        background_image_file = self.cleaned_data.get('background_picture')
+        cleaned_data['background_picture'] = utils.image_to_base64(background_image_file)
         return cleaned_data

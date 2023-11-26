@@ -17,11 +17,8 @@ class DetailView(generic.DetailView):
         """
         Handle GET requests and render the activity details.
 
-        Raises:
-            Http404: If the requested Activity does not exist.
-
         Returns:
-            HttpResponse: Rendered template with activity details.
+            HttpResponse: Rendered activity details.
 
         Notes:
             Redirects to the index page with an error message if the Activity is not found.
