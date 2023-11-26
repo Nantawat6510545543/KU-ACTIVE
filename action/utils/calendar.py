@@ -1,4 +1,4 @@
-from allauth.socialaccount.models import SocialApp, SocialToken
+from allauth.socialaccount.models import SocialApp, SocialToken, SocialAccount
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from decouple import config
@@ -9,7 +9,8 @@ from django.utils.crypto import get_random_string
 
 from action.models.activity import Activity
 
-
+API_NAME = 'calendar'
+API_VERSION = 'v3'
 CHARSET = "0123456789abcdefghijklmnopqrstuv"
 
 @login_required
@@ -34,7 +35,8 @@ def build_service(request):
     }
     creds = Credentials.from_authorized_user_info(info=user_info,
                                                   scopes=scope)
-    return build('calendar', 'v3', credentials=creds)
+    return build(API_NAME, API_VERSION, credentials=creds)
+
 
 def get_json_data(activity_id):
     """
@@ -63,41 +65,14 @@ def get_json_data(activity_id):
     }
 
 
-# TODO add update function + make a decorator 
-@login_required
-def create_event(request, activity_id):
-    """
-    Create a Google Calendar event for the specified activity.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-        activity_id (int): ID of the activity.
-    """
-    service = build_service(request)
-
-    if service:
-        data = get_json_data(activity_id)
-        request.user.event_encoder[str(activity_id)] = data['id']
-        request.user.save()
-        service.events().insert(calendarId='primary', body=data).execute()
+def user_is_login_with_google(request):
+    try:
+        # Check if the user has a Google social account
+        SocialAccount.objects.get(user=request.user, provider='google')
+        return True
+    except SocialAccount.DoesNotExist:
+        return False
 
 
-@login_required
-def remove_event(request, activity_id):
-    """
-    Remove the Google Calendar event associated with the specified activity.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-        activity_id (int): ID of the activity.
-    """
-    event_id = str(activity_id)
-    user = request.user
-    service = build_service(request)
-
-    if service and event_id in user.event_encoder:
-        encoded_event = user.event_encoder[event_id]
-        service.events().delete(calendarId='primary',
-                                eventId=encoded_event).execute()
-        del user.event_encoder[event_id]
-        user.save()
+# def calendar_is_working(request):
+#     pass
