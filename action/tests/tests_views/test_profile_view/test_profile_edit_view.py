@@ -2,7 +2,7 @@ from django.urls import reverse
 from django.test import TestCase
 from action.tests.utils import create_user, USER_DATA_1
 from django.contrib.messages import get_messages
-from action.views import EditProfileView
+from action.views import ProfileEditView
 
 
 class ProfileEditViewTests(TestCase):
@@ -71,6 +71,6 @@ class ProfileEditViewTests(TestCase):
         2. Get the success URL.
         3. Assert that the success URL is the reverse of the profile page.
         """
-        view = EditProfileView()
+        view = ProfileEditView()
         success_url = view.get_success_url()
         self.assertEqual(success_url, reverse('action:profile'))
