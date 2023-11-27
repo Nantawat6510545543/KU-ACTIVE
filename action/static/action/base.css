@@ -13,6 +13,16 @@ nav {
     width: 100%;
 }
 
+.topnav a img.title-logo {
+    width: auto;
+    height: 55px;
+    padding: 4px 10px 0px 10px;
+}
+
+.topnav a img.title-logo:hover {
+    transform: scale(1.05);
+}
+
 .topnav a {
     text-align: center;
     text-decoration: none;
@@ -21,20 +31,6 @@ nav {
     margin-bottom: 5px;
     transition: font-size 0.5s;
     font-family: Arial, Helvetica, sans-serif;
-}
-
-.topnav a.title {
-    color: white;
-    font-size: 55px;
-    font-family: Inter;
-    font-weight: 700;
-    margin-left: 1%;
-
-    transition: all 0.5s ;
-}
-
-.topnav a.title:hover {
-    text-decoration: underline;
 }
 
 .topnav a.admin {
@@ -249,7 +245,6 @@ nav {
     font-size: 25px;
     text-decoration:underline;
     border:none;
-
 }
 
 /* Content block */
@@ -323,15 +318,10 @@ nav {
         display: none;
     }
 
-    .topnav a.title {
-        float:left;
-        margin-top:5px;
-        font-size:45px;
-    }
-
-    .topnav a.title:hover {
-        margin-top:0px;
-        font-size:50px;
+    .topnav a img.title-logo {
+        width: auto;
+        height: 45px;
+        padding: 9px 10px 0px 10px;
     }
 
     .topnav .drop-button {
