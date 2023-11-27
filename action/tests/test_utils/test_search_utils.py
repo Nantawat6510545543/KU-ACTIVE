@@ -380,8 +380,8 @@ class SearchUtilsTests(TestCase):
                                     title="Test Next Week",
                                     start_date=timezone.now() + timezone.timedelta(days=7))
 
-        yesterday_string = (timezone.now() - timezone.timedelta(days=1))
-        tomorrow_string = (timezone.now() + timezone.timedelta(days=1))
+        yesterday_string = timezone.now() - timezone.timedelta(days=1)
+        tomorrow_string = timezone.now() + timezone.timedelta(days=1)
 
         # Test start point range
         request = self.factory.get(reverse('action:index'), {
@@ -432,7 +432,7 @@ class SearchUtilsTests(TestCase):
                                     title="Test Tag", place="Test Place",
                                     start_date=timezone.now() - timezone.timedelta(days=10))
 
-        last_week_string = (timezone.now() - timezone.timedelta(days=7))
+        last_week_string = timezone.now() - timezone.timedelta(days=7)
         request = self.factory.get(reverse('action:index'), {
             'tag': ['title', 'owner', 'place', 'date_start_point'],
             'q': ['Test Tag', 'Test User 1', 'Test place', last_week_string]

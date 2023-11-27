@@ -35,13 +35,13 @@ def delete_activity(request, activity_id: int):
     try:
         activity = Activity.objects.get(id=activity_id)
     except Activity.DoesNotExist:
-        messages.info(request, "Activity doesn't exist")
+        messages.info(request, "Activity doesn't exist.")
         return redirect(reverse("action:manage"))
 
     if activity.owner.id is not request.user.id:
         messages.info(request, "You do not have permission to delete this activity")
-        return redirect(reverse("action:manage"))
+    else:
+        activity.delete()
+        messages.success(request, "You have successfully deleted this activity.")
 
-    activity.delete()
-    messages.success(request, "You have successfully deleted this activity.")
     return redirect(reverse("action:manage"))
