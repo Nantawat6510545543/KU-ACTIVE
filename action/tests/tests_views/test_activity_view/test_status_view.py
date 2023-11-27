@@ -76,6 +76,7 @@ class ActivityStatusViewTests(TestCase):
         self.assertRedirects(response, reverse('action:detail', args=(self.activity_1.id,)))
         # Check for failed messages.
         messages = list(get_messages(response.wsgi_request))
+
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "You are already participating.")
         # Check that the activity status is remained the same.
@@ -107,6 +108,7 @@ class ActivityStatusViewTests(TestCase):
         self.assertRedirects(response, reverse('action:detail', args=(unavailable_activity.id,)))
         # Check for failed messages.
         messages = list(get_messages(response.wsgi_request))
+
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "This activity can no longer be participated in.")
         # Check that the activity status is remained the same.

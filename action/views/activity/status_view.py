@@ -38,9 +38,9 @@ def participate(request, activity_id: int):
             except HttpError:
                 messages.info(request, "Calendar is not working, please Login again.")
 
-    activity_status.is_participated = True
-    activity_status.save()
-    messages.success(request, "You have successfully participated.")
+        activity_status.is_participated = True
+        activity_status.save()
+        messages.success(request, "You have successfully participated.")
 
     return redirect(reverse("action:detail", args=(activity_id,)))
 
