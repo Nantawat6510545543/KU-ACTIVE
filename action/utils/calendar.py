@@ -39,7 +39,7 @@ def build_service(request) -> Resource:
     return build(API_NAME, API_VERSION, credentials=creds)
 
 
-def create_event_json_data(activity_id):
+def get_event_json_data(activity_id, generate_event_id=False):
     """
     Get JSON data for creating a Google Calendar event based on the activity details.
 
@@ -51,7 +51,7 @@ def create_event_json_data(activity_id):
     """
     activity = get_object_or_404(Activity, pk=activity_id)
 
-    return {
+    data = {
         activity_id: {
             'summary': activity.title,
             'location': activity.place,
@@ -64,42 +64,19 @@ def create_event_json_data(activity_id):
                 'dateTime': activity.last_date.strftime('%Y-%m-%dT%H:%M:%S'),
                 'timeZone': config('TIME_ZONE', default='UTC'),
             },
-            'id': get_random_string(length=100, allowed_chars=CHARSET)
         }
     }
 
+    if generate_event_id:
+        data[activity_id]['id'] = get_random_string(length=100, allowed_chars=CHARSET)
 
-def create_event_json_data_without_event_id(activity_id):
-    """
-    Get JSON data for creating a Google Calendar event based on the activity details.
-
-    Args:
-        activity_id (int): ID of the activity.
-
-    Returns:
-        dict: JSON data for creating a Google Calendar event.
-    """
-    activity = get_object_or_404(Activity, pk=activity_id)
-
-    return {
-        str(activity_id): {
-            'summary': activity.title,
-            'location': activity.place,
-            'description': activity.description,
-            'start': {
-                'dateTime': activity.start_date.strftime('%Y-%m-%dT%H:%M:%S'),
-                'timeZone': config('TIME_ZONE', default='UTC'),
-            },
-            'end': {
-                'dateTime': activity.last_date.strftime('%Y-%m-%dT%H:%M:%S'),
-                'timeZone': config('TIME_ZONE', default='UTC'),
-            },
-        }
-    }
+    return data
 
 
-def get_event_json_data(request, activity_id):
-    return request.user.event_json_data[activity_id]
+def get_event_id(request, activity_id: str):
+    if activity_id in request.user.event_encoder:
+        return request.user.event_encoder[activity_id]
+
 
 def user_is_login_with_google(request):
     """
