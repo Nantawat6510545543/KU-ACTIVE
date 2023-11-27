@@ -98,4 +98,4 @@ class ActivityManageViewTests(TestCase):
         # Check for the failed messages.
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), "Activity doesn't exist")
+        self.assertEqual(str(messages[0]), "Activity doesn't exist.")
