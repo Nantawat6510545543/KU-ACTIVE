@@ -24,7 +24,7 @@ class EndToEndTestBase(StaticLiveServerTestCase):
         """
         super().setUpClass()
         options = FirefoxOptions()
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         cls.browser = Firefox(options=options)
         cls.browser.implicitly_wait(30)
         cls.browser.set_page_load_timeout(30)
