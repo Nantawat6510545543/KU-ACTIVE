@@ -32,7 +32,7 @@ class CalendarView(LoginRequiredMixin, generic.TemplateView):
         else:
             # If the user doesn't have a Google social account, Redirect to the Google login page
             messages.warning(self.request, "Please login to Google to use the calendar feature.")
-            # return render(self.request, 'socialaccount/login.html', {'provider': 'google'})
+            # TODO return render(self.request, 'socialaccount/login.html', {'provider': 'google'})
 
         # Proceed with the regular view logic
         return super(CalendarView, self).get(*args, **kwargs)

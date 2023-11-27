@@ -60,7 +60,7 @@ Detail
         <div class="activity-details">
             <div class="Description">
                 <p>Description:</p>
-                <p class="full-detail">{{ activity.full_description }}</p>
+                <p class="full-detail">{{ activity.full_description|linebreaks }}</p>
             </div> 
             <div class="activity-general-information">
                 <p><strong>Date Published:</strong> {{ activity.pub_date }}</p>

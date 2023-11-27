@@ -69,7 +69,6 @@ def get_event_json_data(activity_id, generate_event_id=False):
 
     if generate_event_id:
         data[activity_id]['id'] = get_random_string(length=100, allowed_chars=CHARSET)
-
     return data
 
 
@@ -89,7 +88,6 @@ def user_is_login_with_google(request):
         bool: True if the user is logged in with Google, False otherwise.
     """
     try:
-        # Check if the user has a Google social account
         SocialAccount.objects.get(user=request.user, provider='google')
         return True
     except SocialAccount.DoesNotExist:
