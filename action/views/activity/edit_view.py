@@ -8,8 +8,6 @@ from action.forms import ActivityForm
 from action.models import Activity
 
 
-# from action.utils import update_event
-
 class ActivityEditView(LoginRequiredMixin, generic.UpdateView):
     """View for editing an existing activity."""
 

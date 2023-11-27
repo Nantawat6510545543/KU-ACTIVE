@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
+from action.calendar import update_event
 
 from action.utils.calendar import user_is_login_with_google
 
@@ -29,6 +30,10 @@ class CalendarView(LoginRequiredMixin, generic.TemplateView):
             messages.warning(self.request, "Please login to Google to use the calendar feature.")
 
             # return render(self.request, 'socialaccount/login.html', {'provider': 'google'})
+
+        if user_is_login_with_google(self.request):
+            for each_activity in self.request.user.participated_activity:
+                update_event(self.request, each_activity.id)
 
         # If the user already has a Google social account, proceed with the regular view logic
         return super(CalendarView, self).get(*args, **kwargs)
