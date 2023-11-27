@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.test import TestCase
 from action.tests.utils import create_user, USER_DATA_1
 from django.utils import timezone
-from action.views.activity.create_view import ActivityCreateView
+from action.views.activity.activity_create_view import ActivityCreateView
 
 
 class ActivityCreateViewTests(TestCase):
