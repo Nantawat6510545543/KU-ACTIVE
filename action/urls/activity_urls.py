@@ -3,7 +3,7 @@ from django.urls import path
 from action import views
 
 activity_patterns = [
-    path('<int:pk>', views.DetailView.as_view(), name='detail'),
+    path('<int:pk>', views.ActivityDetailView.as_view(), name='detail'),
     path('manage/', views.ActivityManageView.as_view(), name='manage'),
     path('create/', views.ActivityCreateView.as_view(), name='create'),
     path('edit/<int:activity_id>', views.ActivityEditView.as_view(), name='edit'),

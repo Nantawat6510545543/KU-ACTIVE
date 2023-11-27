@@ -7,7 +7,7 @@ from action.models import Activity
 from action import utils
 
 
-class DetailView(generic.DetailView):
+class ActivityDetailView(generic.DetailView):
     """DetailView for displaying details of a specific Activity."""
 
     model = Activity

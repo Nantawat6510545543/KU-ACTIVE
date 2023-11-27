@@ -8,7 +8,7 @@ from action.forms import UserEditForm
 from action.models import User
 
 
-class EditProfileView(LoginRequiredMixin, generic.UpdateView):
+class ProfileEditView(LoginRequiredMixin, generic.UpdateView):
     """View for editing the user profile."""
 
     form_class = UserEditForm

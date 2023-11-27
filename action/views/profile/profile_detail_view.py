@@ -6,7 +6,7 @@ from django.views import generic
 from action.models import User
 
 
-class ProfileView(generic.ListView):
+class ProfileDetailView(generic.ListView):
     """View for displaying user profiles."""
 
     template_name = 'action/profile/detail.html'
