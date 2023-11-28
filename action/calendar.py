@@ -10,7 +10,7 @@ def create_event(request, activity_id):
         request (HttpRequest): The HTTP request object.
         activity_id (int): ID of the activity.
     """
-    activity_id = str(activity_id)  # use string, too late to use (int) now
+    activity_id = str(activity_id)  # use string
     service = build_service(request)
 
     if service:
@@ -22,7 +22,7 @@ def create_event(request, activity_id):
 
 @login_required
 def update_event(request, activity_id):
-    activity_id = str(activity_id)  # use string, too late to use (int) now
+    activity_id = str(activity_id)  # use string
 
     # Get the existing event
     service = build_service(request)
@@ -43,7 +43,7 @@ def remove_event(request, activity_id):
         request (HttpRequest): The HTTP request object.
         activity_id (int): ID of the activity.
     """
-    activity_id = str(activity_id)  # use string, too late to use (int) now
+    activity_id = str(activity_id)  # use string
     service = build_service(request)
 
     if service:

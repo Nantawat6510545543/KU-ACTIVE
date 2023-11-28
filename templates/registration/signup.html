@@ -18,14 +18,9 @@
                 {% csrf_token %}
                 <table class="form-table">
                     {% for field in form %}
-                        {% if field.name == "profile_picture" %}
-                        {% elif field.name == "background_picture" %}
-                        {% elif field.name == "bio" %}
-                        {% else %}
-                            <h4>{{ field.label_tag }}</h4>
-                            {{ field }}
-                            <p style="color:red;">{{ field.help_text }}</p>
-                        {% endif %}
+                        <h4>{{ field.label_tag }}</h4>
+                        {{ field }}
+                        <p style="color:red;">{{ field.help_text }}</p>
                     {% endfor %}
                     <tr>
                         <td colspan="2" class="form-submit">

@@ -32,7 +32,7 @@ def participate(request, activity_id: int):
     elif activity_status.is_participated:
         messages.info(request, "You are already participating.")
     else:
-        if user_is_login_with_google(request):
+        if user_is_login_with_google(request.user):
             try:
                 create_event(request, activity_id)  # Add activity to user calendar
             except HttpError:
@@ -64,7 +64,7 @@ def leave(request, activity_id: int):
         activity_status.save()
         messages.success(request, "You have left this activity.")
 
-        if user_is_login_with_google(request):
+        if user_is_login_with_google(request.user):
             try:
                 remove_event(request, activity_id)  # Remove activity from user calendar
             except HttpError:

@@ -1,8 +1,22 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models.query import QuerySet
 from django.views import generic
 
 from action.models import FriendStatus, User
+
+
+def get_user_friend_add_list(user):
+    # Exclude yourself from the list and people you are already friends with
+    add_list = User.objects.exclude(id=user.id).exclude(id__in=user.friends)
+    return add_list
+
+def get_user_pending_request_list(user):
+    pending_request = FriendStatus.objects.filter(
+        sender=user,
+        request_status='Pending'
+    )
+
+    pending_request_user_list = User.objects.filter(receiver__id__in=pending_request)
+    return pending_request_user_list
 
 
 class AddFriendView(LoginRequiredMixin, generic.ListView):
@@ -19,13 +33,9 @@ class AddFriendView(LoginRequiredMixin, generic.ListView):
             QuerySet: The queryset of users.
         """
         query = self.request.GET.get('q')
-        user = self.request.user
 
-        # Exclude yourself from the list and people you are already friends with
-        add_list = User.objects.exclude(id=user.id).exclude(id__in=user.friends)
-
-        add_list = add_list.filter(username__icontains=query)
-        return add_list.distinct()
+        add_list = get_user_friend_add_list(self.request.user)
+        return add_list.filter(username__icontains=query).distinct()
 
     def get_context_data(self, **kwargs):
         """
@@ -35,12 +45,6 @@ class AddFriendView(LoginRequiredMixin, generic.ListView):
             dict: context with all pending requests
         """
         context = super().get_context_data(**kwargs)
-        pending_request = FriendStatus.objects.filter(
-            sender=self.request.user,
-            request_status='Pending'
-        )
-
-        pending_request_user_list = User.objects.filter(receiver__id__in=pending_request)
-        context['pending_request_user_list'] = pending_request_user_list
+        context['pending_request_user_list'] = get_user_pending_request_list(self.request.user)
 
         return context

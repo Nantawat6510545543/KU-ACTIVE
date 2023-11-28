@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialaccount %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -50,6 +51,7 @@
                 <a class="friends" href="{% url 'action:friends' %}">Friends</a>
                 <a class="manage" href="{% url 'action:manage' %}">Manage Your Activity!</a>
                 <a class="calendar" href="{% url 'action:calendar' %}">Calendar</a>
+
                 {% if user.is_superuser %}
                     <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
                 {% endif %}

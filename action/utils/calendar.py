@@ -1,4 +1,5 @@
 from allauth.socialaccount.models import SocialApp, SocialToken, SocialAccount
+from django.http import HttpRequest
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build, Resource
 from decouple import config
@@ -71,24 +72,17 @@ def get_event_json_data(activity_id, generate_event_id=False):
         data[activity_id]['id'] = get_random_string(length=100, allowed_chars=CHARSET)
     return data
 
+def get_event_id(request: HttpRequest, activity_id: str):
+    return request.user.event_encoder.get(activity_id, None)
 
-def get_event_id(request, activity_id: str):
-    if activity_id in request.user.event_encoder:
-        return request.user.event_encoder[activity_id]
-
-
-def user_is_login_with_google(request):
+def user_is_login_with_google(user):
     """
     Check if the user is logged in with a Google social account.
 
     Args:
-        request (HttpRequest): The incoming HTTP request.
+        user (User): The user object.
 
     Returns:
         bool: True if the user is logged in with Google, False otherwise.
     """
-    try:
-        SocialAccount.objects.get(user=request.user, provider='google')
-        return True
-    except SocialAccount.DoesNotExist:
-        return False
+    return SocialAccount.objects.filter(user=user, provider='google').exists()
