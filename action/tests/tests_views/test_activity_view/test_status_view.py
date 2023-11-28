@@ -4,23 +4,27 @@ from django.utils import timezone
 from django.contrib.messages import get_messages
 
 from action.models import ActivityStatus
-from action.tests.utils import create_user, create_activity, create_activity_status, create_social_app
+from action.tests.utils import create_user, create_activity, \
+    create_activity_status, create_social_app, USER_DATA_1, USER_DATA_2
 
 
 class ActivityStatusViewTests(TestCase):
+    """Test cases for the ActivityStatusView."""
+
     def setUp(self) -> None:
-        user_data_1 = {"email": "test1@example.com"}
-        user_data_2 = {"email": "test2@example.com"}
-        self.user_1 = create_user(username="John", password="abc", **user_data_1)
-        self.user_2 = create_user(username="Jane", password="abc", **user_data_2)
+        """Set up the test environment by creating test users, activities, and a social app."""
+        self.user_1 = create_user(**USER_DATA_1)
+        self.user_2 = create_user(**USER_DATA_2)
+
         self.activity_1 = create_activity(self.user_1)
         self.activity_2 = create_activity(self.user_2)
         self.social_app = create_social_app()
 
     def test_activity_participation_as_owner(self):
         """
-        Authenticated users should be able to participate in their available activity.
-        Successful messages should be shown.
+        Test whether authenticated owners can participate in their available activity.
+
+        Authenticated owners should be redirected to the activity detail page with a success message.
         """
         create_activity_status(self.user_1, self.activity_1, is_participated=False)
         self.client.force_login(self.user_1)
@@ -39,8 +43,9 @@ class ActivityStatusViewTests(TestCase):
 
     def test_activity_participation_others(self):
         """
-        Authenticated users should be able to participate in others' available activity.
-        Successful messages should be shown.
+        Test whether authenticated users can participate in others' available activity.
+
+        Authenticated users should be redirected to the activity detail page with a success message.
         """
         create_activity_status(self.user_1, self.activity_2, is_participated=False)
         self.client.force_login(self.user_1)
@@ -59,9 +64,9 @@ class ActivityStatusViewTests(TestCase):
 
     def test_activity_participation_already_participating(self):
         """
-        Authenticated users should not be able to participate in any activity
-        that they are already participating in.
-        Failed messages should be shown.
+        Test whether authenticated users cannot participate in an activity they are already participating in.
+
+        Authenticated users should be redirected to the activity detail page with a failed message.
         """
         create_activity_status(self.user_1, self.activity_1, is_participated=True)
         self.client.force_login(self.user_1)
@@ -71,6 +76,7 @@ class ActivityStatusViewTests(TestCase):
         self.assertRedirects(response, reverse('action:detail', args=(self.activity_1.id,)))
         # Check for failed messages.
         messages = list(get_messages(response.wsgi_request))
+
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "You are already participating.")
         # Check that the activity status is remained the same.
@@ -80,8 +86,9 @@ class ActivityStatusViewTests(TestCase):
 
     def test_unavailable_activity_participation(self):
         """
-        Anyone should not be able to participate in any unavailable activity.
-        Failed messages should be shown.
+        Test whether anyone can participate in an unavailable activity.
+
+        Anyone attempting to participate in an unavailable activity should be redirected with a failed message.
         """
         form_data = {
             "title": "Test",
@@ -101,6 +108,7 @@ class ActivityStatusViewTests(TestCase):
         self.assertRedirects(response, reverse('action:detail', args=(unavailable_activity.id,)))
         # Check for failed messages.
         messages = list(get_messages(response.wsgi_request))
+
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "This activity can no longer be participated in.")
         # Check that the activity status is remained the same.
@@ -110,9 +118,9 @@ class ActivityStatusViewTests(TestCase):
 
     def test_activity_leave(self):
         """
-        Authenticated users should be able to leave activities
-        in which they have participated.
-        Successful messages should be shown.
+        Test whether authenticated users can leave activities in which they have participated.
+
+        Authenticated users should be redirected to the activity detail page with a success message.
         """
         create_activity_status(self.user_1, self.activity_1, is_participated=True)
         self.client.force_login(self.user_1)
@@ -131,9 +139,9 @@ class ActivityStatusViewTests(TestCase):
 
     def test_activity_leave_not_partipate(self):
         """
-        Authenticated users should not be able to leave activities
-        in which they have not yet participated.
-        Failed messages should be shown.
+        Test whether authenticated users cannot leave activities in which they have not yet participated.
+
+        Authenticated users should be redirected to the activity detail page with a failed message.
         """
         create_activity_status(self.user_1, self.activity_1, is_participated=False)
         self.client.force_login(self.user_1)
@@ -152,8 +160,9 @@ class ActivityStatusViewTests(TestCase):
 
     def test_activity_favorite_as_owner(self):
         """
-        Authenticated users should be able to favorite their available activity.
-        Successful messages should be shown.
+        Test whether authenticated owners can favorite their available activity.
+
+        Authenticated owners should be redirected to the activity detail page with a success message.
         """
         create_activity_status(self.user_1, self.activity_1)
         self.client.force_login(self.user_1)
@@ -172,8 +181,9 @@ class ActivityStatusViewTests(TestCase):
 
     def test_activity_favorite_others(self):
         """
-        Authenticated users should be able to favorite others' available activity.
-        Successful messages should be shown.
+        Test whether authenticated users can favorite others' available activity.
+
+        Authenticated users should be redirected to the activity detail page with a success message.
         """
         create_activity_status(self.user_1, self.activity_2)
         self.client.force_login(self.user_1)
@@ -192,9 +202,9 @@ class ActivityStatusViewTests(TestCase):
 
     def test_activity_favorite_already_favorite(self):
         """
-        Authenticated users should not be able to favorite any activity
-        that they are already favorite.
-        Failed messages should be shown.
+        Test whether authenticated users cannot favorite an activity they have already favorited.
+
+        Authenticated users should be redirected to the activity detail page with a failed message.
         """
         create_activity_status(self.user_1, self.activity_1, is_favorited=True)
         self.client.force_login(self.user_1)
@@ -213,8 +223,9 @@ class ActivityStatusViewTests(TestCase):
 
     def test_activity_unfavorite(self):
         """
-        Authenticated users should be able to unfavorite the activity.
-        Successful messages should be shown.
+        Test whether authenticated users can unfavorite the activity.
+
+        Authenticated users should be redirected to the activity detail page with a success message.
         """
         create_activity_status(self.user_1, self.activity_1, is_favorited=True)
         self.client.force_login(self.user_1)
@@ -233,9 +244,9 @@ class ActivityStatusViewTests(TestCase):
 
     def test_activity_unfavorite_not_yet_favorited(self):
         """
-        Authenticated users should not be able to unfavorite an activity
-        that they have not favorited.
-        Failed messages should be shown.
+        Test whether authenticated users cannot unfavorite an activity they have not favorited.
+
+        Authenticated users should be redirected to the activity detail page with a failed message.
         """
         create_activity_status(self.user_1, self.activity_1, is_favorited=False)
         self.client.force_login(self.user_1)

@@ -1,8 +1,8 @@
 .profile-outer-edit {
-    background:#79AC78;
-    border-radius:45px;
+    background: #002e27;
+    border-radius: 45px;
     padding: 0% 2% 2% 2%;
-    margin:2% 10% 5% 10%;
+    margin: 2% 10% 5% 10%;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -13,8 +13,8 @@
 }
 
 .profile-outer-edit .title h1 {
-    margin: 1% 5% 0% 5%;
-    color: black;
+    margin: 0% 5% 1% 5%;
+    color: white;
     font-size: 50px;
     font-family: Arial, Helvetica, sans-serif;
     word-wrap: break-word;
@@ -22,7 +22,7 @@
 
 .profile-inner-edit {
     font-family: Arial, Helvetica, sans-serif;
-    background:#618264;
+    background: #00b14f;
     border-radius:45px;
     padding: 1% 4% 2% 4%;
     margin: 0%;
@@ -53,7 +53,7 @@
     text-shadow: 1px 1px 4px #000000;
     padding: 5px 0px 5px 0px;
     border: none;
-    border-bottom: 3px solid black;
+    border-bottom: 3px solid white;
 
     margin: 0% 5% 0% 0%;
     font-size: 30px;

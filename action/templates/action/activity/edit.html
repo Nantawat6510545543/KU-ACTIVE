@@ -5,7 +5,6 @@
 Edit
 {% endblock %}
 
-{% comment %} reuse actiivity-form base/create_activity.html?? {% endcomment %}
 {% block content %}
 <h3>
 <form method="post" enctype="multipart/form-data">
@@ -21,16 +20,16 @@ Edit
                     <h2><strong>{{ field.label_tag }}</strong> {{ field.as_hidden }} {{ user }}</h2>
 
                 {% elif field.name == 'picture' %}
-                    <div class="heading-detail"><p>{{ field.label_tag }}</p> <input id="imageInput" type="file" name="{{ field.name }}" onchange="displayImage()"></div>
+                    <div class="heading-detail"><p>{{ field.label_tag }}</p> <input id="imageInput" type="file" name="{{ field.name }}" onchange="displayImage()" accept=".png,.jpg,.jpeg"></div>
                     <img id="uploadedImage" src="{% if activity.picture %} data:image/png;base64,{{ activity.picture }}
                          {% else %} {% static 'action/images/default-image.png' %}
                          {% endif %}"
-                    alt="{{ activity.title }}'s Picture" width="240" height="240">
+                    alt="{{ activity.title }}'s Picture" width="100%" height="600">
 
                 {% elif field.name == 'background_picture' %}
                     <div class="heading-detail">
                         <p>{{ field.label_tag }}</p>
-                        <input id="fileInput" type="file" multiple name="{{ field.name }}">
+                        <input id="fileInput" type="file" multiple name="{{ field.name }}" accept=".png,.jpg,.jpeg">
                     </div>
                     <div class="background-slide" id="backgroundSlide">
                         {% if activity.background_picture %}
@@ -40,7 +39,7 @@ Edit
                             {% endfor %}
                         {% else %}
                             <img src="{% static 'action/images/default-image.png' %}" alt="Default Picture"
-                            width="100%" height="auto">
+                            width="100%" height="600">
                         {% endif %}
                     </div>
                     <div class="slide-button">
@@ -52,10 +51,9 @@ Edit
                     <div><p>{{ field.label_tag }}</p></div>
                     <div class="grid-tag-name">
                     {% for category in field.field.queryset %}
-
                         <div>
                             <input type="checkbox" name="{{ field.name }}" value="{{ category.id }}"
-                                {% if category in field.value.all %} checked {% endif %}>{{ category }}</input>
+                                {% if category.id in field.value %} checked="checked" {% endif %}>{{ category }}</input>
                         </div>
                     {% empty %}
                         <p>No tag currently available.</p>

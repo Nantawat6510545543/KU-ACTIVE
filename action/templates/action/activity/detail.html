@@ -32,7 +32,9 @@ Detail
             {% endif %}
 
         {% else %}
-            <p>Login to participate in this activity.</p>
+            <a href="{% url 'action:participate' activity.id %}" class="login-required">
+                Login to participate in this activity.
+            </a>
         {% endif %}
     </div>
 
@@ -42,16 +44,13 @@ Detail
             <a href="{% url 'action:profile' activity.owner.id %}">{{ activity.owner.username }}</a>
         </p>
         <div class="background-slide">
-            {% if activity.background_picture %}
-                {% for value in activity.background_picture.values %}
-                    <img class="image-Slides" src="data:image/png;base64,{{ value }}"
-                    ALT="{{ activity.title }}'s Picture" width="100%" height="auto">
-                {% endfor %}
-
-            {% else %}
-                <img src="{% static 'action/images/default-image.png' %}"
+            {% for value in activity.background_picture.values %}
+                <img class="image-Slides" src="data:image/png;base64,{{ value }}"
                 ALT="{{ activity.title }}'s Picture" width="100%" height="auto">
-            {% endif %}
+            {% empty %}
+                <img src="{% static 'action/images/default-image.png' %}"
+                ALT="{{ activity.title }}'s Picture" width="100%" height="600">
+            {% endfor %}
         </div>
         <div class="slide-button">
             <a class="left-hover-text" onclick="plusDivs(-1)">&#10094;</a>
@@ -61,7 +60,7 @@ Detail
         <div class="activity-details">
             <div class="Description">
                 <p>Description:</p>
-                <p class="full-detail">{{ activity.full_description }}</p>
+                <p class="full-detail">{{ activity.full_description|linebreaks }}</p>
             </div> 
             <div class="activity-general-information">
                 <p><strong>Date Published:</strong> {{ activity.pub_date }}</p>
@@ -70,7 +69,11 @@ Detail
                 <p><strong>Last date of activity:</strong> {{ activity.last_date }}</p>
                 <p>
                     <strong>Place: </strong>
-                    <a href="{% url 'action:index' %}?tag=place&q={{ activity.place }}">{{ activity.place }}</a>
+                    {% if activity.place %}
+                        <a href="{% url 'action:index' %}?tag=place&q={{ activity.place }}">
+                    {% endif %}
+                        {{ activity.place }}
+                    </a>
                 </p>
                 <p><strong>Participant Limit:</strong>
                     {% if activity.participant_limit %}
@@ -80,7 +83,7 @@ Detail
                     {% endif %}
                 </p>
                 <p><strong>Participant Counts:</strong> {{ activity.participants.count }}</p>
-                <p><strong>Participants:</strong>
+                <p class="participant"><strong>Participants:</strong>
                     {% for participants in activity.participants %}
                         <a href="{% url 'action:profile' participants.id %}">
                             {{ participants }}{% if not forloop.last %}, {% endif %}
@@ -89,7 +92,6 @@ Detail
                         None
                     {% endfor %}
                 </p>
-
             </div>
             <div class="category">
                 <p><strong>Categories:</strong></p>

@@ -5,17 +5,20 @@ function setupSearchFunction() {
 
     function updateSearchUI() {
         if (selectElement.value === 'date_exact') {
+            inputElement.value = '';
             inputElement.type = 'datetime-local';
             inputElement.style.display = 'inline-block';
             inputElement.disabled = false;
             dropdownElement.disabled = true;
             dropdownElement.style.display = 'none';
         } else if (selectElement.value === 'categories') {
+            inputElement.value = '';
             inputElement.style.display = 'none';
             dropdownElement.style.display = 'inline-block';
             inputElement.disabled = true;
             dropdownElement.disabled = false;
         } else {
+            inputElement.value = '';
             inputElement.type = 'text';
             inputElement.style.display = 'inline-block';
             inputElement.disabled = false;

@@ -30,6 +30,7 @@ a:-webkit-any-link:hover {
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align:center;
+    position: fixed;
 }
 
 .form-container li {
@@ -169,15 +170,14 @@ a:-webkit-any-link:hover {
 }
 
 .logo {
-    float:right;
-    height:100%;
+    float: right;
+    height: 100%;
+    width: auto;
     margin-right: 10%;
 }
 
 @media screen and (max-width: 1300px) {
     .logo {
-        height:80%;
-        padding-top:50px;
-        margin-right: 5%;
+        margin-right: 0%;
     }
 }

@@ -36,29 +36,30 @@
             <div onclick="show_hide()" class="drop-button">
                 <button class="fas fa-bars"></button>
             </div>
-            <a class="title" href="{% url 'action:index' %}">KU-ACTIVE</a>
+            <a class="title" href="{% url 'action:index' %}">
+                <img class="title-logo" src="{% static 'action/images/logo-title.png' %}" alt="KU-ACTIVE">
+            </a>
+            {% if user.is_authenticated %}
+                <a class="logout" href="{% url 'logout' %}">Logout</a>
+                <div class="user-box">
+                    <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
+                    <img class="img" src="{% if user.profile_picture %} data:image/png;base64,{{ user.profile_picture }}
+                        {% else %} {% static 'action/images/guest-img.png' %}
+                        {% endif %}">
+                </div>
+                <a class="friends" href="{% url 'action:friends' %}">Friends</a>
+                <a class="manage" href="{% url 'action:manage' %}">Manage Your Activity!</a>
+                <a class="calendar" href="{% url 'action:calendar' %}">Calendar</a>
+                {% if user.is_superuser %}
+                    <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
+                {% endif %}
 
-        {% if user.is_authenticated %}
-            <a class="logout" href="{% url 'logout' %}">Logout</a>
-            <div class="user-box">
-                <a class="user" href="{% url 'action:profile' %}"> {{ user.username.title }}</a>
-                <img class="img" src="{% if user.profile_picture %} data:image/png;base64,{{ user.profile_picture }}
-                     {% else %} {% static 'action/images/guest-img.png' %}
-                     {% endif %}">
-            </div>
-            <a class="friends" href="{% url 'action:friends' %}">Friends</a>
-            <a class="manage" href="{% url 'action:manage' %}">Manage Your Activity!</a>
-            <a class="calendar" href="{% url 'action:calendar' %}">Calendar</a>
-            {% if user.is_superuser %}
-                <a class="admin" href="{% url 'admin:index' %}">Admin Interface</a>
+            {% else %}
+                <div class="user-box">
+                    <a class="user" href="{% url 'action:profile' %}">guest</a>
+                    <img class="img" src="{% static 'action/images/guest-img.png' %}">
+                </div>
             {% endif %}
-
-        {% else %}
-            <div class="user-box">
-                <a class="user" href="{% url 'action:profile' %}">guest</a>
-                <img class="img" src="{% static 'action/images/guest-img.png' %}">
-            </div>
-        {% endif %}
         {% endblock %}
         </div>
 
@@ -75,34 +76,35 @@
             {% if user.is_superuser %}
                 <li><a class="drop-item" href="{% url 'admin:index' %}">Admin Interface</a></li>
             {% endif %}
-            <li><a class="drop-item" href="{% url 'action:manage' %}">Manage Your Activity!</a></li>
-            <li><a class="drop-item" href="{% url 'action:friends' %}">Friends</a></li>
+            {% if user.is_authenticated %}
+                <li><a class="drop-item" href="{% url 'action:calendar' %}">Calendar</a></li>
+                <li><a class="drop-item" href="{% url 'action:manage' %}">Manage Your Activity!</a></li>
+                <li><a class="drop-item" href="{% url 'action:friends' %}">Friends</a></li>
+            {% endif %}
             <li><a class="drop-item" href="{% url 'action:index' %}?tag=registered">Registered Activity</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}?tag=favorited">Interested Activity</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}?tag=friend_joined">Your Friends Join!</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}?tag=upcoming">Upcoming</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}?tag=popular">Popular</a></li>
             <li><a class="drop-item" href="{% url 'action:index' %}?tag=recent">Recent</a></li>
-            <li><a class="drop-item" href="{% url 'action:calendar' %}">Calendar</a></li>
+
         </div>
     </nav>
 
     {% block message %}
         {% if messages %}
-            {% for message in messages %}
-                <div id="alert-msg" class="alert-msg">
-                    <span class="close-msg" onclick="closeMsg()">&times;</span>
-                    {% if form.errors %}
-                        {% for field, error_messages in form.errors.items %}
-                            {% for error_message in error_messages %}
-                                <p>{{ error_message }}</p>
-                            {% endfor %}
+            <div id="alert-msg" class="alert-msg">
+                <span class="close-msg" onclick="closeMsg()">&times;</span>
+                {% for message in messages %}
+                    {% for field, error_messages in form.errors.items %}
+                        {% for error_message in error_messages %}
+                            <p>{{ error_message }}</p>
                         {% endfor %}
-                    {% else %}
+                    {% empty %}
                         <p>{{ message }}</p>
-                    {% endif %}
-                </div>
-            {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
         {% endif %}
     {% endblock %}
 

@@ -7,5 +7,7 @@ linux-setup-script.sh
 window-setup-script.bat
 sample.env
 .coverage
+.flake8
+installation
 htmlcov
 action/tests

@@ -18,7 +18,7 @@
     width: 95%;
     height: 90%;
     border-radius: 15px;
-    margin-top: 3%;
+    margin-top: 20px;
 }
 
 div.friend-nav-bar {
@@ -139,6 +139,31 @@ div.friend-nav-bar {
 
 .add-button:hover {
     background-color: #45a049;
+}
+
+.cancel-button-box {
+    display: inline-block;
+    margin: 10px;
+    text-align: right;
+    padding: 20px;
+}
+
+.cancel-button {
+    background-color: #7e7e7e;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cancel-button:hover {
+    background-color: red;
 }
 
 .remove-button-box {

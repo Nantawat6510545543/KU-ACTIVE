@@ -5,7 +5,6 @@
     box-sizing:border-box;
     outline:none;
     text-decoration:none;
-    text-transform:capitalize;
 }
 
 .error img{
@@ -30,7 +29,6 @@
     box-sizing:border-box;
     outline:none;
     text-decoration:none;
-    text-transform:capitalize;
     color:black;
     transition: .3s;
     background:white;

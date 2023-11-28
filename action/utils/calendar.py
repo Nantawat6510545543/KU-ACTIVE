@@ -1,17 +1,30 @@
-import secrets
-
-from allauth.socialaccount.models import SocialApp, SocialToken
+from allauth.socialaccount.models import SocialApp, SocialToken, SocialAccount
 from google.oauth2.credentials import Credentials
-from googleapiclient.discovery import build
+from googleapiclient.discovery import build, Resource
 from decouple import config
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+from django.utils.crypto import get_random_string
 
 from action.models.activity import Activity
 
+API_NAME = 'calendar'
+API_VERSION = 'v3'
+CHARSET = "0123456789abcdefghijklmnopqrstuv"
+
 
 @login_required
-def build_service(request):
+def build_service(request) -> Resource:
+    """
+    Build and return a Google Calendar API service instance for the authenticated user.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+         Google Calendar API service instance.
+    """
     app = SocialApp.objects.get(provider="google")
     token = SocialToken.objects.get(app=app, account__user=request.user)
     refresh_token = token.token_secret
@@ -22,54 +35,60 @@ def build_service(request):
         "refresh_token": str(refresh_token),
     }
     creds = Credentials.from_authorized_user_info(info=user_info,
-                                                    scopes=scope)
-    return build('calendar', 'v3', credentials=creds)
+                                                  scopes=scope)
+    return build(API_NAME, API_VERSION, credentials=creds)
 
 
-def generate_random_id():
-    charset = "0123456789abcdefghijklmnopqrstuv"
-    random_indices = [secrets.randbelow(32) for _ in range(100)]
-    random_string = ''.join([charset[i] for i in random_indices])
-    return random_string
+def get_event_json_data(activity_id, generate_event_id=False):
+    """
+    Get JSON data for creating a Google Calendar event based on the activity details.
 
+    Args:
+        activity_id (int): ID of the activity.
 
-def get_json_data(activity_id):
+    Returns:
+        dict: JSON data for creating a Google Calendar event.
+    """
     activity = get_object_or_404(Activity, pk=activity_id)
-    return {
-        'summary': activity.title,
-        'location': activity.place,
-        'description': activity.description,
-        'start': {
-            'dateTime': activity.start_date.strftime('%Y-%m-%dT%H:%M:%S'),
-            'timeZone': config('TIME_ZONE', default='UTC'),
-        },
-        'end': {
-            'dateTime': activity.last_date.strftime('%Y-%m-%dT%H:%M:%S'),
-            'timeZone': config('TIME_ZONE', default='UTC'),
-        },
-        'id': generate_random_id()  # new event code
+
+    data = {
+        activity_id: {
+            'summary': activity.title,
+            'location': activity.place,
+            'description': activity.description,
+            'start': {
+                'dateTime': activity.start_date.strftime('%Y-%m-%dT%H:%M:%S'),
+                'timeZone': config('TIME_ZONE', default='UTC'),
+            },
+            'end': {
+                'dateTime': activity.last_date.strftime('%Y-%m-%dT%H:%M:%S'),
+                'timeZone': config('TIME_ZONE', default='UTC'),
+            },
+        }
     }
 
-@login_required
-def create_event(request, activity_id):
-    service = build_service(request)
-
-    if service:
-        data = get_json_data(activity_id)
-        request.user.event_encoder[str(activity_id)] = data['id']
-        request.user.save()
-        service.events().insert(calendarId='primary', body=data).execute()
+    if generate_event_id:
+        data[activity_id]['id'] = get_random_string(length=100, allowed_chars=CHARSET)
+    return data
 
 
-@login_required
-def remove_event(request, activity_id):
-    event_id = str(activity_id)
-    user = request.user
-    service = build_service(request)
+def get_event_id(request, activity_id: str):
+    if activity_id in request.user.event_encoder:
+        return request.user.event_encoder[activity_id]
 
-    if service and event_id in user.event_encoder:
-        encoded_event = user.event_encoder[event_id]
-        service.events().delete(calendarId='primary',
-                                eventId=encoded_event).execute()
-        del user.event_encoder[event_id]
-        user.save()
+
+def user_is_login_with_google(request):
+    """
+    Check if the user is logged in with a Google social account.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        bool: True if the user is logged in with Google, False otherwise.
+    """
+    try:
+        SocialAccount.objects.get(user=request.user, provider='google')
+        return True
+    except SocialAccount.DoesNotExist:
+        return False
