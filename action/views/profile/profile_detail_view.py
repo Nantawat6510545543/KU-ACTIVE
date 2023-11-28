@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.views import generic
 
@@ -12,7 +12,7 @@ class ProfileDetailView(generic.ListView):
     template_name = 'action/profile/detail.html'
     context_object_name = 'profile'
 
-    def get(self, request: HttpRequest, user_id=None):
+    def get(self, request: HttpRequest, user_id=None) -> HttpResponse:
         """
         Handle HTTP GET requests to display the user profile.
 

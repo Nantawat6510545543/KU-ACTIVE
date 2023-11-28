@@ -40,7 +40,7 @@ def build_service(request) -> Resource:
     return build(API_NAME, API_VERSION, credentials=creds)
 
 
-def get_event_json_data(activity_id, generate_event_id=False):
+def get_event_json_data(activity_id, generate_event_id=False) -> dict[str, dict]:
     """
     Get JSON data for creating a Google Calendar event based on the activity details.
 
@@ -72,10 +72,10 @@ def get_event_json_data(activity_id, generate_event_id=False):
         data[activity_id]['id'] = get_random_string(length=100, allowed_chars=CHARSET)
     return data
 
-def get_event_id(request: HttpRequest, activity_id: str):
+def get_event_id(request: HttpRequest, activity_id: str) -> str:  # return random string
     return request.user.event_encoder.get(activity_id, None)
 
-def user_is_login_with_google(user):
+def user_is_login_with_google(user) -> bool:
     """
     Check if the user is logged in with a Google social account.
 

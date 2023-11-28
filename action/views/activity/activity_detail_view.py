@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
 from django.views import generic
 
@@ -13,7 +13,7 @@ class ActivityDetailView(generic.DetailView):
     model = Activity
     template_name = 'action/activity/detail.html'
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) -> HttpResponse:
         """
         Handle GET requests and render the activity details.
 

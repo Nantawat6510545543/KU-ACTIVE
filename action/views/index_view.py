@@ -1,9 +1,12 @@
+from typing import Any
 from django.contrib import messages
-from django.http import HttpRequest
+from django.db.models import QuerySet
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.views import generic
 
 from action.models import Category
+from action.models.activity import Activity
 from action.utils.search_utils import BaseSearcher
 
 TAG_OPTIONS = [
@@ -36,7 +39,7 @@ class IndexView(generic.ListView):
     template_name = 'action/index.html'
     context_object_name = 'activity_list'
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) -> HttpResponse:
         """
         Handle HTTP GET requests to display the list of activities.
 
@@ -57,12 +60,12 @@ class IndexView(generic.ListView):
             messages.warning(self.request, "Invalid Tag!")
             return redirect('action:index')
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Activity]:
         """Return the queryset of activities based on the applied filters."""
         searcher = BaseSearcher(self.request)
         return searcher.get_index_query()
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         """Return the context data with categories and tags."""
         context = super().get_context_data(**kwargs)
 

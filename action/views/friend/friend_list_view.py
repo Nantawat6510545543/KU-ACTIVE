@@ -11,7 +11,7 @@ class FriendListView(LoginRequiredMixin, generic.ListView):
     template_name = 'action/friends/list.html'
     context_object_name = 'friend_list'
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[User]:
         """
         Return the queryset of friends for the logged-in user.
 

@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from googleapiclient.errors import HttpError
@@ -11,7 +12,7 @@ from action.utils.calendar import user_is_login_with_google
 
 
 @login_required
-def participate(request, activity_id: int):
+def participate(request, activity_id: int) -> HttpResponse:
     """
     View for allowing a user to participate in a specific activity.
 
@@ -46,7 +47,7 @@ def participate(request, activity_id: int):
 
 
 @login_required
-def leave(request, activity_id: int):
+def leave(request, activity_id: int) -> HttpResponse:
     """
     View for allowing a user to leave a specific activity in which they are currently participating.
 
@@ -77,7 +78,7 @@ def leave(request, activity_id: int):
 
 
 @login_required
-def favorite(request, activity_id: int):
+def favorite(request, activity_id: int) -> HttpResponse:
     """
     View for allowing a user to mark a specific activity as a favorite.
 
@@ -101,7 +102,7 @@ def favorite(request, activity_id: int):
 
 
 @login_required
-def unfavorite(request, activity_id: int):
+def unfavorite(request, activity_id: int) -> HttpResponse:
     """
     View for allowing a user to remove a specific activity from their favorites.
 

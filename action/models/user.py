@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 
 
 class User(AbstractUser):
@@ -12,7 +12,7 @@ class User(AbstractUser):
     event_encoder = models.JSONField(blank=True, default=dict)
 
     @property
-    def participated_activity(self):
+    def participated_activity(self) -> QuerySet['Activity']:
         """
         Filter and return the Activity objects where the user has participated.
 
@@ -24,7 +24,7 @@ class User(AbstractUser):
             activity__participants=self, activity__is_participated=True)
 
     @property
-    def favorited_activity(self):
+    def favorited_activity(self) -> QuerySet['Activity']:
         """
         Filter and return the Activity objects where the user has favorited.
 
@@ -36,7 +36,7 @@ class User(AbstractUser):
             activity__participants=self, activity__is_favorited=True)
 
     @property
-    def friends(self):
+    def friends(self) -> QuerySet['User']:
         """
         Get a QuerySet of User objects representing friends of the current user.
 

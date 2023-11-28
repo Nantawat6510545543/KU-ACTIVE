@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.views import generic
@@ -12,7 +13,7 @@ class CalendarView(LoginRequiredMixin, generic.TemplateView):
 
     template_name = 'action/calendar.html'
 
-    def get(self, *args, **kwargs):
+    def get(self, *args, **kwargs) -> HttpResponse:
         """
         Handle GET requests for the calendar view.
 

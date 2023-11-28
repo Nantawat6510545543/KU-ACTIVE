@@ -1,3 +1,4 @@
+from typing import Any
 from django import forms
 from django.contrib.auth.forms import UserChangeForm
 from action.forms.user_form import changed_username_is_not_unique
@@ -23,7 +24,7 @@ class UserEditForm(UserChangeForm):
             'background_picture'
         ]
 
-    def clean(self):
+    def clean(self) -> dict[str, Any]:
         """Clean and validate the form data."""
         cleaned_data = super().clean()
 

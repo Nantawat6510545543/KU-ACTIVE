@@ -11,7 +11,7 @@ class FriendRequestView(LoginRequiredMixin, generic.ListView):
     template_name = 'action/friends/request.html'
     context_object_name = 'friend_request_list'
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[FriendStatus]:
         """
         Return the queryset of friend requests that are in a 'Pending' state.
 

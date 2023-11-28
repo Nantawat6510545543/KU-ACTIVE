@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from django.http import Http404, HttpRequest
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 
 from mysite.settings import DEBUG
@@ -35,7 +35,7 @@ class BaseMiddleware(ABC):
 class Render404Middleware(BaseMiddleware):
     """Middleware for rendering a custom 404 page."""
 
-    def __call__(self, request: HttpRequest):
+    def __call__(self, request: HttpRequest) -> HttpResponse:
         """
         Process the request and handle 404 responses.
 
@@ -59,7 +59,7 @@ class Render404Middleware(BaseMiddleware):
 class RemoveWhitespaceMiddleware(BaseMiddleware):
     """Middleware for removing whitespace from query parameters."""
 
-    def __call__(self, request: HttpRequest):
+    def __call__(self, request: HttpRequest) -> HttpResponse:
         """
         Process the request by removing whitespace from query parameters.
 
@@ -85,7 +85,7 @@ class RemoveWhitespaceMiddleware(BaseMiddleware):
 class UpdateSessionMiddleware(BaseMiddleware):
     """Middleware for updating session variables based on query parameters."""
 
-    def __call__(self, request: HttpRequest):
+    def __call__(self, request: HttpRequest) -> HttpResponse:
         """
         Process the request by updating session variables based on query parameters.
 

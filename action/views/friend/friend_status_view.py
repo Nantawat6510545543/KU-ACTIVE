@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 
@@ -7,7 +8,7 @@ from action import utils
 
 
 @login_required
-def add_friend(request, friend_id: int):
+def add_friend(request, friend_id: int) -> HttpResponse:
     """
     Send a friend request to the specified user.
 
@@ -37,7 +38,7 @@ def add_friend(request, friend_id: int):
 
 
 @login_required
-def remove_friend(request, friend_id: int):
+def remove_friend(request, friend_id: int) -> HttpResponse:
     """
     Remove the specified user from the friend list.
 
@@ -62,7 +63,7 @@ def remove_friend(request, friend_id: int):
 
 
 @login_required
-def accept_request(request, friend_id: int):
+def accept_request(request, friend_id: int) -> HttpResponse:
     """
     Accept a friend request from the specified user.
 
@@ -87,7 +88,7 @@ def accept_request(request, friend_id: int):
 
 
 @login_required
-def decline_request(request, friend_id: int):
+def decline_request(request, friend_id: int) -> HttpResponse:
     """
     Decline a friend request from the specified user.
 
@@ -110,7 +111,7 @@ def decline_request(request, friend_id: int):
 
 
 @login_required
-def cancel_request(request, friend_id: int):
+def cancel_request(request, friend_id: int) -> HttpResponse:
     """
     Cancel a friend request sent to the specified user.
 

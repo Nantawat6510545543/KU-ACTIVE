@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count
+from django.db.models import Count, QuerySet
 from django.http import HttpRequest
 from django.utils import timezone
 from urllib.parse import parse_qs
@@ -8,7 +8,7 @@ from urllib.parse import parse_qs
 from action.models import Activity, ActivityStatus
 
 
-def get_query_dict(request: HttpRequest):
+def get_query_dict(request: HttpRequest) -> dict[list, list]:
     """
     Extract and return a dictionary mapping tag names to their corresponding query values.
 
@@ -25,7 +25,7 @@ def get_query_dict(request: HttpRequest):
     return dict(zip(values_tag, values_q))
 
 
-def get_categories_list(request: HttpRequest):
+def get_categories_list(request: HttpRequest) -> list[str]:
     """
     Get a list of category values from the request.
 
@@ -39,7 +39,6 @@ def get_categories_list(request: HttpRequest):
     return values_category_q
 
 
-# TODO refactor
 class BaseSearcher:
     """Base class for searching activities based on various criteria."""
 
@@ -107,7 +106,7 @@ class BaseSearcher:
                 raise ValueError(f"Invalid Tag: {self.tag}")
         self.searcher = searcher(self.request)
 
-    def get_index_query(self):
+    def get_index_query(self) -> QuerySet[Activity]:
         """
         Get the final queryset based on the applied filters.
 
@@ -145,7 +144,7 @@ class BaseSearcher:
 class IndexSearcher(BaseSearcher):
     """Searcher for the default index view."""
 
-    def get_index_query(self):
+    def get_index_query(self) -> QuerySet[Activity]:
         """
         Return the base queryset of activities.
 
@@ -158,7 +157,7 @@ class IndexSearcher(BaseSearcher):
 class TitleSearcher(BaseSearcher):
     """Searcher for filtering activities by title."""
 
-    def get_index_query(self):
+    def get_index_query(self) -> QuerySet[Activity]:
         """
         Return the queryset of activities filtered by title.
 
@@ -172,7 +171,7 @@ class TitleSearcher(BaseSearcher):
 class OwnerSearcher(BaseSearcher):
     """Searcher for filtering activities by owner."""
 
-    def get_index_query(self):
+    def get_index_query(self) -> QuerySet[Activity]:
         """
         Return the queryset of activities filtered by owner.
 
@@ -186,7 +185,7 @@ class OwnerSearcher(BaseSearcher):
 class DateSearcher(BaseSearcher):
     """Searcher for filtering activities by date."""
 
-    def get_index_query(self):
+    def get_index_query(self) -> QuerySet[Activity]:
         """
         Return the queryset of activities filtered by date.
 
@@ -218,7 +217,7 @@ class DateSearcher(BaseSearcher):
 class CategoriesSearcher(BaseSearcher):
     """Searcher for filtering activities by categories."""
 
-    def get_index_query(self):
+    def get_index_query(self) -> QuerySet[Activity]:
         """
         Return the queryset of activities filtered by categories.
 
@@ -232,7 +231,7 @@ class CategoriesSearcher(BaseSearcher):
 class CategoryListSearcher(BaseSearcher):
     """Searcher for filtering activities by a list of categories."""
 
-    def get_index_query(self):
+    def get_index_query(self) -> QuerySet[Activity]:
         """
         Return the queryset of activities filtered by a list of categories.
 
@@ -249,7 +248,7 @@ class CategoryListSearcher(BaseSearcher):
 class PlaceSearcher(BaseSearcher):
     """Searcher for filtering activities by place."""
 
-    def get_index_query(self):
+    def get_index_query(self) -> QuerySet[Activity]:
         """
         Return the queryset of activities filtered by place.
 
@@ -263,7 +262,7 @@ class PlaceSearcher(BaseSearcher):
 class UpcomingSearcher(BaseSearcher):
     """Searcher for retrieving upcoming activities."""
 
-    def get_index_query(self):
+    def get_index_query(self) -> QuerySet[Activity]:
         """
         Return the queryset of upcoming activities.
 
@@ -279,7 +278,7 @@ class UpcomingSearcher(BaseSearcher):
 class PopularSearcher(BaseSearcher):
     """Searcher for retrieving popular activities."""
 
-    def get_index_query(self):
+    def get_index_query(self) -> QuerySet[Activity]:
         """
         Return the queryset of popular activities.
 
@@ -298,7 +297,7 @@ class PopularSearcher(BaseSearcher):
 class RecentSearcher(BaseSearcher):
     """Searcher for retrieving recent activities."""
 
-    def get_index_query(self):
+    def get_index_query(self) -> QuerySet[Activity]:
         """
         Return the queryset of recent activities.
 
@@ -314,7 +313,7 @@ class RecentSearcher(BaseSearcher):
 class FriendJoinedSearcher(LoginRequiredMixin, BaseSearcher):
     """Searcher for retrieving activities joined by friends."""
 
-    def get_index_query(self):
+    def get_index_query(self) -> QuerySet[Activity]:
         """
         Return the queryset of activities joined by friends.
 
@@ -335,7 +334,7 @@ class FriendJoinedSearcher(LoginRequiredMixin, BaseSearcher):
 class RegisteredSearcher(LoginRequiredMixin, BaseSearcher):
     """Searcher for retrieving registered activities."""
 
-    def get_index_query(self):
+    def get_index_query(self) -> QuerySet[Activity]:
         """
         Return the queryset of registered activities.
 
@@ -348,7 +347,7 @@ class RegisteredSearcher(LoginRequiredMixin, BaseSearcher):
 class FavoritedSearcher(LoginRequiredMixin, BaseSearcher):
     """Searcher for retrieving favorited activities."""
 
-    def get_index_query(self):
+    def get_index_query(self) -> QuerySet[Activity]:
         """
         Return the queryset of favorited activities.
 

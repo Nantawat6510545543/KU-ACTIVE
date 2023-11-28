@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import generic
@@ -20,7 +21,7 @@ class ActivityManageView(LoginRequiredMixin, generic.ListView):
 
 
 @login_required
-def delete_activity(request, activity_id: int):
+def delete_activity(request, activity_id: int) -> HttpResponse:
     """
     View for deleting a specific activity owned by the user.
 
