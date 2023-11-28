@@ -1,0 +1,5 @@
+[run]
+omit = action/calendar.py,action/utils/calendar.py
+
+[report]
+omit = action/calendar.py,action/utils/calendar.py
