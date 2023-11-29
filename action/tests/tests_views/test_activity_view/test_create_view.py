@@ -1,4 +1,4 @@
-from datetime import timedelta, datetime
+from datetime import timedelta
 
 from django.urls import reverse
 from django.test import TestCase
@@ -58,7 +58,7 @@ class ActivityCreateViewTests(TestCase):
 
         The form should be submitted successfully, and a success message should be displayed.
         """
-        now = datetime.now()
+        now = timezone.now()
         # Correct data.
         form_data = {
             'owner': self.user.pk,
@@ -85,7 +85,7 @@ class ActivityCreateViewTests(TestCase):
 
         The form submission should fail, and an error message should be displayed.
         """
-        now = datetime.now()
+        now = timezone.now()
         # invalid data, pub_date should be today.
         form_data = {
             'pub_date': now - timedelta(days=2),

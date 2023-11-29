@@ -6,18 +6,36 @@ from django.views import generic
 from action.models import FriendStatus, User
 
 
-def get_user_friend_add_list(user) -> QuerySet[User]:
+def get_user_friend_add_list(user: User) -> QuerySet[User]:
+    """
+    Get a list of users that the specified user can send friend requests to.
+
+    Args:
+        user (User): The user for whom to retrieve the friend add list.
+
+    Returns:
+        QuerySet[User]: A queryset of users that the specified user can send friend requests to.
+    """
     # Exclude yourself from the list and people you are already friends with
     add_list = User.objects.exclude(id=user.id).exclude(id__in=user.friends)
     return add_list
 
-def get_user_pending_request_list(user) -> QuerySet[User]:
+def get_user_pending_request_list(user: User) -> QuerySet[User]:
+    """
+    Get a list of users who have sent friend requests to the specified user that are pending approval.
+
+    Args:
+        user (User): The user for whom to retrieve the pending friend request list.
+
+    Returns:
+        QuerySet[User]: A queryset of users who have sent friend requests to the specified user that are pending approval.
+    """
     pending_request = FriendStatus.objects.filter(
-        sender=user,
+        receiver=user,
         request_status='Pending'
     )
 
-    pending_request_user_list = User.objects.filter(receiver__id__in=pending_request)
+    pending_request_user_list = User.objects.filter(sender__id__in=pending_request)
     return pending_request_user_list
 
 

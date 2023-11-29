@@ -23,6 +23,16 @@ def create_event(request, activity_id):
 
 @login_required
 def update_event(request, activity_id):
+    """
+    Update the event in Google Calendar associated with the specified activity.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        activity_id (int): The ID of the activity whose event in Google Calendar is to be updated.
+
+    Returns:
+        HttpResponse: The HTTP response indicating the success or failure of the update.
+    """
     activity_id = str(activity_id)  # use string
 
     # Get the existing event
