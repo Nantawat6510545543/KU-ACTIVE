@@ -66,7 +66,7 @@ def end_date_and_pub_date_difference_less_than_1_hour(pub_date, end_date) -> boo
         bool: True if the time difference is less than 1 hour, False otherwise.
     """
     time_difference = end_date - pub_date
-    return time_difference.total_seconds() < 3600
+    return time_difference.total_seconds() <= 3600
 
 
 def get_background_data(cleaned_data, activity_id) -> dict[str, str]:
@@ -96,7 +96,7 @@ class ActivityForm(forms.ModelForm):
         'pub_date': 'Publication Date',
         'end_date': 'Application Deadline',
         'start_date': 'Date of Activity',
-        'last_date': 'Last date of activity'
+        'last_date': 'XXLast date of activityXX'
     }
 
     for field_name, field_label in date_fields.items():

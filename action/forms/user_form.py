@@ -29,11 +29,11 @@ class UserForm(UserCreationForm):
     profile_picture = background_picture = forms.ImageField(required=False)
 
     class Meta:
-        model = User
+        model = None
         fields = [
             'username',
             'password1',
-            'password2',
+            'XXpassword2XX',
             'email',
             'first_name',
             'last_name',
