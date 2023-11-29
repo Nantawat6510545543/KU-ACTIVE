@@ -13,7 +13,7 @@ class ProfileEditView(LoginRequiredMixin, generic.UpdateView):
     """View for editing the user profile."""
 
     form_class = UserEditForm
-    template_name = 'action/profile/edit.html'
+    template_name = 'action/profile/profile_edit.html'
 
     def get_object(self) -> QuerySet[User]:
         """Retrieve the user object based on the current user's ID."""

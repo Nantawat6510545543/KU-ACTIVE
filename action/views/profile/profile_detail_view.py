@@ -45,7 +45,7 @@ def guest_view_their_profile(request, user_id) -> bool:
 class ProfileDetailView(generic.ListView):
     """View for displaying user profiles."""
 
-    template_name = 'action/profile/detail.html'
+    template_name = 'action/profile/profile_detail.html'
     context_object_name = 'profile'
 
     def get(self, request: HttpRequest, user_id=None) -> HttpResponse:

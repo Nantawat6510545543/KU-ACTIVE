@@ -11,7 +11,7 @@ class ActivityDetailView(generic.DetailView):
     """DetailView for displaying details of a specific Activity."""
 
     model = Activity
-    template_name = 'action/activity/detail.html'
+    template_name = 'action/activity/activity_detail.html'
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
         """

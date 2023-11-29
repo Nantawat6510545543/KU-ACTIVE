@@ -15,7 +15,7 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     """View for creating a new activity."""
 
     form_class = ActivityForm
-    template_name = 'action/activity/create.html'
+    template_name = 'action/activity/activity_create.html'
 
     def get_initial(self) -> dict[str, Any]:
         """Set the initial values for the form fields."""

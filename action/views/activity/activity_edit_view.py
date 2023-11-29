@@ -14,7 +14,7 @@ class ActivityEditView(LoginRequiredMixin, generic.UpdateView):
     """View for editing an existing activity."""
 
     form_class = ActivityForm
-    template_name = 'action/activity/edit.html'
+    template_name = 'action/activity/activity_edit.html'
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
         """

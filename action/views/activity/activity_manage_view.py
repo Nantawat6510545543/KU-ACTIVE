@@ -8,7 +8,7 @@ from action.models import Activity
 class ActivityManageView(LoginRequiredMixin, generic.ListView):
     """View for managing and displaying a list of activities owned by the current user."""
 
-    template_name = 'action/activity/manage.html'
+    template_name = 'action/activity/activity_manage.html'
     context_object_name = 'activity_manage_list'
 
     def get_queryset(self) -> QuerySet[Activity]:

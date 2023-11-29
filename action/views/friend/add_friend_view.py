@@ -42,7 +42,7 @@ def get_user_pending_request_list(user: User) -> QuerySet[User]:
 class AddFriendView(LoginRequiredMixin, generic.ListView):
     """View for displaying a list of users that the logged-in user can add as friends."""
 
-    template_name = 'action/friends/add.html'
+    template_name = 'action/friends/friends_add.html'
     context_object_name = 'friend_add_list'
 
     def get_queryset(self) -> QuerySet[User]:
