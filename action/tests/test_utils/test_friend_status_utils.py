@@ -11,10 +11,10 @@ class FriendStatusUtilsTestCase(TestCase):
         """
         Set up common attributes for the test methods.
 
-        1. Set the view attribute to 'action:add_friend'.
+        1. Set the view attribute to 'action:send_request'.
         2. Create two user instances, user1 and user2.
         """
-        self.view = 'action:add_friend'
+        self.view = 'action:send_request'
         self.user1 = create_user(username='user1', password='password1')
         self.user2 = create_user(username='user2', password='password2')
 

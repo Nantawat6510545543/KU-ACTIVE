@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import QuerySet
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -34,7 +35,7 @@ class ActivityEditView(LoginRequiredMixin, generic.UpdateView):
 
         return super().get(request, *args, **kwargs)
 
-    def get_object(self, **kwargs):
+    def get_object(self, **kwargs) -> QuerySet[Activity]:
         """Retrieve the activity object based on activity_id."""
         return Activity.objects.get(pk=self.kwargs['activity_id'])
 

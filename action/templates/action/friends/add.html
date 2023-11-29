@@ -24,7 +24,7 @@ Friend
                 <button class="cancel-button" type="submit">Cancel friend request</button>
             </form>
         {% else %}
-            <form class="add-button-box" action="{% url 'action:add_friend' friend_id=each_friend.id %}">
+            <form class="add-button-box" action="{% url 'action:send_request' friend_id=each_friend.id %}">
                 <button class="add-button" type="submit">Add friend</button>
             </form>
         {% endif %}

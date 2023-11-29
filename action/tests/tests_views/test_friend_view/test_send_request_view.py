@@ -5,10 +5,10 @@ from action.models import FriendStatus
 from action.tests.utils import create_friend_status, FriendStatusViewSetup
 
 
-class AddViewTests(FriendStatusViewSetup):
+class SendRequestViewTests(FriendStatusViewSetup):
     """Test cases for sending friend request."""
 
-    def test_add_new_friend(self):
+    def test_send_request_new_friend(self):
         """
         Test whether users can send friend requests to other users successfully.
 
@@ -18,7 +18,7 @@ class AddViewTests(FriendStatusViewSetup):
         create_friend_status(self.user_1, self.user_2)  # no friend status
 
         self.client.force_login(self.user_1)
-        response = self.client.get(reverse('action:add_friend', args=[self.user_2.id]))
+        response = self.client.get(reverse('action:send_request', args=[self.user_2.id]))
         # Should be redirected.
         self.assertRedirects(response, reverse('action:add_view'))
 
@@ -32,7 +32,7 @@ class AddViewTests(FriendStatusViewSetup):
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "Request Sent.")
 
-    def test_add_current_friend(self):
+    def test_send_request_current_friend(self):
         """
         Test whether users cannot send friend requests to those who are already friends.
 
@@ -42,7 +42,7 @@ class AddViewTests(FriendStatusViewSetup):
         create_friend_status(self.user_1, self.user_2, 'Accepted')  # already friend status
 
         self.client.force_login(self.user_1)
-        response = self.client.get(reverse('action:add_friend', args=[self.user_2.id]))
+        response = self.client.get(reverse('action:send_request', args=[self.user_2.id]))
         # Should be redirected.
         self.assertRedirects(response, reverse('action:add_view'))
 

@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import QuerySet
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -15,7 +16,7 @@ class ActivityManageView(LoginRequiredMixin, generic.ListView):
     template_name = 'action/activity/manage.html'
     context_object_name = 'activity_manage_list'
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Activity]:
         """Return the queryset of activities owned by the current user."""
         return Activity.objects.filter(owner=self.request.user)
 
