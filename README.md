@@ -19,7 +19,7 @@ If you intend to develop and debug this application, please review the instructi
 
 ## How to run
 
-1. To run the server
+1. To run the local server
 
 ```
 python manage.py runserver
@@ -32,7 +32,7 @@ python manage.py runserver
 ```
 deactivate
 ```
- 
+
 ## Project documentation
 
 ### Project wiki
@@ -51,4 +51,5 @@ deactivate
 - [Iteration 4 Plan](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Iteration-4-Plan) and [Project Board](https://github.com/users/Nantawat6510545543/projects/4/views/5)
 - [Iteration 5 Plan](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Iteration-5-Plan) and [Project Board](https://github.com/users/Nantawat6510545543/projects/4/views/6)
 - [Iteration 6 Plan](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Iteration-6-Plan) and [Project Board](https://github.com/users/Nantawat6510545543/projects/4/views/7)
-- [Iteration 7 Plan](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Iteration-6-Plan) and [Project Board](https://github.com/users/Nantawat6510545543/projects/4/views/8)
+- [Iteration 7 Plan](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Iteration-7-Plan) and [Project Board](https://github.com/users/Nantawat6510545543/projects/4/views/9)
+- [Iteration 8 Plan](https://github.com/Nantawat6510545543/KU-ACTIVE/wiki/Iteration-8-Plan) and [Project Board](https://github.com/users/Nantawat6510545543/projects/4/views/10)
