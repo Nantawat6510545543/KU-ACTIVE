@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.views import generic
@@ -6,19 +7,19 @@ from django.views import generic
 from action.models import User
 
 
-def get_profile(request, user_id):
+def get_profile(request, user_id) -> QuerySet[User]:
     """
     Retrieve the user profile based on the provided user ID or default to the currently authenticated user.
 
     Args:
         request (HttpRequest): The HTTP request object.
-        user_id (Optional[int]): The ID of the user to retrieve the profile for, or None to use the currently authenticated user.
+        user_id (Optional[int]): The ID of the user to retrieve the profile for,
+        or None to use the currently authenticated user.
 
     Returns:
         Optional[User]: The user profile if found, or None if the user does not exist.
     """
-    # Set default value to current user
-    user_id = user_id or request.user.id
+    user_id = user_id or request.user.id  # Set default value to current user
 
     try:
         return User.objects.get(id=user_id)
@@ -62,8 +63,8 @@ class ProfileDetailView(generic.ListView):
             return redirect('login')
 
         profile = get_profile(request, user_id)
-        if profile is None:
-            # Case where there's no user profile with that id
+
+        if profile is None:  # Case where there's no user profile with that id
             messages.warning(request, "Invalid user id.")
             return redirect('action:index')
 
