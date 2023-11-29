@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from action.utils import build_service, get_event_json_data, get_event_id
 
+
 @login_required
 def create_event(request, activity_id):
     """

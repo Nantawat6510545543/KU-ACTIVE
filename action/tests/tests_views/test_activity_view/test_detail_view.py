@@ -11,7 +11,7 @@ from action.tests.utils import create_user, create_activity, USER_DATA_1
 class ActivityDetailViewTests(TestCase):
     """Test case for the views related to activity details."""
 
-    def setUp(self) -> None:
+    def setUp(self):
         """
         Set up common attributes for the test methods.
 

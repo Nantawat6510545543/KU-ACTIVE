@@ -8,7 +8,7 @@ from action.tests.utils import create_activity, create_user, USER_DATA_1, USER_D
 class ActivityEditViewTests(TestCase):
     """Test cases for the ActivityEditView."""
 
-    def setUp(self) -> None:
+    def setUp(self):
         """Set up the test environment by creating test users and activities."""
         self.user_1 = create_user(**USER_DATA_1)
         self.user_2 = create_user(**USER_DATA_2)

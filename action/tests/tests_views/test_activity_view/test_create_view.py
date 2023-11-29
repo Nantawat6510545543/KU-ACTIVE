@@ -10,7 +10,7 @@ from action.views.activity.activity_create_view import ActivityCreateView
 class ActivityCreateViewTests(TestCase):
     """Test cases for the ActivityCreateView."""
 
-    def setUp(self) -> None:
+    def setUp(self):
         """Set up the test environment by creating a test user."""
         self.user = create_user(**USER_DATA_1)
 

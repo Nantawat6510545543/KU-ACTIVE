@@ -1,9 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
-from django.shortcuts import redirect
-from django.shortcuts import render
 from django.views import generic
+
 from action.calendar import update_event
 from action.utils.calendar import user_is_login_with_google
 
@@ -31,9 +30,8 @@ class CalendarView(LoginRequiredMixin, generic.TemplateView):
             for each_activity in self.request.user.participated_activity:
                 update_event(self.request, each_activity.id)
         else:
-            # If the user doesn't have a Google social account, Redirect to the Google login page
+            # If the user doesn't have a Google social account
             messages.warning(self.request, "Please login to Google to use the calendar feature.")
-            # return render(self.request, 'socialaccount/login.html', {'provider': 'google'})
 
         # Proceed with the regular view logic
         return super(CalendarView, self).get(*args, **kwargs)
