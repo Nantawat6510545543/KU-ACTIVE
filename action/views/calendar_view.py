@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.views import generic
 
 from action.calendar import update_event
-from action.utils.calendar import user_is_login_with_google
+from action.utils.calendar_utils import user_is_login_with_google
 
 
 class CalendarView(LoginRequiredMixin, generic.TemplateView):

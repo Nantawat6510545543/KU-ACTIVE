@@ -8,13 +8,13 @@ from django.views import View
 from action.utils import fetch_activity_status
 
 
-class FavoriteView(LoginRequiredMixin, View):
+class ActivityUnfavoriteView(LoginRequiredMixin, View):
     """
-    View for allowing a user to mark a specific activity as a favorite.
+    View for allowing a user to remove a specific activity from their favorites.
 
     Args:
         request (HttpRequest): The HTTP request object.
-        activity_id (int): The ID of the activity to mark as a favorite.
+        activity_id (int): The ID of the activity to remove from favorites.
 
     Returns:
         HttpResponse: Redirect response to the activity detail view.
@@ -24,10 +24,10 @@ class FavoriteView(LoginRequiredMixin, View):
         activity_status = fetch_activity_status(request, activity_id)
 
         if activity_status.is_favorited:
-            messages.info(request, "You have already favorited this activity.")
-        else:
-            activity_status.is_favorited = True
+            activity_status.is_favorited = False
             activity_status.save()
-            messages.success(request, "You have successfully favorited this activity.")
+            messages.success(request, "You have unfavorited this activity.")
+        else:
+            messages.info(request, "You have not currently favorited this activity.")
 
         return redirect(reverse("action:detail", args=(activity_id,)))

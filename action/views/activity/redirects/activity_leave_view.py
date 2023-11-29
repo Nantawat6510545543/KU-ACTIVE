@@ -8,10 +8,10 @@ from googleapiclient.errors import HttpError
 
 from action.calendar import remove_event
 from action.utils import fetch_activity_status
-from action.utils.calendar import user_is_login_with_google
+from action.utils.calendar_utils import user_is_login_with_google
 
 
-class LeaveView(LoginRequiredMixin, View):
+class ActivityLeaveView(LoginRequiredMixin, View):
     """
     View for allowing a user to leave a specific activity in which they are currently participating.
 

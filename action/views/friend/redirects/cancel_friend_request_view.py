@@ -7,7 +7,7 @@ from django.http import HttpRequest, HttpResponse
 from action import utils
 
 
-class CancelRequestView(LoginRequiredMixin, View):
+class CancelFriendRequestView(LoginRequiredMixin, View):
     """
     Cancel a friend request sent to the specified user.
 

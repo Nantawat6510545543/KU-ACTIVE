@@ -7,9 +7,9 @@ from django.http import HttpRequest, HttpResponse
 from action import utils
 
 
-class DeclineRequestView(LoginRequiredMixin, View):
+class AcceptFriendRequestView(LoginRequiredMixin, View):
     """
-    Decline a friend request from the specified user.
+    Accept a friend request from the specified user.
 
     Args:
         request (HttpRequest): The HTTP request object.
@@ -25,7 +25,9 @@ class DeclineRequestView(LoginRequiredMixin, View):
         if friend_status.is_friend:
             messages.warning(request, "You are already friend with this person.")
         else:
-            friend_status.delete()
-            messages.success(request, "You have declined this person.")
+            friend_status.request_status = 'Accepted'
+            friend_status.is_friend = True
+            friend_status.save()
+            messages.success(request, "You are now friend with this person.")
 
         return redirect(reverse("action:request_view"))

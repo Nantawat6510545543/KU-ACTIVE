@@ -7,7 +7,7 @@ from django.http import HttpRequest, HttpResponse
 from action import utils
 
 
-class SendRequestView(LoginRequiredMixin, View):
+class SendFriendRequestView(LoginRequiredMixin, View):
     """
     Send a friend request to the specified user.
 

@@ -10,8 +10,8 @@ activity_patterns = [
 
     path('delete/<int:activity_id>', views.activity.redirects.ActivityDeleteView.as_view(), name='delete_activity'),
 
-    path('participate/<int:activity_id>', views.activity.redirects.ParticipateView.as_view(), name='participate'),
-    path('leave/<int:activity_id>', views.activity.redirects.LeaveView.as_view(), name='leave'),
-    path('favorite/<int:activity_id>', views.activity.redirects.FavoriteView.as_view(), name='favorite'),
-    path('unfavorite/<int:activity_id>', views.activity.redirects.UnfavoriteView.as_view(), name='unfavorite'),
+    path('participate/<int:activity_id>', views.activity.redirects.ActivityParticipateView.as_view(), name='participate'),
+    path('leave/<int:activity_id>', views.activity.redirects.ActivityLeaveView.as_view(), name='leave'),
+    path('favorite/<int:activity_id>', views.activity.redirects.ActivityFavoriteView.as_view(), name='favorite'),
+    path('unfavorite/<int:activity_id>', views.activity.redirects.ActivityUnfavoriteView.as_view(), name='unfavorite'),
 ]

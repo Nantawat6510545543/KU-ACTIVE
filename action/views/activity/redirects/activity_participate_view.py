@@ -9,10 +9,10 @@ from googleapiclient.errors import HttpError
 from action.calendar import create_event
 from action.models import Activity
 from action.utils import fetch_activity_status
-from action.utils.calendar import user_is_login_with_google
+from action.utils.calendar_utils import user_is_login_with_google
 
 
-class ParticipateView(LoginRequiredMixin, View):
+class ActivityParticipateView(LoginRequiredMixin, View):
     """
     View for allowing a user to participate in a specific activity.
 

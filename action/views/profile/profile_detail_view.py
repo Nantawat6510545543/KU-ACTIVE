@@ -26,6 +26,7 @@ def get_profile(request, user_id) -> QuerySet[User]:
     except User.DoesNotExist:
         return None
 
+
 def guest_view_their_profile(request, user_id) -> bool:
     """
     Check if a guest is attempting to view their own profile.

@@ -14,6 +14,7 @@ class EndToEndTestBase(StaticLiveServerTestCase):
 
     browser = None
 
+    @classmethod
     def setUpClass(cls):
         """
         Set up the Firefox browser for headless mode.
