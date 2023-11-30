@@ -20,6 +20,7 @@ def get_user_friend_add_list(user: User) -> QuerySet[User]:
     add_list = User.objects.exclude(id=user.id).exclude(id__in=user.friends)
     return add_list
 
+
 def get_user_pending_request_list(user: User) -> QuerySet[User]:
     """
     Get a list of users who have sent friend requests to the specified user that are pending approval.

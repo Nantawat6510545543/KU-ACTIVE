@@ -5,7 +5,7 @@ from io import BytesIO
 MAX_SIZE = 1024
 
 
-def image_to_base64(image_file)-> str:
+def image_to_base64(image_file) -> str:
     """
     Convert an image file to a base64-encoded string.
 
@@ -51,7 +51,7 @@ def image_to_base64(image_file)-> str:
     return base64_encoded
 
 
-def background_image_to_base64(background_file: list)-> dict[str, str]:
+def background_image_to_base64(background_file: list) -> dict[str, str]:
     """
     Convert a list of background files to base64-encoded images.
 
