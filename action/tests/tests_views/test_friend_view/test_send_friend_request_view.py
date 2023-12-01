@@ -57,7 +57,7 @@ class SendRequestViewTests(FriendStatusViewSetup):
         self.assertEqual(str(messages[0]), "You are already friend with this person.")
 
 
-class FriendRequestSendE2E(EndToEndTestBase):
+class FriendRequestSendTestsE2E(EndToEndTestBase):
     """Test case for the views related to friends request."""
 
     def setUp(self):
@@ -88,7 +88,7 @@ class FriendRequestSendE2E(EndToEndTestBase):
         self.login(self.name_1, self.password_1)
 
         # Navigate to add friend page
-        url = self.getUrl('action:add_view')
+        url = self.getUrl("action:add_view")
         self.browser.get(url)
 
         # Find user_2
@@ -126,7 +126,7 @@ class FriendRequestSendE2E(EndToEndTestBase):
         self.login(self.name_1, self.password_1)
 
         # Navigate to add friend view
-        url = self.getUrl('action:add_view')
+        url = self.getUrl("action:add_view")
         self.browser.get(url)
 
         # Click add button
@@ -168,7 +168,7 @@ class FriendRequestSendE2E(EndToEndTestBase):
         self.login(self.name_1, self.password_1)
 
         # Navigate to add friend page
-        url = self.getUrl('action:add_view')
+        url = self.getUrl("action:add_view")
         self.browser.get(url)
 
         # Click add button
@@ -183,7 +183,7 @@ class FriendRequestSendE2E(EndToEndTestBase):
         self.login(self.name_2, self.password_2)
 
         # Navigate to friend request page
-        url = self.getUrl('action:request_view')
+        url = self.getUrl("action:request_view")
         self.browser.get(url)
 
         # Click accept friend request
@@ -216,7 +216,7 @@ class FriendRequestSendE2E(EndToEndTestBase):
         self.login(self.name_1, self.password_1)
 
         # Navigate to add friend page
-        url = self.getUrl('action:add_view')
+        url = self.getUrl("action:add_view")
         self.browser.get(url)
 
         # Click add button
@@ -231,7 +231,7 @@ class FriendRequestSendE2E(EndToEndTestBase):
         self.login(self.name_2, self.password_2)
 
         # Navigate to friend request page
-        url = self.getUrl('action:request_view')
+        url = self.getUrl("action:request_view")
         self.browser.get(url)
 
         # Click decline friend request
@@ -266,7 +266,7 @@ class FriendRequestSendE2E(EndToEndTestBase):
         self.login(self.name_1, self.password_1)
 
         # Navigate to add friend page
-        url = self.getUrl('action:add_view')
+        url = self.getUrl("action:add_view")
         self.browser.get(url)
 
         # Click add button
@@ -281,7 +281,7 @@ class FriendRequestSendE2E(EndToEndTestBase):
         self.login(self.name_2, self.password_2)
 
         # Navigate to friend request page
-        url = self.getUrl('action:request_view')
+        url = self.getUrl("action:request_view")
         self.browser.get(url)
 
         # Click accept the request
@@ -289,7 +289,7 @@ class FriendRequestSendE2E(EndToEndTestBase):
         accept_button.click()
 
         # Navigate to friends page
-        url = self.getUrl('action:friends')
+        url = self.getUrl("action:friends")
         self.browser.get(url)
 
         # Click remove button
