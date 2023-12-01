@@ -96,7 +96,7 @@ class ActivityForm(forms.ModelForm):
         'pub_date': 'Publication Date',
         'end_date': 'Application Deadline',
         'start_date': 'Date of Activity',
-        'last_date': 'XXLast date of activityXX'
+        'last_date': 'Last Date of Activity'
     }
 
     for field_name, field_label in date_fields.items():

@@ -147,13 +147,13 @@ nav {
 }
 
 .topnav .drop-button {
-    display:inline-block;
+    display: inline-block;
     float: left;
     display: none;
 }
 
 .topnav .drop-button button{
-    border:none;
+    border: none;
     padding: 10px;
     margin-left: 10px;
     border-radius: 100%;
@@ -164,7 +164,7 @@ nav {
     font-size: 30px;
     margin-top: 5px;
     margin-bottom: 5px;
-    transition:0.3s font-size ease-out;
+    transition: 0.3s font-size ease-out;
 }
 
 .topnav .drop-button button:hover{
@@ -182,7 +182,7 @@ nav {
 }
 
 .secnav li{
-    display:inline-block;
+    display: inline-block;
     padding: 10px 2% 10px 2%;
     text-align: center;
 }
@@ -198,22 +198,22 @@ nav {
 }
 
 .secnav a {
-    padding-top:10px;
-    padding-bottom:10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     transition: all 0.3s;
 }
 
 .secnav a:hover {
     text-decoration: underline;
-    color:black;
+    color: black;
     font-size: 22px;
 }
 /* Dropbox */
 .dropbox {
     display: none;
-    margin:0%;
+    margin: 0%;
     background: #00b14f;
-    padding:1%;
+    padding: 1%;
 }
 
 .dropbox li {
@@ -222,7 +222,7 @@ nav {
 	list-style-type: none;
     text-align: center;
     text-align: center;
-    background:white;
+    background: white;
     text-decoration: none;
     font-size: 17px;
     transition: background-color 1s;
@@ -243,8 +243,8 @@ nav {
 
 .dropbox .drop-item:hover {
     font-size: 25px;
-    text-decoration:underline;
-    border:none;
+    text-decoration: underline;
+    border: none;
 }
 
 /* Content block */
@@ -256,21 +256,21 @@ nav {
 
 /* alert massage */
 .alert-msg {
-    width:70%;
+    width: 70%;
     list-style: none;
-    text-align:center;
-    border-radius:10px;
+    text-align: center;
+    border-radius: 10px;
     margin: 20px auto 0px auto;
     background-color: white;
     opacity: 1;
     transition: all 1s;
-    padding:0%;
+    padding: 0%;
 }
 
 .alert-msg li {
     list-style: none;
     font-size: 20px;
-    padding:0%;
+    padding: 0%;
     margin-left: -20px;
 }
 
@@ -325,8 +325,8 @@ nav {
     }
 
     .topnav .drop-button {
-        display:block;
-        float:left;
+        display: block;
+        float: left;
     }
 
     .secnav {

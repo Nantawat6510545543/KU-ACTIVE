@@ -20,7 +20,7 @@ a:-webkit-any-link:hover {
 /*login.html*/
 
 .form-container {
-    float:left;
+    float: left;
     font-family: Arial, Helvetica, sans-serif;
     max-width: 400px;
     padding: 20px;
@@ -29,17 +29,17 @@ a:-webkit-any-link:hover {
     background: #fff;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align:center;
+    text-align: center;
     position: fixed;
 }
 
 .form-container li {
     list-style-type: none;
-    margin-left:-30px;
+    margin-left: -30px;
 }
 
 .form-container h1{
-    font-size:40px;
+    font-size: 40px;
 }
 
 .form-table {
@@ -49,11 +49,11 @@ a:-webkit-any-link:hover {
 }
 
 .form-container a{
-    color:blue;
+    color: blue;
 }
 
 .form-container a:hover{
-    color:purple;
+    color: purple;
 }
 
 .form-container div {
@@ -76,12 +76,12 @@ a:-webkit-any-link:hover {
     background-color: white;
     background-repeat: no-repeat;
     background-position: 12px 11px;
-    text-decoration:none;
+    text-decoration: none;
 }
 
 .form-container .login-with-google-btn:hover {
     box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 2px 4px rgba(0, 0, 0, .25);
-    color:blue;
+    color: blue;
 }
 
 .form-input,
@@ -106,36 +106,36 @@ a:-webkit-any-link:hover {
     border: none;
     border-radius: 3px;
     cursor: pointer;
-    width:90%;
-    text-align:center;
-    font-size:20px;
+    width: 90%;
+    text-align: center;
+    font-size: 20px;
 }
 
 /* signup.html */
 .signup-error {
-    background:white;
+    background: white;
 }
 
 .signup {
-    min-width:500px;
+    min-width: 500px;
     text-align: center;
     padding: auto;
 }
 
 .signup-form {
-    margin:auto;
-    width:70%;
+    margin: auto;
+    width: 70%;
     background: #fff;
     border: none;
     border-radius: 3px;
-    padding:10px 0px;
+    padding: 10px 0px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     font-family: Arial, Helvetica, sans-serif;
 }
 
 .signup-form li{
     list-style-type: none;
-    color:red;
+    color: red;
 }
 
 .signup-form input,
@@ -156,17 +156,17 @@ a:-webkit-any-link:hover {
     border: none;
     border-radius: 3px;
     cursor: pointer;
-    width:60%;
-    text-align:center;
-    font-size:20px;
+    width: 60%;
+    text-align: center;
+    font-size: 20px;
 }
 
 .signup-form a{
-    color:blue;
+    color: blue;
 }
 
 .signup-form a:hover{
-    color:purple;
+    color: purple;
 }
 
 .logo {
