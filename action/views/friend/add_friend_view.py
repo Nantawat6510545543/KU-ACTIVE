@@ -32,12 +32,12 @@ def get_user_pending_request_list(user: User) -> QuerySet[User]:
         QuerySet[User]: A queryset of users who have sent friend requests to the specified user that are pending approval.
     """
     pending_request = FriendStatus.objects.filter(
-        receiver=user,
+        sender=user,
         request_status='Pending'
     )
 
-    pending_request_user_list = User.objects.filter(sender__id__in=pending_request)
-    return pending_request_user_list
+    pending_request_user_list = User.objects.filter(receiver__id__in=pending_request)
+    return pending_request_user_list.distinct()
 
 
 class AddFriendView(LoginRequiredMixin, generic.ListView):
