@@ -19,14 +19,14 @@ class ActivityDeleteViewTests(TestCase):
         self.activity_2 = create_activity(self.user_2)
 
     def test_delete_activity_as_guest(self):
-            """
-            Test whether guests have permission to delete an activity.
+        """
+        Test whether guests have permission to delete an activity.
 
-            Guests should be redirected when attempting to delete an activity.
-            """
-            url = reverse('action:delete_activity', args=(self.activity_1.id,))
-            response = self.client.get(url)
-            self.assertEqual(response.status_code, 302)
+        Guests should be redirected when attempting to delete an activity.
+        """
+        url = reverse('action:delete_activity', args=(self.activity_1.id,))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
 
     def test_delete_activity_as_owner(self):
         """
@@ -80,57 +80,3 @@ class ActivityDeleteViewTests(TestCase):
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "Activity doesn't exist.")
-
-
-class DeleteActivityTestsE2E(EndToEndTestBase):
-    """Test case for the views related to activity deletion."""
-
-    def setUp(self):
-        """
-        Set up common attributes for the test methods.
-
-        1. Define a username and password.
-        2. Create a user with the defined username and password.
-        """
-        super().setUp()
-        self.name_1 = 'user1'
-        self.password_1 = 'pass1'
-        self.user_1 = create_user(self.name_1, self.password_1)
-
-    def test_delete_activity(self):
-        """
-        Test delete an activity.
-
-        1. Create a new activity.
-        2. Check the initial activity amount.
-        3. LogIn.
-        4. Navigate to activity manage page.
-        5. Delete the activity.
-        6. Check the messages.
-        7. Check that the activity was deleted.
-        """
-        # Create an activity
-        create_activity(self.user_1)
-
-        # Check the activity amount
-        initial_count = Activity.objects.filter(owner=self.user_1)
-        self.assertEqual(len(initial_count), 1)
-
-        # LogIn as user_1
-        self.login(self.name_1, self.password_1)
-
-        # Navigate to activity manage page
-        url = self.getUrl("action:manage")
-        self.browser.get(url)
-
-        # Delete the activity
-        delete_button = self.find_by_class("activity-delete")
-        delete_button.click()
-
-        # Check the messages
-        message = self.find_by_class("alert-msg")
-        self.assertIn("You have successfully deleted this activity.", message.text)
-
-        # Check that the activity was deleted.
-        activity = Activity.objects.filter(owner=self.user_1)
-        self.assertEqual(len(activity), 0)

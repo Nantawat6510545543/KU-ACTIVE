@@ -163,7 +163,7 @@ class ActivityIndexViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class ActivityIndexViewTestsE2E(EndToEndTestBase):
+class IndexViewTestsE2E(EndToEndTestBase):
     """End-to-end tests for the activity index view."""
 
     def setUp(self):
