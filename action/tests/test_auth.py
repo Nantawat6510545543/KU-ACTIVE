@@ -35,7 +35,7 @@ class UserAuthTest(TestCase):
             self.client.login(username=self.username, password=self.password)
         )
         logout_url = reverse("logout")
-        response = self.client.get(logout_url)
+        response = self.client.post(logout_url)
         self.assertEqual(302, response.status_code)
         self.assertRedirects(response, reverse(settings.LOGOUT_REDIRECT_URL))
 
