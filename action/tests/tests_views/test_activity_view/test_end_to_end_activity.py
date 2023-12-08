@@ -1,5 +1,4 @@
 from django.utils import timezone
-from selenium.webdriver.common.by import By
 
 from action.tests.utils import create_user, create_activity
 from action.tests.end_to_end_base import EndToEndTestBase
@@ -178,18 +177,17 @@ class ActivityTestsE2E(EndToEndTestBase):
         self.browser.get(url)
 
         # Click create new activity button
-        create_button = self.browser.find_element(By.CSS_SELECTOR, ".new-activity a")
+        create_button = self.find_by_css(".new-activity a")
         create_button.click()
 
         # Fill information in the fields.
-        title_field = self.browser.find_element(By.ID, "id_title")
+        title_field = self.find_by_id("id_title")
         title_field.send_keys("TitleTestTitle")
-        description_field = self.browser.find_element(By.ID, "id_description")
+        description_field = self.find_by_id("id_description")
         description_field.send_keys("DescriptionTestDescription")
 
-        # Click create button for submit
-        create_button = self.browser.find_element(By.CSS_SELECTOR,
-                                                  "input[type='submit'][value='Create']")
+        # Click create button for submitting
+        create_button = self.find_by_css("input[type='submit'][value='Create']")
         create_button.click()
 
         # Check the messages

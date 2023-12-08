@@ -64,6 +64,36 @@ class EndToEndTestBase(StaticLiveServerTestCase):
             return element.find_element(By.CLASS_NAME, class_name)
         return self.browser.find_element(By.CLASS_NAME, class_name)
 
+    def find_by_id(self, element_id, element=None):
+        """
+        Find an element by its ID.
+
+        Args:
+            - `element_id`: The ID of the element to find.
+            - `element`: Optional parent element to search within.
+
+        Returns:
+            - The found element.
+        """
+        if element is not None:
+            return element.find_element(By.ID, element_id)
+        return self.browser.find_element(By.ID, element_id)
+
+    def find_by_css(self, css_selector, element=None):
+        """
+        Find an element by CSS selector.
+
+        Args:
+            - `css_selector`: The CSS selector of the element to find.
+            - `element`: Optional parent element to search within.
+
+        Returns:
+            - The found element.
+        """
+        if element is not None:
+            return element.find_element(By.CSS_SELECTOR, css_selector)
+        return self.browser.find_element(By.CSS_SELECTOR, css_selector)
+
     def getUrl(self, view, args=None):
         """
         Get the URL for a given view and arguments.

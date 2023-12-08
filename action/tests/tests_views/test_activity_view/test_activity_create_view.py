@@ -111,4 +111,4 @@ class ActivityCreateViewTests(TestCase):
         view = ActivityCreateView()
         success_url = view.get_success_url()
         # A successful action should be redirected to the index page.
-        self.assertEqual(success_url, reverse('action:index'))
+        self.assertEqual(success_url, reverse('action:manage'))
