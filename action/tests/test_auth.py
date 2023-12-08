@@ -31,10 +31,10 @@ class UserAuthTest(TestCase):
         3. Assert that the response status code is 302 (redirect).
         4. Assert that the response redirects to the logout redirect URL.
         """
-        logout_url = reverse("logout")
         self.assertTrue(
             self.client.login(username=self.username, password=self.password)
         )
+        logout_url = reverse("logout")
         response = self.client.get(logout_url)
         self.assertEqual(302, response.status_code)
         self.assertRedirects(response, reverse(settings.LOGOUT_REDIRECT_URL))
