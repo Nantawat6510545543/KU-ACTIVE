@@ -39,4 +39,4 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
 
     def get_success_url(self) -> str:
         """Define the URL to redirect to on form success."""
-        return reverse('action:index')
+        return reverse('action:manage')
