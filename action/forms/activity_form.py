@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 from django import forms
 from django.utils import timezone
 from action.forms.multiple_file import MultipleFileField
@@ -7,7 +8,7 @@ from action.models import Activity
 from action import utils
 
 
-def not_datetime(cleaned_data):
+def not_datetime(cleaned_data) -> bool:
     """
     Check if any of the specified date fields in cleaned_data are not instances of datetime.
 
@@ -26,7 +27,7 @@ def not_datetime(cleaned_data):
     return False
 
 
-def activity_is_newly_created(activity_id):
+def activity_is_newly_created(activity_id) -> bool:
     """
     Check if the activity with the given ID exists in the database.
 
@@ -39,7 +40,7 @@ def activity_is_newly_created(activity_id):
     return not Activity.objects.filter(id=activity_id).exists()
 
 
-def pub_date_is_less_than_today(cleaned_data):
+def pub_date_is_less_than_today(cleaned_data) -> bool:
     """
     Check if the Publication Date is earlier than today.
 
@@ -53,7 +54,7 @@ def pub_date_is_less_than_today(cleaned_data):
     return pub_date.date() < timezone.now().date()
 
 
-def end_date_and_pub_date_difference_less_than_1_hour(pub_date, end_date):
+def end_date_and_pub_date_difference_less_than_1_hour(pub_date, end_date) -> bool:
     """
     Check if the difference between Application Deadline and Publication Date is less than 1 hour.
 
@@ -65,10 +66,10 @@ def end_date_and_pub_date_difference_less_than_1_hour(pub_date, end_date):
         bool: True if the time difference is less than 1 hour, False otherwise.
     """
     time_difference = end_date - pub_date
-    return time_difference.total_seconds() < 3600
+    return time_difference.total_seconds() <= 3600
 
 
-def get_background_data(cleaned_data, activity_id):
+def get_background_data(cleaned_data, activity_id) -> dict[str, str]:
     """
     Get background data based on the cleaned_data and activity_id.
 
@@ -95,7 +96,7 @@ class ActivityForm(forms.ModelForm):
         'pub_date': 'Publication Date',
         'end_date': 'Application Deadline',
         'start_date': 'Date of Activity',
-        'last_date': 'Last date of activity'
+        'last_date': 'Last Date of Activity'
     }
 
     for field_name, field_label in date_fields.items():
@@ -112,7 +113,7 @@ class ActivityForm(forms.ModelForm):
         model = Activity
         fields = '__all__'
 
-    def clean(self):
+    def clean(self) -> dict[str, Any]:
         """Clean and validate the form data."""
         cleaned_data = super().clean()
 

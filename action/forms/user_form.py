@@ -1,3 +1,4 @@
+from typing import Any
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
@@ -5,7 +6,7 @@ from action.models import User
 from action import utils
 
 
-def changed_username_is_not_unique(cleaned_data, user_id):
+def changed_username_is_not_unique(cleaned_data, user_id) -> bool:
     """
     Check if the changed username is already used by another existing user.
 
@@ -41,7 +42,7 @@ class UserForm(UserCreationForm):
             'background_picture'
         ]
 
-    def clean(self):
+    def clean(self) -> dict[str, Any]:
         """Clean and validate the form data."""
         cleaned_data = super().clean()
 

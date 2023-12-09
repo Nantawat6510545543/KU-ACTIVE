@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import QuerySet
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import generic
@@ -12,9 +13,9 @@ class ProfileEditView(LoginRequiredMixin, generic.UpdateView):
     """View for editing the user profile."""
 
     form_class = UserEditForm
-    template_name = 'action/profile/edit.html'
+    template_name = 'action/profile/profile_edit.html'
 
-    def get_object(self):
+    def get_object(self) -> QuerySet[User]:
         """Retrieve the user object based on the current user's ID."""
         return User.objects.get(pk=self.request.user.id)
 

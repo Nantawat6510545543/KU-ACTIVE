@@ -17,16 +17,16 @@ class ProfileDetailViewTests(TestCase):
         response = self.client.get(reverse('action:profile'))
         self.assertEqual(response.status_code, 302)
 
+    def test_guest_view_others_profile(self):
+        """Test that guests can view other users' profiles."""
+        response = self.client.get(reverse('action:profile', kwargs={'user_id': self.user_2.id}))
+        self.assertEqual(response.status_code, 200)
+
     def test_authenticated_view_profile(self):
         """Test that authenticated users can view their own profiles."""
         self.client.force_login(self.user_1)
         response = self.client.get(reverse('action:profile'))
         self.assertEqual(response.status_code, 200)
-
-    def test_guest_view_others_profile(self):
-        """Test that guests cannot view other users' profiles and are redirected."""
-        response = self.client.get(reverse('action:profile'), args=(self.user_2.id,))
-        self.assertEqual(response.status_code, 302)
 
     def test_authenticated_view_others_profile(self):
         """
@@ -37,11 +37,11 @@ class ProfileDetailViewTests(TestCase):
         3. Assert that the response status code is 200 (OK).
         """
         self.client.force_login(self.user_1)
-        response = self.client.get(reverse('action:profile'), args=(self.user_2.id,))
+        response = self.client.get(reverse('action:profile', kwargs={'user_id': self.user_2.id}))
         self.assertEqual(response.status_code, 200)
 
         self.client.force_login(self.user_2)
-        response = self.client.get(reverse('action:profile'), args=(self.user_1.id,))
+        response = self.client.get(reverse('action:profile', kwargs={'user_id': self.user_2.id}))
         self.assertEqual(response.status_code, 200)
 
     def test_authenticated_view_own_profile(self):
@@ -53,11 +53,11 @@ class ProfileDetailViewTests(TestCase):
         3. Assert that the response status code is 200 (OK).
         """
         self.client.force_login(self.user_1)
-        response = self.client.get(reverse('action:profile'), args=(self.user_1.id,))
+        response = self.client.get(reverse('action:profile', kwargs={'user_id': self.user_2.id}))
         self.assertEqual(response.status_code, 200)
 
         self.client.force_login(self.user_2)
-        response = self.client.get(reverse('action:profile'), args=(self.user_2.id,))
+        response = self.client.get(reverse('action:profile', kwargs={'user_id': self.user_2.id}))
         self.assertEqual(response.status_code, 200)
 
     def test_profile_not_exists(self):

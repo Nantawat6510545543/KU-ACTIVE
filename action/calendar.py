@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from action.utils import build_service, get_event_json_data, get_event_id
 
+
 @login_required
 def create_event(request, activity_id):
     """
@@ -10,7 +11,7 @@ def create_event(request, activity_id):
         request (HttpRequest): The HTTP request object.
         activity_id (int): ID of the activity.
     """
-    activity_id = str(activity_id)  # use string, too late to use (int) now
+    activity_id = str(activity_id)  # use string
     service = build_service(request)
 
     if service:
@@ -22,7 +23,17 @@ def create_event(request, activity_id):
 
 @login_required
 def update_event(request, activity_id):
-    activity_id = str(activity_id)  # use string, too late to use (int) now
+    """
+    Update the event in Google Calendar associated with the specified activity.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        activity_id (int): The ID of the activity whose event in Google Calendar is to be updated.
+
+    Returns:
+        HttpResponse: The HTTP response indicating the success or failure of the update.
+    """
+    activity_id = str(activity_id)  # use string
 
     # Get the existing event
     service = build_service(request)
@@ -43,7 +54,7 @@ def remove_event(request, activity_id):
         request (HttpRequest): The HTTP request object.
         activity_id (int): ID of the activity.
     """
-    activity_id = str(activity_id)  # use string, too late to use (int) now
+    activity_id = str(activity_id)  # use string
     service = build_service(request)
 
     if service:

@@ -1,5 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import QuerySet
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import generic
@@ -12,9 +14,9 @@ class ActivityEditView(LoginRequiredMixin, generic.UpdateView):
     """View for editing an existing activity."""
 
     form_class = ActivityForm
-    template_name = 'action/activity/edit.html'
+    template_name = 'action/activity/activity_edit.html'
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) -> HttpResponse:
         """
         Handle HTTP GET requests to display the form for editing the activity.
 
@@ -33,22 +35,22 @@ class ActivityEditView(LoginRequiredMixin, generic.UpdateView):
 
         return super().get(request, *args, **kwargs)
 
-    def get_object(self, **kwargs):
+    def get_object(self, **kwargs) -> QuerySet[Activity]:
         """Retrieve the activity object based on activity_id."""
         return Activity.objects.get(pk=self.kwargs['activity_id'])
 
-    def form_valid(self, form):
+    def form_valid(self, form) -> HttpResponse:
         """Render the form with success messages if it's valid."""
         super().form_valid(form)
         form.save()
         messages.success(self.request, 'Activity edited successfully.')
         return redirect(self.get_success_url())
 
-    def form_invalid(self, form):
+    def form_invalid(self, form) -> HttpResponse:
         """Render the form with errors if it's invalid."""
         messages.error(self.request, 'Activity edit failed. Please check the form.')
         return self.render_to_response(self.get_context_data(form=form))
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         """Define the URL to redirect to on form success."""
         return reverse('action:manage')

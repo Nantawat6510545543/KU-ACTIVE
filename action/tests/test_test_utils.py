@@ -79,10 +79,6 @@ class TestUtilsTest(TestCase):
         self.assertEqual(friend_status2.request_status, 'Accepted')
         self.assertTrue(friend_status2.is_friend)
 
-        friend_status3 = create_friend_status(sender=sender, receiver=receiver, request_status='Declined')
-        self.assertEqual(friend_status3.request_status, 'Declined')
-        self.assertFalse(friend_status3.is_friend)
-
     def test_quick_join(self):
         """
         Test the quick_join utility function.

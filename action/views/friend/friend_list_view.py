@@ -8,10 +8,10 @@ from action.models import User
 class FriendListView(LoginRequiredMixin, generic.ListView):
     """View for displaying the list of friends for the logged-in user."""
 
-    template_name = 'action/friends/list.html'
+    template_name = 'action/friends/friends_list.html'
     context_object_name = 'friend_list'
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[User]:
         """
         Return the queryset of friends for the logged-in user.
 

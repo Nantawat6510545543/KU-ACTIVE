@@ -1,46 +1,45 @@
 .error {
-    padding-top:50px;
-    text-align:center;
-    font-family:sans-serif;
-    box-sizing:border-box;
-    outline:none;
-    text-decoration:none;
+    padding-top: 50px;
+    text-align: center;
+    font-family: sans-serif;
+    box-sizing: border-box;
+    outline: none;
+    text-decoration: none;
 }
 
 .error img{
-    width:200px;
+    width: 200px;
 }
 
 .error h1{
-    font-size:40px;
+    font-size: 40px;
 }
 
 .error p{
-    font-size:20px;
+    font-size: 20px;
 }
 
 .redirect-error{
-    text-align:center;
-    margin:50px;
+    text-align: center;
+    margin: 50px;
 }
 
 .redirect-error a{
-    font-family:sans-serif;
-    box-sizing:border-box;
-    outline:none;
-    text-decoration:none;
-    color:black;
+    font-family: sans-serif;
+    box-sizing: border-box;
+    outline: none;
+    text-decoration: none;
+    color: black;
     transition: .3s;
-    background:white;
-    font-size:30px;
-    padding:10px 100px;
-    border-radius:50px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
-    0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    border:solid;
-    border-color:black;
+    background: white;
+    font-size: 30px;
+    padding: 10px 100px;
+    border-radius: 50px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border: solid;
+    border-color: black;
 }
 
 .redirect-error a:hover{
-    font-size:35px;
+    font-size: 35px;
 }

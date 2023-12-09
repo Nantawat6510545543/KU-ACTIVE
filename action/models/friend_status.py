@@ -12,8 +12,7 @@ class FriendStatus(models.Model):
 
     STATUS_CHOICES = (
         ('Pending', 'Pending'),
-        ('Accepted', 'Accepted'),
-        ('Declined', 'Declined'),
+        ('Accepted', 'Accepted')
     )
 
     sender = models.ForeignKey(User, on_delete=models.CASCADE,
